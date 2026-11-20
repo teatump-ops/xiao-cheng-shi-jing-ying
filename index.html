@@ -1,0 +1,1676 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>小城市经营静态版</title>
+    <style>
+      :root {
+        --bg: #eef2ee;
+        --panel: #ffffff;
+        --panel-2: #f4f7f2;
+        --ink: #22301f;
+        --ink-soft: #5a6a55;
+        --line: #d5ddd0;
+        --accent: #2e7d46;
+        --accent-ink: #ffffff;
+        --gold: #b97f16;
+        --danger: #b23a2e;
+        --warn: #a86a12;
+        --good: #2e7d46;
+        --chip: #e7eee3;
+        --shadow: 0 2px 10px rgba(34, 48, 31, .10);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #141a14;
+          --panel: #1e261e;
+          --panel-2: #242e24;
+          --ink: #e4ecdf;
+          --ink-soft: #9db098;
+          --line: #39463a;
+          --accent: #4caf6d;
+          --accent-ink: #0d150d;
+          --gold: #d9a441;
+          --danger: #e0705f;
+          --warn: #d9a441;
+          --good: #6fce8b;
+          --chip: #2a362a;
+          --shadow: 0 2px 10px rgba(0, 0, 0, .45);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      button, select, input, textarea { font: inherit; color: inherit; }
+      button { min-height: 2.25rem; cursor: pointer; }
+      .wrap { max-width: 1240px; margin: 0 auto; padding: 12px 14px 40px; }
+
+      /* ---------- top stats bar ---------- */
+      .statsbar {
+        display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+      }
+      .chip {
+        background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 6px 12px; box-shadow: var(--shadow); min-width: 96px;
+      }
+      .chip .k { font-size: 12px; color: var(--ink-soft); display: block; }
+      .chip .v { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .chip .v small { font-size: 12px; font-weight: 400; color: var(--ink-soft); }
+      .v.bad { color: var(--danger); }
+      .v.warn { color: var(--warn); }
+      .v.good { color: var(--good); }
+
+      /* ---------- layout ---------- */
+      .layout { display: grid; grid-template-columns: minmax(0, 1fr) 368px; gap: 14px; align-items: start; }
+      @media (max-width: 920px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+      .card {
+        background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+        box-shadow: var(--shadow); padding: 12px;
+      }
+      .card h2 { font-size: 16px; margin: 0 0 8px; }
+      .card h3 { font-size: 14px; margin: 14px 0 6px; }
+
+      /* ---------- 3D stage ---------- */
+      #stageWrap { position: relative; padding: 0; overflow: hidden; }
+      #stage { width: 100%; height: 520px; display: block; touch-action: none; border-radius: var(--radius); }
+      @media (max-width: 920px) { #stage { height: 400px; } }
+      #stageFallback {
+        display: none; padding: 28px 16px; text-align: center; color: var(--ink-soft);
+      }
+      .stage-hint {
+        position: absolute; left: 10px; bottom: 8px; font-size: 12px; color: #fff;
+        background: rgba(20, 30, 20, .55); padding: 3px 9px; border-radius: 999px; pointer-events: none;
+      }
+      .controls-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      .btn {
+        border: 1px solid var(--line); background: var(--panel-2); border-radius: 8px;
+        padding: 6px 14px; font-weight: 600;
+      }
+      .btn:hover { border-color: var(--accent); }
+      .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-size: 16px; padding: 8px 22px; }
+      .btn.danger { color: var(--danger); }
+      .btn:disabled { opacity: .45; cursor: not-allowed; }
+      .btn.small { min-height: 2rem; padding: 3px 10px; font-size: 13px; font-weight: 500; }
+
+      /* ---------- tile panel ---------- */
+      #tilePanel { margin-top: 14px; }
+      .tile-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+      .tile-head .pos { color: var(--ink-soft); font-size: 13px; }
+      .kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 4px 14px; margin: 8px 0; }
+      .kv div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); padding: 2px 0; }
+      .kv span:first-child { color: var(--ink-soft); }
+      .kv span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+      .build-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 8px; margin-top: 8px; }
+      .build-item {
+        text-align: left; border: 1px solid var(--line); background: var(--panel-2);
+        border-radius: 8px; padding: 8px 10px; min-height: 4.2rem;
+      }
+      .build-item:hover:not(:disabled) { border-color: var(--accent); }
+      .build-item .bn { font-weight: 700; display: flex; justify-content: space-between; }
+      .build-item .bn .cost { color: var(--gold); font-variant-numeric: tabular-nums; }
+      .build-item .bd { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+      .build-item:disabled { opacity: .5; cursor: not-allowed; }
+      .note { font-size: 13px; color: var(--ink-soft); }
+      .note.warn { color: var(--warn); }
+      .note.bad { color: var(--danger); }
+      .note.good { color: var(--good); }
+
+      /* ---------- sidebar tabs ---------- */
+      .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+      .tab {
+        border: 1px solid var(--line); background: var(--panel-2); border-radius: 999px;
+        padding: 4px 14px; font-weight: 600; min-height: 2.25rem;
+      }
+      .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+      table.stat { width: 100%; border-collapse: collapse; font-size: 14px; }
+      table.stat th, table.stat td { padding: 5px 6px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+      table.stat th:first-child, table.stat td:first-child { text-align: left; }
+      table.stat th { color: var(--ink-soft); font-weight: 500; font-size: 12px; }
+      .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+      .breakdown { list-style: none; margin: 0; padding: 0; }
+      .breakdown li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+      .breakdown .val { font-weight: 700; font-variant-numeric: tabular-nums; }
+      .pos-v { color: var(--good); } .neg-v { color: var(--danger); } .zero-v { color: var(--ink-soft); }
+      .needs { list-style: none; margin: 0; padding: 0; }
+      .needs li { padding: 6px 0 6px 20px; position: relative; border-bottom: 1px dashed var(--line); }
+      .needs li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); }
+      .needs li.ok::before { background: var(--good); }
+      textarea.savecode {
+        width: 100%; min-height: 84px; border: 1px solid var(--line); border-radius: 8px;
+        background: var(--panel-2); padding: 8px; font-size: 12px; word-break: break-all;
+      }
+      .msg { min-height: 1.4em; font-size: 13px; margin-top: 6px; }
+
+      /* ---------- flat map: city block + surrounding terrain ---------- */
+      .flat-scene {
+        background: #7d8f6d; border: 1px solid var(--line); border-radius: 10px;
+        padding: 8px; overflow: hidden;
+      }
+      @media (prefers-color-scheme: dark) { .flat-scene { background: #2c3a2a; } }
+      .flat-world-wrap { position: relative; }
+      /* gap colour reads as the road network between blocks */
+      #flatGrid {
+        display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px;
+        background: #5b6058; padding: 2px; border-radius: 6px;
+      }
+      @media (prefers-color-scheme: dark) { #flatGrid { background: #3a3f3a; } }
+      #flatGrid button {
+        min-height: 0; height: auto; aspect-ratio: 1; border: 1px solid rgba(30,40,25,.35);
+        border-radius: 3px; font-size: 10px; padding: 0; line-height: 1.1; overflow: hidden;
+        background: #a9bd8f; color: var(--ink); position: relative; cursor: pointer;
+      }
+      #flatGrid button .bt-roof { position: absolute; left: 0; right: 0; top: 0; height: 22%; opacity: .9; }
+      #flatGrid button .bt-name {
+        position: absolute; inset: 18% 0 12%; display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 11px; text-shadow: 0 1px 2px rgba(255,255,255,.45);
+      }
+      #flatGrid button .bt-lv {
+        position: absolute; left: 0; right: 0; bottom: 0; font-size: 8px; text-align: center;
+        background: rgba(20,26,18,.45); color: #fff; line-height: 1.5;
+      }
+      #flatGrid button.empty {
+        background:
+          radial-gradient(circle at 30% 35%, rgba(255,255,255,.20) 0 2px, transparent 3px),
+          radial-gradient(circle at 70% 65%, rgba(60,90,40,.25) 0 2px, transparent 3px),
+          #a9bd8f;
+        color: rgba(40,55,32,.55);
+      }
+      @media (prefers-color-scheme: dark) { #flatGrid button.empty { background-color: #4d5f42; color: rgba(220,235,205,.5); } }
+      #flatGrid button.sel { outline: 2px solid #f2c230; outline-offset: -2px; z-index: 2; }
+      #flatGrid button.polluted { box-shadow: inset 0 0 0 3px #d9b81e; }
+      #flatGrid button.polluted .bt-name { color: #4a3d05; }
+      /* terrain outside the 12x12 city grid */
+      .terrain {
+        aspect-ratio: 1; border-radius: 2px; display: flex; align-items: center; justify-content: center;
+        font-size: 9px; line-height: 1; overflow: hidden; user-select: none;
+      }
+      .terrain.forest  { background: #2f5d33; color: #9ed09a; letter-spacing: -2px; }
+      .terrain.forest2 { background: #3a6f3e; color: #b7e2ae; letter-spacing: -2px; }
+      .terrain.waste   { background: #c9b586; color: #8a7648; background-image: radial-gradient(circle at 40% 40%, rgba(120,95,50,.35) 0 1.5px, transparent 2.5px), radial-gradient(circle at 75% 70%, rgba(120,95,50,.3) 0 1.5px, transparent 2.5px); }
+      .terrain.scrub   { background: #97a86f; color: #5d7038; }
+      .terrain.rock    { background: #9b968b; color: #6d675c; }
+      @media (prefers-color-scheme: dark) {
+        .terrain.forest { background: #1f4224; } .terrain.forest2 { background: #26502b; }
+        .terrain.waste { background: #6e6244; color: #c9b586; } .terrain.scrub { background: #4a5a35; color: #a9bd8f; }
+        .terrain.rock { background: #55524b; color: #a09a8e; }
+      }
+      /* vehicles on the roads right next to buildings (flat view) */
+      #flatCars { position: absolute; inset: 2px; pointer-events: none; z-index: 3; }
+      .flat-car { position: absolute; width: 4.6%; aspect-ratio: 2.1; margin-left: -2.3%; margin-top: -1.1%; }
+      .flat-car .car-body {
+        width: 100%; height: 100%; border-radius: 3px; position: relative;
+        box-shadow: 0 1px 2px rgba(0,0,0,.45); animation: flatDrive 3.2s ease-in-out infinite alternate;
+      }
+      .flat-car .car-body::before {
+        content: ""; position: absolute; left: 26%; right: 26%; top: 18%; bottom: 18%;
+        background: #2c3540; border-radius: 2px;
+      }
+      .flat-car.vert .car-body { transform: rotate(90deg); animation-name: flatDriveV; }
+      @keyframes flatDrive { from { transform: translateX(-14%); } to { transform: translateX(14%); } }
+      @keyframes flatDriveV { from { transform: rotate(90deg) translateX(-14%); } to { transform: rotate(90deg) translateX(14%); } }
+      @media (prefers-reduced-motion: reduce) { .flat-car .car-body { animation: none; } }
+      #flatMeta { font-size: 13px; margin-top: 8px; }
+      .flat-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+      .flat-legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+
+      /* ---------- event modal ---------- */
+      #eventOverlay {
+        position: fixed; inset: 0; background: rgba(10, 16, 10, .55);
+        display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
+      }
+      #eventOverlay.open { display: flex; }
+      .event-card {
+        background: var(--panel); color: var(--ink); border-radius: 14px; max-width: 560px; width: 100%;
+        padding: 20px; box-shadow: 0 12px 40px rgba(0,0,0,.35); max-height: 88vh; overflow: auto;
+      }
+      .event-card h2 { margin: 0 0 4px; font-size: 20px; }
+      .event-tag { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: .08em; }
+      .opt {
+        display: block; width: 100%; text-align: left; border: 1px solid var(--line);
+        background: var(--panel-2); border-radius: 10px; padding: 10px 12px; margin-top: 8px; min-height: 3.4rem;
+      }
+      .opt:hover { border-color: var(--accent); }
+      .opt .ot { font-weight: 700; }
+      .opt .od { font-size: 13px; color: var(--ink-soft); display: block; margin-top: 2px; }
+      .opt .oe { font-size: 13px; display: block; margin-top: 4px; font-variant-numeric: tabular-nums; }
+      #toast {
+        position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px);
+        background: var(--ink); color: var(--bg); padding: 9px 18px; border-radius: 999px;
+        opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60;
+        max-width: 92vw; text-align: center; font-size: 14px;
+      }
+      #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .log { font-size: 13px; color: var(--ink-soft); max-height: 180px; overflow: auto; margin: 0; padding-left: 18px; }
+      .log li { margin: 2px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="statsbar" id="statsBar"></div>
+
+      <div class="layout">
+        <div>
+          <div class="card" id="stageWrap">
+            <canvas id="stage" aria-label="3D 城市地图：点击地块进行建设"></canvas>
+            <div id="stageFallback">3D 视图没能加载，可以用「平面图」页签照常建设经营。</div>
+            <div class="stage-hint">拖动旋转 · 滚轮/双指缩放 · 点击地块建设</div>
+          </div>
+          <div class="controls-row">
+            <button class="btn primary" id="btnNextMonth">推进一个月 ▶</button>
+            <button class="btn" id="btnResetCam">重置视角</button>
+            <button class="btn" id="btnNewGame">重新开始</button>
+          </div>
+          <div class="card" id="tilePanel"></div>
+          <div class="card" style="margin-top:14px">
+            <h2>城市日志</h2>
+            <ul class="log" id="cityLog"></ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tabs" role="tablist">
+            <button class="tab" role="tab" data-tab="stats" aria-selected="true">建筑统计</button>
+            <button class="tab" role="tab" data-tab="sat" aria-selected="false">满意度解析</button>
+            <button class="tab" role="tab" data-tab="needs" aria-selected="false">市民需求</button>
+            <button class="tab" role="tab" data-tab="flat" aria-selected="false">平面图</button>
+            <button class="tab" role="tab" data-tab="save" aria-selected="false">存档</button>
+          </div>
+          <div id="tab-stats"></div>
+          <div id="tab-sat" hidden></div>
+          <div id="tab-needs" hidden></div>
+          <div id="tab-flat" hidden>
+            <p class="note">和 3D 地图是同一座城市，点任意地块即可选中建设。格子之间的灰色细线是街道，黄框 = 该住宅受污染影响。</p>
+            <div class="flat-scene">
+              <div class="flat-world-wrap">
+                <div id="flatGrid"></div>
+                <div id="flatCars" aria-hidden="true"></div>
+              </div>
+              <div id="flatMeta"></div>
+              <div class="flat-legend">
+                <span><span class="sw" style="background:#2f5d33"></span>森林（城外）</span>
+                <span><span class="sw" style="background:#c9b586"></span>荒地（城外）</span>
+                <span><span class="sw" style="background:#a9bd8f"></span>空地草坪</span>
+                <span><span class="sw" style="background:#5b6058"></span>街道</span>
+              </div>
+            </div>
+          </div>
+          <div id="tab-save" hidden>
+            <h3 style="margin-top:0">存档码</h3>
+            <p class="note">静态版的存档是一串代码：导出后自己收好，下次打开页面粘贴回来就能接着玩。</p>
+            <textarea class="savecode" id="saveCode" placeholder="点「导出存档码」生成，或把之前的存档码粘贴到这里再点「导入」"></textarea>
+            <div class="controls-row">
+              <button class="btn" id="btnExport">导出存档码</button>
+              <button class="btn" id="btnCopyCode">复制</button>
+              <button class="btn" id="btnImport">导入</button>
+            </div>
+            <div class="msg" id="saveMsg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="eventOverlay" role="dialog" aria-modal="true" aria-labelledby="eventTitle">
+      <div class="event-card">
+        <div class="event-tag">城市大事件</div>
+        <h2 id="eventTitle"></h2>
+        <p id="eventDesc"></p>
+        <div id="eventOpts"></div>
+      </div>
+    </div>
+    <div id="toast" role="status"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js"></script>
+    <script>
+    "use strict";
+    /* ============================================================
+       小城市经营 · 静态版
+       规则与带存档版一致：12×12 地块、建筑 5 级、位置污染、
+       公园净化、生活便利、受教育度、大事件与市民口碑。
+       ============================================================ */
+    var SIZE = 12, N = SIZE * SIZE, MAXLV = 5;
+
+    function mult(lv) { return 1 + 0.4 * (lv - 1); }
+    function upCost(def, lv) { return Math.round(def.cost * 0.7 * lv / 5) * 5; }
+
+    var DEFS = {
+      house:   { name: "住宅",       cost: 100, upkeep: 2,  power: 2,  cap: 12, color: 0xd96f4e, roof: 0x9e3b26,
+                 desc: "容纳 12 人 · 每位居民每月缴税 2" },
+      luxury:  { name: "高级住宅区", cost: 320, upkeep: 8,  power: 5,  cap: 30, color: 0xe3b34c, roof: 0x8a6420,
+                 desc: "容纳 30 人 · 每栋满意度 +2（上限 +6）" },
+      shop:    { name: "商业街",     cost: 150, upkeep: 4,  power: 3,  jobs: 8,  income: 30, color: 0x4f9fd9, roof: 0x2b5f86,
+                 desc: "岗位 8 · 月入 30 · 每座工厂 +10 税收（上限 +30）· 吃教育加成" },
+      factory: { name: "工厂",       cost: 200, upkeep: 6,  power: 6,  jobs: 12, income: 55, color: 0x8d99a6, roof: 0x59636e,
+                 desc: "岗位 12 · 月入 55 · 污染半径 2 格，不能紧挨住宅" },
+      office:  { name: "办公楼",     cost: 260, upkeep: 6,  power: 5,  jobs: 14, income: 45, color: 0x7fb3c8, roof: 0x49707f,
+                 desc: "岗位 14 · 月入 45 · 教育加成翻倍" },
+      park:    { name: "公园",       cost: 80,  upkeep: 2,  power: 0,  capBonus: 2, color: 0x58a860, roof: 0x58a860,
+                 desc: "城市容量 +2 · 紧挨住宅全额抵消污染，隔一格减半" },
+      power:   { name: "发电厂",     cost: 250, upkeep: 8,  power: 0,  gen: 40, color: 0xb08968, roof: 0x6e5138,
+                 desc: "发电 40 点" },
+      wind:    { name: "风力发电机", cost: 180, upkeep: 3,  power: 0,  gen: 22, color: 0xdfe6ea, roof: 0xdfe6ea,
+                 desc: "发电 22 点 · 清洁电力，维护便宜" },
+      school:  { name: "学校",       cost: 180, upkeep: 6,  power: 3,  jobs: 6, color: 0xe0a458, roof: 0xa56c26,
+                 desc: "岗位 6 · 提升受教育度 · 靠近住宅算上学便利" },
+      library: { name: "图书馆",     cost: 140, upkeep: 4,  power: 2,  jobs: 3, color: 0xa879c9, roof: 0x6d4a8a,
+                 desc: "岗位 3 · 与学校一起提升受教育度 · 文化满意度" },
+      hospital:{ name: "医院",       cost: 220, upkeep: 8,  power: 4,  jobs: 8, color: 0xf0f0ee, roof: 0xc23b2e,
+                 desc: "岗位 8 · 医疗覆盖加满意度 · 靠近住宅算就医便利" },
+      police:  { name: "警察局",     cost: 160, upkeep: 6,  power: 2,  jobs: 5, color: 0x4a5f8a, roof: 0x2c3a57,
+                 desc: "岗位 5 · 安全感 · 每座全城维护费 −4%（上限 −20%）" },
+      fire:    { name: "消防站",     cost: 150, upkeep: 5,  power: 2,  jobs: 4, color: 0xd94f3d, roof: 0x8f2a1e,
+                 desc: "岗位 4 · 安全感 · 工厂事故赔付减半" },
+      stadium: { name: "体育馆",     cost: 300, upkeep: 10, power: 6,  jobs: 10, color: 0x3fa08c, roof: 0x256355,
+                 desc: "岗位 10 · 满意度 +4 · 门票月入 = 人口 × 0.25" }
+    };
+    var ORDER = ["house","luxury","shop","factory","office","park","power","wind","school","library","hospital","police","fire","stadium"];
+    var RES_TYPES = { house: 1, luxury: 1 };
+
+    /* ---------------- state ---------------- */
+    var S;
+    function newState() {
+      return {
+        funds: 900, month: 1, pop: 0, reputation: 0,
+        grid: new Array(N).fill(null),
+        recentEvents: [], log: ["城市成立。第 1 个月，从第一栋住宅开始规划吧。"],
+        totalEvents: 0
+      };
+    }
+    S = newState();
+    var selected = -1;
+
+    function idx(x, y) { return y * SIZE + x; }
+    function xy(i) { return [i % SIZE, Math.floor(i / SIZE)]; }
+    function cheb(a, b) { var p = xy(a), q = xy(b); return Math.max(Math.abs(p[0]-q[0]), Math.abs(p[1]-q[1])); }
+    function tilesOf(type) { var r = []; for (var i = 0; i < N; i++) if (S.grid[i] && S.grid[i].type === type) r.push(i); return r; }
+    function residences() { var r = []; for (var i = 0; i < N; i++) if (S.grid[i] && RES_TYPES[S.grid[i].type]) r.push(i); return r; }
+    function addLog(t) { S.log.unshift("第 " + S.month + " 月：" + t); if (S.log.length > 40) S.log.pop(); }
+
+    /* ---------------- derived stats ---------------- */
+    function compute() {
+      var c = { counts: {}, lvSum: {}, capacity: 0, jobs: 0, gen: 0, use: 0, upkeepRaw: 0 };
+      ORDER.forEach(function (t) { c.counts[t] = 0; c.lvSum[t] = 0; });
+      for (var i = 0; i < N; i++) {
+        var b = S.grid[i]; if (!b) continue;
+        var d = DEFS[b.type], m = mult(b.level);
+        c.counts[b.type]++; c.lvSum[b.type] += b.level;
+        if (d.cap) c.capacity += Math.round(d.cap * m);
+        if (d.capBonus) c.capacity += d.capBonus;
+        if (d.jobs) c.jobs += Math.round(d.jobs * m);
+        if (d.gen) c.gen += Math.round(d.gen * m);
+        c.use += Math.round((d.power || 0) * m);
+        c.upkeepRaw += Math.round(d.upkeep * m);
+      }
+      c.powerOk = c.gen >= c.use;
+      c.powerFactor = c.powerOk ? 1 : 0.5;
+      c.policeCut = Math.min(0.20, c.counts.police * 0.04);
+      c.upkeep = Math.round(c.upkeepRaw * (1 - c.policeCut));
+
+      /* education */
+      if (S.pop <= 0) c.education = (c.counts.school + c.counts.library) > 0 ? 50 : 0;
+      else c.education = Math.max(0, Math.min(100, Math.round((c.lvSum.school * 45 + c.lvSum.library * 25) / S.pop * 100)));
+      c.eduBonus = c.education / 100 * 0.25;
+
+      /* pollution & parks */
+      var facs = tilesOf("factory"), parks = tilesOf("park"), res = residences();
+      c.resInfo = {};
+      c.totalRaw = 0; c.totalRemain = 0; c.totalOffset = 0; c.cleaned = 0; c.pollutedHomes = 0;
+      res.forEach(function (r) {
+        var raw = 0, off = 0, j;
+        for (j = 0; j < facs.length; j++) { var dd = cheb(r, facs[j]); if (dd === 1) raw += 2; else if (dd === 2) raw += 1; }
+        for (j = 0; j < parks.length; j++) {
+          var pd = cheb(r, parks[j]), plv = S.grid[parks[j]].level, full = 1 + 0.5 * (plv - 1);
+          if (pd === 1) off += full; else if (pd === 2) off += full / 2;
+        }
+        var applied = Math.min(raw, off), remain = raw - applied;
+        c.resInfo[r] = { raw: raw, off: applied, remain: remain };
+        c.totalRaw += raw; c.totalRemain += remain; c.totalOffset += applied;
+        if (raw > 0 && remain <= 0) c.cleaned++;
+        if (remain > 0) c.pollutedHomes++;
+      });
+      c.factoryNearRes = false;
+      facs.forEach(function (f) { res.forEach(function (r) { if (cheb(f, r) <= 2) c.factoryNearRes = true; }); });
+
+      /* convenience: school / shop / hospital proximity */
+      c.conv = {};
+      ["school", "shop", "hospital"].forEach(function (t) {
+        var ts = tilesOf(t), served = 0, scoreSum = 0;
+        res.forEach(function (r) {
+          var best = 99;
+          ts.forEach(function (o) { var d2 = cheb(r, o); if (d2 < best) best = d2; });
+          var sc = best <= 1 ? 1 : best === 2 ? 0.5 : 0;
+          scoreSum += sc; if (sc > 0) served++;
+        });
+        c.conv[t] = { count: ts.length, served: served, avg: res.length ? scoreSum / res.length : 0, tiles: ts };
+      });
+      c.homesAllConv = 0;
+      res.forEach(function (r) {
+        var all = true;
+        ["school", "shop", "hospital"].forEach(function (t) {
+          var best = 99;
+          c.conv[t].tiles.forEach(function (o) { var d2 = cheb(r, o); if (d2 < best) best = d2; });
+          if (best > 2) all = false;
+        });
+        if (all && res.length) c.homesAllConv++;
+      });
+      c.resCount = res.length;
+
+      /* monthly income preview */
+      c.incomeTax = Math.round(S.pop * 2);
+      c.incomeBiz = 0;
+      ["shop", "factory", "office"].forEach(function (t) {
+        tilesOf(t).forEach(function (i2) {
+          var d = DEFS[t], b = S.grid[i2];
+          var inc = d.income * mult(b.level);
+          var eduF = t === "office" ? 1 + c.eduBonus * 2 : 1 + c.eduBonus;
+          c.incomeBiz += inc * eduF;
+        });
+      });
+      if (c.counts.shop && c.counts.factory) c.incomeBiz += c.counts.shop * Math.min(30, c.counts.factory * 10);
+      c.incomeBiz = Math.round(c.incomeBiz * c.powerFactor);
+      c.incomeStadium = Math.round(c.counts.stadium ? S.pop * 0.25 * (1 + 0.4 * (avgLv("stadium") - 1)) : 0);
+      c.income = c.incomeTax + c.incomeBiz + c.incomeStadium;
+      c.net = c.income - c.upkeep;
+
+      c.sat = satisfaction(c);
+      return c;
+    }
+    function avgLv(t) { var ts = tilesOf(t); if (!ts.length) return 1; var s = 0; ts.forEach(function (i) { s += S.grid[i].level; }); return s / ts.length; }
+
+    function satisfaction(c) {
+      var items = [];
+      function add(label, v) { items.push({ label: label, v: Math.round(v) }); }
+      if (S.pop > 0) {
+        add("住房供给", c.capacity >= S.pop ? 5 : -Math.min(20, Math.ceil((S.pop - c.capacity) / 4)));
+        if (S.pop >= 10) {
+          var emp = Math.min(1, c.jobs / Math.max(1, S.pop * 0.7));
+          add("就业", Math.max(-15, Math.min(8, (emp - 0.7) * 30)));
+        }
+      } else add("住房供给", 0);
+      add("电力供应", c.use === 0 ? 0 : (c.powerOk ? 2 : -12));
+      if (c.totalRemain > 0) add("工厂污染", -Math.min(18, c.totalRemain * 1.5));
+      else if (c.counts.factory > 0 && !c.factoryNearRes) add("工厂选址（远离住宅）", 3);
+      else if (c.counts.factory > 0) add("工厂污染", 0);
+      if (c.cleaned > 0) add("公园净化", Math.min(6, c.cleaned));
+      if (c.resCount > 0) {
+        add("上学便利", c.conv.school.avg * 8);
+        add("购物便利", c.conv.shop.avg * 8);
+        add("就医便利", c.conv.hospital.avg * 8);
+      }
+      ["school", "shop", "hospital"].forEach(function (t) {
+        if (c.conv[t].count > 0 && c.conv[t].served === 0 && c.resCount > 0)
+          add(DEFS[t].name + "离住宅太远", -3);
+      });
+      if (c.counts.luxury) add("高级住宅区品质", Math.min(6, c.counts.luxury * 2));
+      if (c.counts.park && S.pop > 0) add("公园绿化", Math.min(5, c.counts.park));
+      if (c.counts.library && S.pop > 0) add("文化氛围（图书馆）", Math.min(5, c.counts.library * 2));
+      if (S.pop > 0 && c.counts.hospital) add("医疗覆盖", Math.min(6, c.lvSum.hospital * 60 / S.pop * 6));
+      if (S.pop > 0 && (c.counts.police || c.counts.fire))
+        add("安全感（警察/消防）", Math.min(6, (c.lvSum.police + c.lvSum.fire) * 50 / S.pop * 6));
+      if (S.pop > 0) add("受教育度", (c.education >= 30 || S.pop < 10) ? c.education / 100 * 8 : -5);
+      if (c.counts.stadium) add("体育馆", 4);
+      add("大事抉择口碑", S.reputation);
+      if (S.funds < 0) add("财政赤字", -10);
+      var total = 50;
+      items.forEach(function (it) { total += it.v; });
+      return { total: Math.max(0, Math.min(100, total)), items: items };
+    }
+
+    /* citizen needs */
+    function needsList(c) {
+      var n = [];
+      if (c.resCount === 0) n.push("还没有住宅，先盖一栋住宅，市民才会搬进来。");
+      if (S.pop > 0 && c.capacity < S.pop) n.push("住房不够住：人口 " + S.pop + "，容量只有 " + c.capacity + "，再盖些住宅或升级。");
+      if (c.use > c.gen) n.push("电力不足（用 " + c.use + " / 发 " + c.gen + "）：商业和工厂收入减半，盖发电厂或风力发电机。");
+      if (c.pollutedHomes > 0) n.push(c.pollutedHomes + " 栋住宅正受工厂污染，在它们旁边盖公园可以抵消，污染越少满意度越高。");
+      if (c.resCount > 0) {
+        ["school", "shop", "hospital"].forEach(function (t) {
+          var far = c.resCount - c.conv[t].served;
+          if (c.conv[t].count === 0) n.push("全城还没有" + DEFS[t].name + "，在住宅 2 格内盖一座能涨满意度。");
+          else if (far > 0) n.push(far + " 栋住宅离最近的" + DEFS[t].name + "超过 2 格，享受不到生活便利。");
+        });
+      }
+      if (S.pop > 0 && c.jobs < S.pop * 0.7) n.push("岗位不足：现有岗位 " + c.jobs + "，盖商业街、工厂或办公楼能提供工作。");
+      if (S.pop > 20 && c.education < 40) n.push("受教育度偏低（" + c.education + "%）：多盖学校和图书馆，还能给商业、工厂、办公楼加收入。");
+      if (S.pop > 0 && !c.counts.hospital) n.push("没有医院，市民看病没着落。");
+      if (S.pop > 0 && !c.counts.park) n.push("没有公园，市民没有散步的地方，公园还能抵消工厂污染。");
+      if (S.reputation <= -10) n.push("市民口碑很差（" + S.reputation + "），在大事件里多选为市民着想的方案能慢慢挽回。");
+      if (n.length === 0) n.push("市民暂时没什么大意见，城市运转良好。");
+      return n;
+    }
+    /* ---------------- events ---------------- */
+    var EVENTS = [
+      { id: "flood", title: "暴雨内涝", when: function (c) { return S.pop >= 20; },
+        desc: "连夜暴雨，低洼街道积水过膝，几栋老楼的地下室进水，市民在等市政府表态。",
+        opts: [
+          { t: "全额抢修并补偿受损住户", d: "花钱买民心，抢修队连夜排水。", funds: -180, rep: 6, pop: 0 },
+          { t: "只修主干道，其余慢慢来", d: "省了钱，但泡水的住户怨气不小。", funds: -60, rep: -3, pop: 0 },
+          { t: "号召市民自救，市府只出工具", d: "几乎不花钱，口碑跌得最狠。", funds: 0, rep: -7, pop: -3 }
+        ] },
+      { id: "flu", title: "流感大流行", when: function (c) { return S.pop >= 30; },
+        desc: "流感席卷全城，诊所排起长队，学校请假的学生越来越多。",
+        opts: [
+          { t: "免费发放药品并临时增开诊所", d: "支出不小，市民很领情。", funds: -160, rep: 6, pop: 0 },
+          { t: "只保障学校和老人", d: "重点人群稳住了，其他人有点意见。", funds: -70, rep: 1, pop: 0 },
+          { t: "发布通知，建议多喝热水", d: "没花钱，骂声一片，还有人病重搬走。", funds: 0, rep: -6, pop: -4 }
+        ] },
+      { id: "pollution_news", title: "工厂排污上新闻", when: function (c) { return c.counts.factory >= 1 && c.totalRemain > 0; },
+        desc: "本地媒体曝光工厂排污，周边居民举着横幅要求说法，记者的镜头正对着市政厅。",
+        opts: [
+          { t: "责令停产整改并罚款", d: "工厂交了罚款，居民拍手叫好。", funds: 120, rep: 6, pop: 0 },
+          { t: "约谈厂长，限期装净化设备", d: "两边都勉强接受。", funds: -40, rep: 2, pop: 0 },
+          { t: "发声明称排放达标", d: "罚款省了，口碑和居民一起流失。", funds: 0, rep: -8, pop: -5 }
+        ] },
+      { id: "bigcorp", title: "大企业入驻", when: function (c) { return c.counts.office + c.counts.factory >= 2; },
+        desc: "一家大企业想把区域总部搬来，开出的条件是三年税收优惠，市民担心房价被炒高。",
+        opts: [
+          { t: "给优惠，大力欢迎", d: "先贴钱修路接电，企业随后带来一笔入驻费。", funds: 150, rep: 2, pop: 8 },
+          { t: "不给优惠，按规矩谈", d: "企业犹豫后还是来了，规模小一些。", funds: 60, rep: 0, pop: 4 },
+          { t: "婉拒，怕扰民", d: "清净保住了，年轻人觉得没前途走了几个。", funds: 0, rep: -2, pop: -4 }
+        ] },
+      { id: "tourism", title: "网红旅游热潮", when: function (c) { return c.counts.park >= 1 && S.pop >= 15; },
+        desc: "城里的公园突然在网上走红，周末游客暴增，小摊贩赚翻了，居民却抱怨吵。",
+        opts: [
+          { t: "顺势办市集，收摊位费", d: "赚了一笔，顺手把公园修缮了。", funds: 170, rep: 3, pop: 2 },
+          { t: "限流开放，优先居民", d: "收入一般，但居民很满意。", funds: 60, rep: 4, pop: 0 },
+          { t: "关闭公园谢客", d: "清净了，小商户的怨气却很大。", funds: -30, rep: -4, pop: 0 }
+        ] },
+      { id: "livable", title: "宜居城市评比", when: function (c) { return S.month >= 6; },
+        desc: "全省宜居城市评比开始报名，评委要看绿化、教育和居民满意度，参评要交一笔申报与整改费。",
+        opts: [
+          { t: "认真参评，该补的短板都补上", d: "花钱整改，拿了个好名次，口碑大涨。", funds: -140, rep: 8, pop: 3 },
+          { t: "简单申报，顺其自然", d: "名次中游，无功无过。", funds: -40, rep: 2, pop: 0 },
+          { t: "不参评，省下这笔钱", d: "钱省了，市民觉得城市没追求。", funds: 0, rep: -3, pop: 0 }
+        ] },
+      { id: "renovation", title: "老旧小区改造", when: function (c) { return c.counts.house >= 3; },
+        desc: "最早建的一批住宅外墙脱落、管线老化，居民联名要求改造。",
+        opts: [
+          { t: "市府全额出资改造", d: "老楼焕然一新，居民逢人就夸。", funds: -200, rep: 7, pop: 2 },
+          { t: "市府和居民各出一半", d: "改造照样完成，夸的人少一些。", funds: -100, rep: 3, pop: 0 },
+          { t: "再拖两年看看", d: "省了钱，怨气攒了下来。", funds: 0, rep: -6, pop: -2 }
+        ] },
+      { id: "talent_war", title: "抢人大战", when: function (c) { return S.pop >= 40; },
+        desc: "邻市开出落户补贴抢年轻人，本市的毕业生也在犹豫要不要走。",
+        opts: [
+          { t: "发安家补贴留人", d: "花钱留住了人，还有外来人口慕名搬入。", funds: -170, rep: 5, pop: 10 },
+          { t: "打感情牌，办青年活动", d: "花得不多，留住了一部分人。", funds: -50, rep: 2, pop: 3 },
+          { t: "随他们去", d: "一批年轻人收拾行李离开了。", funds: 0, rep: -4, pop: -10 }
+        ] },
+      { id: "extreme_weather", title: "极端天气", when: function () { return true; },
+        desc: "气象台发布红色预警：极端天气即将过境，老旧电线和广告牌都可能出问题。",
+        opts: [
+          { t: "提前加固并储备物资", d: "花钱买平安，天气过后城市基本无损。", funds: -120, rep: 5, pop: 0 },
+          { t: "只加固电力设施", d: "没停电，但倒了几块广告牌，赔了点钱。", funds: -70, rep: 0, pop: 0 },
+          { t: "赌它绕过去", d: "赌输了：抢修和赔付花了一大笔，口碑也跌了。", funds: -150, rep: -6, pop: -2 }
+        ] },
+      { id: "school_seats", title: "学位紧张", when: function (c) { return S.pop >= 30 && c.education < 60; },
+        desc: "新生儿入学季，学位缺口被家长们顶上热搜，有家长在校门口拉横幅。",
+        opts: [
+          { t: "紧急扩招，租场地加开班级", d: "花钱解决了学位，家长们很感激。", funds: -150, rep: 6, pop: 0 },
+          { t: "摇号入学，公开透明", d: "没摇上的家庭有怨言，但程序服众。", funds: -30, rep: 0, pop: 0 },
+          { t: "让家长自行想办法", d: "几户人家干脆搬去了教育资源好的邻市。", funds: 0, rep: -7, pop: -6 }
+        ] }
+    ];
+    var pendingEvent = null;
+
+    function rollEvent(c) {
+      if (S.month <= 2) return;
+      if (Math.random() > 0.30) return;
+      var pool = EVENTS.filter(function (e) {
+        return S.recentEvents.indexOf(e.id) < 0 && (!e.when || e.when(c));
+      });
+      if (!pool.length) return;
+      pendingEvent = pool[Math.floor(Math.random() * pool.length)];
+      showEvent(pendingEvent);
+    }
+    function showEvent(ev) {
+      document.getElementById("eventTitle").textContent = ev.title;
+      document.getElementById("eventDesc").textContent = ev.desc;
+      var box = document.getElementById("eventOpts");
+      box.innerHTML = "";
+      ev.opts.forEach(function (o) {
+        var b = document.createElement("button");
+        b.className = "opt";
+        var eff = [];
+        if (o.funds) eff.push("资金 " + (o.funds > 0 ? "+" : "") + o.funds);
+        if (o.rep) eff.push("口碑 " + (o.rep > 0 ? "+" : "") + o.rep);
+        if (o.pop) eff.push("人口 " + (o.pop > 0 ? "+" : "") + o.pop);
+        b.innerHTML = "<span class='ot'></span><span class='od'></span><span class='oe'></span>";
+        b.children[0].textContent = o.t;
+        b.children[1].textContent = o.d;
+        b.children[2].textContent = eff.join(" · ") || "无直接影响";
+        b.addEventListener("click", function () { resolveEvent(ev, o); });
+        box.appendChild(b);
+      });
+      document.getElementById("eventOverlay").classList.add("open");
+    }
+    function resolveEvent(ev, o) {
+      S.funds += o.funds;
+      S.reputation = Math.max(-25, Math.min(25, S.reputation + o.rep));
+      if (o.pop) {
+        var c = compute();
+        S.pop = Math.max(0, Math.min(c.capacity, S.pop + o.pop));
+      }
+      S.recentEvents.push(ev.id);
+      if (S.recentEvents.length > 4) S.recentEvents.shift();
+      S.totalEvents++;
+      pendingEvent = null;
+      document.getElementById("eventOverlay").classList.remove("open");
+      addLog("大事件「" + ev.title + "」选择了「" + o.t + "」（口碑 " + (S.reputation >= 0 ? "+" : "") + S.reputation + "）。");
+      toast("已处理：" + ev.title);
+      refresh();
+    }
+
+    /* ---------------- monthly tick ---------------- */
+    function nextMonth() {
+      if (pendingEvent) { toast("先处理大事件再推进。"); return; }
+      var c = compute();
+      S.funds += c.net;
+      /* population drift */
+      var sat = c.sat.total, newPop = S.pop;
+      if (c.capacity > S.pop) {
+        var rate = sat >= 60 ? 0.22 : sat >= 45 ? 0.10 : sat >= 30 ? 0.03 : -0.05;
+        newPop = S.pop + Math.ceil((c.capacity - S.pop) * rate);
+        if (sat < 30) newPop = Math.floor(S.pop * 0.95);
+      } else if (c.capacity < S.pop) newPop = c.capacity;
+      else if (sat < 30) newPop = Math.floor(S.pop * 0.94);
+      S.pop = Math.max(0, newPop);
+      S.month++;
+      addLog("月结：收入 " + c.income + "，维护 " + c.upkeep + "，净 " + (c.net >= 0 ? "+" : "") + c.net + "；人口 " + S.pop + "，满意度 " + compute().sat.total + "。");
+      rollEvent(compute());
+      refresh();
+    }
+
+    /* ---------------- build rules ---------------- */
+    function buildBlockReason(type, i) {
+      var d = DEFS[type];
+      if (S.funds < d.cost) return "资金不足（需要 " + d.cost + "）";
+      if (type === "factory") {
+        var res = residences();
+        for (var j = 0; j < res.length; j++) if (cheb(i, res[j]) <= 1) return "工厂不能紧挨住宅建（污染太重），换个离住宅远一点的地块。";
+      }
+      if (RES_TYPES[type]) {
+        var facs = tilesOf("factory");
+        for (var k = 0; k < facs.length; k++) if (cheb(i, facs[k]) <= 1) return "住宅不能紧挨工厂建（污染太重），换个地块或先拆工厂。";
+      }
+      return null;
+    }
+    function doBuild(type, i) {
+      var why = buildBlockReason(type, i);
+      if (why) { toast(why); return; }
+      S.funds -= DEFS[type].cost;
+      S.grid[i] = { type: type, level: 1 };
+      addLog("建成" + DEFS[type].name + "（" + posLabel(i) + "）。");
+      refresh();
+    }
+    function doUpgrade(i) {
+      var b = S.grid[i]; if (!b || b.level >= MAXLV) return;
+      var cost = upCost(DEFS[b.type], b.level);
+      if (S.funds < cost) { toast("资金不足，升级需要 " + cost + "。"); return; }
+      S.funds -= cost; b.level++;
+      addLog(DEFS[b.type].name + "（" + posLabel(i) + "）升到 " + b.level + " 级。");
+      refresh();
+    }
+    function doDemolish(i) {
+      var b = S.grid[i]; if (!b) return;
+      var refund = Math.round(DEFS[b.type].cost * 0.3);
+      S.funds += refund;
+      S.grid[i] = null;
+      var c = compute();
+      if (S.pop > c.capacity) S.pop = c.capacity;
+      addLog("拆除" + DEFS[b.type].name + "（" + posLabel(i) + "），返还 " + refund + "。");
+      refresh();
+    }
+    function upgradeAll() {
+      var spent = 0, n = 0, guard = 0;
+      var list = [];
+      for (var i = 0; i < N; i++) if (S.grid[i] && S.grid[i].level < MAXLV) list.push(i);
+      list.sort(function (a, b) { return S.grid[a].level - S.grid[b].level; });
+      while (guard++ < 500) {
+        var progressed = false;
+        for (var j = 0; j < list.length; j++) {
+          var b = S.grid[list[j]];
+          if (!b || b.level >= MAXLV) continue;
+          var cost = upCost(DEFS[b.type], b.level);
+          if (S.funds >= cost) { S.funds -= cost; b.level++; spent += cost; n++; progressed = true; }
+        }
+        if (!progressed) break;
+      }
+      if (n) { addLog("一键升级：" + n + " 次升级，共花费 " + spent + "。"); toast("已升级 " + n + " 次，花费 " + spent); }
+      else toast("没有可升级的建筑，或资金不足。");
+      refresh();
+    }
+    function posLabel(i) { var p = xy(i); return "第 " + (p[0] + 1) + " 列第 " + (p[1] + 1) + " 行"; }
+    /* ============================================================
+       3D scene (Three.js) — degrades gracefully to the flat map.
+       ============================================================ */
+    var three = { ok: false };
+    var TILE = 1.18, GAP = TILE; /* world step between tile centers: leaves road gaps */
+    function wpos(i) { var p = xy(i); return [(p[0] - (SIZE - 1) / 2) * GAP, (p[1] - (SIZE - 1) / 2) * GAP]; }
+
+    var scene, camera, renderer, raycaster, groundPlane;
+    var tileGroups = {}, markerSprites = {}, smokePool = [], turbines = [], peds = [], cars = [];
+    var camTheta = Math.PI / 4, camPhi = 0.95, camR = 19, camTarget;
+
+    function mat(color, opts) {
+      var o = { color: color, roughness: 0.85, metalness: 0.05 };
+      if (opts) for (var k in opts) o[k] = opts[k];
+      return new THREE.MeshStandardMaterial(o);
+    }
+    function box(w, h, d, color, x, y, z, opts) {
+      var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(color, opts));
+      m.position.set(x || 0, y || 0, z || 0);
+      m.castShadow = true; m.receiveShadow = true;
+      return m;
+    }
+    function cyl(rt, rb, h, color, x, y, z, seg) {
+      var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 14), mat(color));
+      m.position.set(x || 0, y || 0, z || 0);
+      m.castShadow = true;
+      return m;
+    }
+
+    function buildModel(type, level) {
+      var g = new THREE.Group();
+      var d = DEFS[type], hGrow = 1 + 0.22 * (level - 1);
+      var W = 0.86;
+      function windows(w, h, dd, color, rows, cols) {
+        var grp = new THREE.Group();
+        var wm = new THREE.MeshBasicMaterial({ color: color });
+        for (var r = 0; r < rows; r++) for (var cI = 0; cI < cols; cI++) {
+          var p = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.11), wm);
+          p.position.set(-w / 2 + (cI + 0.5) * (w / cols), 0.18 + r * ((h - 0.3) / Math.max(1, rows)), dd / 2 + 0.006);
+          grp.add(p);
+          var p2 = p.clone(); p2.rotation.y = Math.PI; p2.position.z = -dd / 2 - 0.006; grp.add(p2);
+        }
+        return grp;
+      }
+      switch (type) {
+        case "house": {
+          var bh = 0.42 * hGrow;
+          g.add(box(W, bh, W, d.color, 0, bh / 2, 0));
+          var roof = new THREE.Mesh(new THREE.ConeGeometry(0.72, 0.34, 4), mat(d.roof));
+          roof.position.y = bh + 0.17; roof.rotation.y = Math.PI / 4; roof.castShadow = true; g.add(roof);
+          g.add(windows(W, bh, W, 0xffe9a8, 1, 2));
+          break;
+        }
+        case "luxury": {
+          var lh = 0.95 * hGrow;
+          g.add(box(W, lh, W, d.color, 0, lh / 2, 0));
+          g.add(box(W + 0.08, 0.08, W + 0.08, d.roof, 0, lh + 0.04, 0));
+          g.add(box(0.3, 0.16, 0.3, d.roof, 0.18, lh + 0.14, 0.1));
+          g.add(windows(W, lh, W, 0xd8f2ff, Math.min(5, 2 + level), 3));
+          break;
+        }
+        case "shop": {
+          var sh = 0.5 * hGrow;
+          g.add(box(W, sh, W, d.color, 0, sh / 2, 0));
+          g.add(box(W + 0.16, 0.07, W + 0.16, 0xe4572e, 0, sh * 0.62, 0));
+          g.add(box(0.4, 0.14, 0.1, 0xffd23f, 0, sh + 0.1, 0.3));
+          g.add(windows(W, sh, W, 0xbfeaff, 1, 3));
+          break;
+        }
+        case "factory": {
+          var fh = 0.55 * hGrow;
+          g.add(box(W + 0.06, fh, W, d.color, 0, fh / 2, 0));
+          var saw = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, W + 0.06, 3, 1), mat(d.roof));
+          saw.rotation.z = Math.PI / 2; saw.rotation.y = Math.PI / 2; saw.position.y = fh + 0.12; saw.castShadow = true; g.add(saw);
+          var ch = cyl(0.09, 0.11, 0.85, 0x707a85, 0.28, fh + 0.4, -0.2);
+          ch.userData.smoke = true; g.add(ch);
+          g.userData.chimney = new THREE.Vector3(0.28, fh + 0.85, -0.2);
+          break;
+        }
+        case "office": {
+          var oh = 1.25 * hGrow;
+          g.add(box(W * 0.9, oh, W * 0.9, d.color, 0, oh / 2, 0, { roughness: 0.35, metalness: 0.35 }));
+          g.add(box(W * 0.96, 0.07, W * 0.96, d.roof, 0, oh + 0.035, 0));
+          g.add(windows(W * 0.9, oh, W * 0.9, 0xcfeeff, Math.min(7, 3 + level), 3));
+          break;
+        }
+        case "park": {
+          g.add(cyl(0.46, 0.5, 0.06, 0x6fbf73, 0, 0.03, 0, 20));
+          var spots = [[-0.22, -0.15], [0.24, 0.12], [0.02, -0.28], [-0.05, 0.26]];
+          for (var sI = 0; sI < Math.min(4, 2 + level); sI++) {
+            var tx = spots[sI][0], tz = spots[sI][1], th = 0.3 + 0.06 * level;
+            g.add(cyl(0.03, 0.04, th * 0.5, 0x7a5230, tx, th * 0.25, tz, 6));
+            var crown = new THREE.Mesh(new THREE.SphereGeometry(0.16 + level * 0.012, 10, 8), mat(0x3e8e4f));
+            crown.position.set(tx, th * 0.5 + 0.15, tz); crown.castShadow = true; g.add(crown);
+          }
+          break;
+        }
+        case "power": {
+          var ph = 0.6 * hGrow;
+          g.add(box(W, ph, W, d.color, 0, ph / 2, 0));
+          g.add(cyl(0.1, 0.12, 1.0, 0x8a97a3, -0.25, ph + 0.45, 0, 12));
+          g.add(cyl(0.1, 0.12, 1.0, 0x8a97a3, 0.15, ph + 0.45, 0.1, 12));
+          g.userData.chimney = new THREE.Vector3(-0.25, ph + 0.95, 0);
+          break;
+        }
+        case "wind": {
+          var pole = cyl(0.045, 0.06, 1.25, 0xc9d2d8, 0, 0.625, 0, 10);
+          g.add(pole);
+          var hub = new THREE.Group(); hub.position.set(0, 1.28, 0.07);
+          for (var bI = 0; bI < 3; bI++) {
+            var blade = box(0.05, 0.52, 0.02, 0xf2f5f7, 0, 0.26, 0);
+            var holder = new THREE.Group(); holder.rotation.z = bI * Math.PI * 2 / 3; holder.add(blade); hub.add(holder);
+          }
+          hub.add(new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), mat(0x9fb2bd)));
+          g.add(hub); g.userData.hub = hub; turbines.push(hub);
+          break;
+        }
+        case "school": {
+          var eh = 0.55 * hGrow;
+          g.add(box(W, eh, W, d.color, 0, eh / 2, 0));
+          var sroof = new THREE.Mesh(new THREE.ConeGeometry(0.74, 0.3, 4), mat(d.roof));
+          sroof.position.y = eh + 0.15; sroof.rotation.y = Math.PI / 4; sroof.castShadow = true; g.add(sroof);
+          g.add(cyl(0.02, 0.02, 0.5, 0xcccccc, 0.3, eh + 0.4, 0.3, 6));
+          g.add(box(0.2, 0.12, 0.02, 0xd23b2e, 0.4, eh + 0.55, 0.3));
+          g.add(windows(W, eh, W, 0xfff3b0, 1, 3));
+          break;
+        }
+        case "library": {
+          var lbh = 0.6 * hGrow;
+          g.add(box(W, lbh, W, d.color, 0, lbh / 2, 0));
+          g.add(box(W + 0.1, 0.09, W + 0.1, d.roof, 0, lbh + 0.045, 0));
+          [-0.3, -0.1, 0.1, 0.3].forEach(function (cx) { g.add(box(0.07, lbh * 0.8, 0.07, 0xe8e2f2, cx, lbh * 0.4, W / 2 + 0.01)); });
+          g.add(windows(W, lbh, W, 0xffe9a8, 2, 2));
+          break;
+        }
+        case "hospital": {
+          var hh = 0.85 * hGrow;
+          g.add(box(W, hh, W, d.color, 0, hh / 2, 0));
+          g.add(box(W + 0.06, 0.07, W + 0.06, 0xb9beb9, 0, hh + 0.035, 0));
+          g.add(box(0.3, 0.09, 0.03, 0xd23b2e, 0, hh * 0.72, W / 2 + 0.02));
+          g.add(box(0.09, 0.3, 0.03, 0xd23b2e, 0, hh * 0.72, W / 2 + 0.02));
+          g.add(windows(W, hh, W, 0xcfe8ff, Math.min(5, 2 + level), 3));
+          break;
+        }
+        case "police": {
+          var poh = 0.55 * hGrow;
+          g.add(box(W, poh, W, d.color, 0, poh / 2, 0));
+          g.add(box(W + 0.08, 0.07, W + 0.08, d.roof, 0, poh + 0.035, 0));
+          g.add(box(0.34, 0.13, 0.03, 0x2b4acb, 0, poh * 0.66, W / 2 + 0.02));
+          g.add(windows(W, poh, W, 0xd8e4ff, 1, 3));
+          break;
+        }
+        case "fire": {
+          var fih = 0.55 * hGrow;
+          g.add(box(W, fih, W, d.color, 0, fih / 2, 0));
+          g.add(box(0.2, 0.55, 0.2, 0xb03a2a, -0.3, fih + 0.2, -0.25));
+          g.add(box(0.44, fih * 0.62, 0.03, 0x5a2c22, 0.08, fih * 0.31, W / 2 + 0.02));
+          g.add(windows(W, fih, W, 0xffe1b0, 1, 2));
+          break;
+        }
+        case "stadium": {
+          var ring = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.46, 0.42 * hGrow, 18, 1, true),
+            new THREE.MeshStandardMaterial({ color: d.color, roughness: 0.8, side: THREE.DoubleSide }));
+          ring.position.y = 0.21 * hGrow; ring.castShadow = true; g.add(ring);
+          var pitch = cyl(0.44, 0.44, 0.04, 0x4da653, 0, 0.05, 0, 18); g.add(pitch);
+          var rim = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.035, 8, 24), mat(d.roof));
+          rim.rotation.x = Math.PI / 2; rim.position.y = 0.42 * hGrow; g.add(rim);
+          break;
+        }
+      }
+      return g;
+    }
+
+    function textSprite(text, color) {
+      var cv = document.createElement("canvas"); cv.width = 192; cv.height = 80;
+      var ctx = cv.getContext("2d");
+      ctx.font = "bold 44px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = 6;
+      ctx.fillStyle = color; ctx.fillText(text, 96, 42);
+      var tex = new THREE.CanvasTexture(cv);
+      var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+      sp.scale.set(0.85, 0.35, 1);
+      return sp;
+    }
+
+    function showFallback() {
+      document.getElementById("stageFallback").style.display = "block";
+      document.getElementById("stage").style.display = "none";
+      var hint = document.querySelector(".stage-hint");
+      if (hint) hint.style.display = "none";
+    }
+    function initThree() {
+      if (typeof THREE === "undefined") { showFallback(); return; }
+      try {
+        var canvas = document.getElementById("stage");
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        scene = new THREE.Scene();
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        scene.background = new THREE.Color(dark ? 0x1b241c : 0xa8c6e0);
+        scene.fog = new THREE.Fog(dark ? 0x1b241c : 0xa8c6e0, 34, 60);
+        camera = new THREE.PerspectiveCamera(46, 1, 0.1, 120);
+        camTarget = new THREE.Vector3(0, 0, 0);
+
+        var hemi = new THREE.HemisphereLight(0xffffff, 0x54604a, 0.85); scene.add(hemi);
+        var sun = new THREE.DirectionalLight(0xfff2d8, 1.15);
+        sun.position.set(10, 16, 6); sun.castShadow = true;
+        sun.shadow.mapSize.set(2048, 2048);
+        sun.shadow.camera.left = -12; sun.shadow.camera.right = 12;
+        sun.shadow.camera.top = 12; sun.shadow.camera.bottom = -12;
+        scene.add(sun);
+
+        /* ground: asphalt base + plot pads + road markings */
+        var extent = SIZE * GAP;
+        var base = new THREE.Mesh(new THREE.PlaneGeometry(extent + 3.4, extent + 3.4),
+          mat(dark ? 0x2c332c : 0x565d55, { roughness: 1 }));
+        base.rotation.x = -Math.PI / 2; base.position.y = -0.03; base.receiveShadow = true; scene.add(base);
+        /* beyond the city grid: wasteland plain with scattered forest & rocks */
+        var outer = new THREE.Mesh(new THREE.PlaneGeometry(90, 90),
+          mat(dark ? 0x3a3d2c : 0xb3a67e, { roughness: 1 }));
+        outer.rotation.x = -Math.PI / 2; outer.position.y = -0.09; outer.receiveShadow = true; scene.add(outer);
+        var half = extent / 2;
+        for (var oI = 0; oI < 90; oI++) {
+          var ang = (Math.sin(oI * 127.1) * 43758.5453) % 1, rad = half + 2.6 + Math.abs(Math.sin(oI * 311.7)) * 15;
+          var ox = Math.cos(oI * 2.39996) * rad, oz = Math.sin(oI * 2.39996) * rad;
+          var kind = Math.abs(ang);
+          if (kind < 0.55) { /* low-poly tree */
+            var tree = new THREE.Group();
+            tree.add(cyl(0.05, 0.07, 0.5, 0x7a5230, 0, 0.25, 0, 6));
+            var crown2 = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.0, 8), mat(kind < 0.28 ? 0x2f6b35 : 0x3e8e4f));
+            crown2.position.y = 0.95; crown2.castShadow = true; tree.add(crown2);
+            tree.position.set(ox, -0.05, oz); scene.add(tree);
+          } else if (kind < 0.8) { /* dry scrub bush */
+            var bush = new THREE.Mesh(new THREE.SphereGeometry(0.3, 7, 5), mat(0x8a9455));
+            bush.position.set(ox, 0.12, oz); bush.castShadow = true; scene.add(bush);
+          } else { /* rock */
+            var rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.32), mat(0x8d887c));
+            rock.position.set(ox, 0.1, oz); rock.castShadow = true; scene.add(rock);
+          }
+        }
+        var padGeo = new THREE.BoxGeometry(1.02, 0.05, 1.02);
+        var padMat = mat(dark ? 0x3d4a3a : 0x9db38d, { roughness: 1 });
+        var hlMat = mat(0xf2c230, { roughness: 0.6 });
+        var polMat = mat(0xd9c84a, { roughness: 1 });
+        three.pads = {};
+        for (var i = 0; i < N; i++) {
+          var p = wpos(i);
+          var pad = new THREE.Mesh(padGeo, padMat.clone());
+          pad.position.set(p[0], 0.025, p[1]); pad.receiveShadow = true;
+          pad.userData.tile = i; scene.add(pad); three.pads[i] = pad;
+        }
+        three.padMat = padMat; three.hlMat = hlMat; three.polMat = polMat;
+        /* dashed center lines on the roads between plots */
+        var lineMat = new THREE.MeshBasicMaterial({ color: 0xe8e4c8 });
+        var dashGeo = new THREE.PlaneGeometry(0.34, 0.045);
+        for (var gI = 0; gI <= SIZE; gI++) {
+          var off = (gI - SIZE / 2) * GAP;
+          for (var sI = 0; sI < SIZE * 3; sI++) {
+            var t = -extent / 2 + (sI + 0.5) * (extent / (SIZE * 3));
+            var d1 = new THREE.Mesh(dashGeo, lineMat);
+            d1.rotation.x = -Math.PI / 2; d1.position.set(t, 0.005, off); scene.add(d1);
+            var d2 = new THREE.Mesh(dashGeo, lineMat);
+            d2.rotation.x = -Math.PI / 2; d2.rotation.z = Math.PI / 2; d2.position.set(off, 0.005, t); scene.add(d2);
+          }
+        }
+        groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ visible: false }));
+        groundPlane.rotation.x = -Math.PI / 2; scene.add(groundPlane);
+        raycaster = new THREE.Raycaster();
+
+        makePeds(); makeCars(); makeSmoke();
+        resizeThree();
+        window.addEventListener("resize", resizeThree);
+        bindCameraControls(canvas);
+        three.ok = true;
+        requestAnimationFrame(animate);
+      } catch (e) {
+        showFallback();
+        three.ok = false;
+      }
+    }
+    function resizeThree() {
+      if (!renderer) return;
+      var canvas = document.getElementById("stage");
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    function updateCamera() {
+      var x = camTarget.x + camR * Math.sin(camPhi) * Math.sin(camTheta);
+      var y = camTarget.y + camR * Math.cos(camPhi);
+      var z = camTarget.z + camR * Math.sin(camPhi) * Math.cos(camTheta);
+      camera.position.set(x, y, z);
+      camera.lookAt(camTarget);
+    }
+    function bindCameraControls(canvas) {
+      var dragging = false, moved = 0, lx = 0, ly = 0;
+      var pointers = {}, pinchD = 0;
+      canvas.addEventListener("pointerdown", function (e) {
+        pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+        if (Object.keys(pointers).length === 1) { dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; }
+        if (Object.keys(pointers).length === 2) {
+          var ps = Object.values(pointers);
+          pinchD = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
+        }
+        canvas.setPointerCapture(e.pointerId);
+      });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!pointers[e.pointerId]) return;
+        pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+        if (Object.keys(pointers).length === 2) {
+          var ps = Object.values(pointers);
+          var nd = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
+          if (pinchD > 0) { camR = Math.max(9, Math.min(34, camR * pinchD / nd)); }
+          pinchD = nd; moved = 99; return;
+        }
+        if (!dragging) return;
+        var dx = e.clientX - lx, dy = e.clientY - ly;
+        moved += Math.abs(dx) + Math.abs(dy);
+        camTheta -= dx * 0.008;
+        camPhi = Math.max(0.35, Math.min(1.35, camPhi - dy * 0.006));
+        lx = e.clientX; ly = e.clientY;
+      });
+      function up(e) {
+        delete pointers[e.pointerId];
+        if (Object.keys(pointers).length === 0) {
+          if (dragging && moved < 6) pickTile(e);
+          dragging = false;
+        }
+      }
+      canvas.addEventListener("pointerup", up);
+      canvas.addEventListener("pointercancel", up);
+      canvas.addEventListener("wheel", function (e) {
+        e.preventDefault();
+        camR = Math.max(9, Math.min(34, camR * (e.deltaY > 0 ? 1.1 : 0.9)));
+      }, { passive: false });
+    }
+    function pickTile(e) {
+      var canvas = document.getElementById("stage");
+      var r = canvas.getBoundingClientRect();
+      var mouse = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      raycaster.setFromCamera(mouse, camera);
+      var hits = raycaster.intersectObject(groundPlane);
+      if (!hits.length) return;
+      var p = hits[0].point;
+      var gx = Math.round(p.x / GAP + (SIZE - 1) / 2), gy = Math.round(p.z / GAP + (SIZE - 1) / 2);
+      if (gx < 0 || gy < 0 || gx >= SIZE || gy >= SIZE) return;
+      selectTile(idx(gx, gy));
+    }
+
+    /* pedestrians & cars */
+    var PED_COLORS = [0xe4572e, 0x2b7fd4, 0xf2c230, 0x7bc950, 0xc95fd0, 0xf28bb4, 0x39b5a8, 0xe8e3d8];
+    function makePeds() {
+      for (var i = 0; i < 36; i++) {
+        var g = new THREE.Group();
+        var col = PED_COLORS[i % PED_COLORS.length];
+        var body = cyl(0.055, 0.075, 0.3, col, 0, 0.28, 0, 8); g.add(body);
+        var head = new THREE.Mesh(new THREE.SphereGeometry(0.075, 10, 8), mat(0xf0c8a0));
+        head.position.y = 0.52; head.castShadow = true; g.add(head);
+        var hat = cyl(0.085, 0.085, 0.03, col, 0, 0.58, 0, 10); g.add(hat);
+        g.add(box(0.05, 0.2, 0.05, 0x3a3f4a, -0.05, 0.08, 0));
+        g.add(box(0.05, 0.2, 0.05, 0x3a3f4a, 0.05, 0.08, 0));
+        g.visible = false; scene.add(g);
+        peds.push({ g: g, horiz: Math.random() < 0.5, fixed: (Math.floor(Math.random() * (SIZE + 1)) - SIZE / 2) * GAP + 0.32,
+                    t: Math.random() * SIZE * GAP - SIZE * GAP / 2, dir: Math.random() < 0.5 ? 1 : -1,
+                    speed: 0.35 + Math.random() * 0.4, phase: Math.random() * 6 });
+      }
+    }
+    function makeCars() {
+      var cols = [0xd94f3d, 0x2b7fd4, 0xf2f5f7, 0xf2c230, 0x39b5a8, 0x8d99a6];
+      var lanes = [-GAP * 2.5, -GAP * 0.5, GAP * 1.5];
+      for (var i = 0; i < 7; i++) {
+        var g = new THREE.Group();
+        var col = cols[i % cols.length];
+        g.add(box(0.42, 0.13, 0.2, col, 0, 0.13, 0));
+        g.add(box(0.22, 0.11, 0.18, 0x2c3540, -0.02, 0.24, 0, { roughness: 0.3, metalness: 0.4 }));
+        [[-0.14, -0.1], [0.14, -0.1], [-0.14, 0.1], [0.14, 0.1]].forEach(function (wp) {
+          var w = cyl(0.045, 0.045, 0.03, 0x1c1f24, wp[0], 0.05, wp[1], 10);
+          w.rotation.x = Math.PI / 2; g.add(w);
+        });
+        scene.add(g);
+        cars.push({ g: g, lane: lanes[i % lanes.length], horiz: i % 2 === 0,
+                    t: Math.random() * SIZE * GAP - SIZE * GAP / 2, dir: i % 3 === 0 ? -1 : 1,
+                    speed: 1.1 + Math.random() * 0.7 });
+      }
+    }
+    function makeSmoke() {
+      var cv = document.createElement("canvas"); cv.width = cv.height = 64;
+      var ctx = cv.getContext("2d");
+      var grad = ctx.createRadialGradient(32, 32, 4, 32, 32, 30);
+      grad.addColorStop(0, "rgba(230,230,230,.75)"); grad.addColorStop(1, "rgba(230,230,230,0)");
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, 64, 64);
+      var tex = new THREE.CanvasTexture(cv);
+      for (var i = 0; i < 42; i++) {
+        var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+        sp.visible = false; scene.add(sp);
+        smokePool.push({ sp: sp, life: Math.random(), src: null });
+      }
+    }
+    var smokeSources = [];
+    function animate(t) {
+      requestAnimationFrame(animate);
+      var time = (t || 0) / 1000;
+      turbines.forEach(function (h) { h.rotation.z += 0.06; });
+      /* pedestrians */
+      var c = three.cache;
+      var want = 0;
+      if (c) want = Math.max(0, Math.min(36, Math.round(36 * (c.capacity ? S.pop / c.capacity : 0))));
+      var lim = SIZE * GAP / 2 - 0.4;
+      peds.forEach(function (p, i2) {
+        p.g.visible = i2 < want;
+        if (!p.g.visible) return;
+        p.t += p.dir * p.speed * 0.016;
+        if (p.t > lim) { p.t = lim; p.dir = -1; }
+        if (p.t < -lim) { p.t = -lim; p.dir = 1; }
+        var bob = Math.abs(Math.sin(time * 7 + p.phase)) * 0.03;
+        if (p.horiz) { p.g.position.set(p.t, 0.05 + bob, p.fixed); p.g.rotation.y = p.dir > 0 ? Math.PI / 2 : -Math.PI / 2; }
+        else { p.g.position.set(p.fixed, 0.05 + bob, p.t); p.g.rotation.y = p.dir > 0 ? 0 : Math.PI; }
+      });
+      /* cars: appear only once population & building thresholds are met,
+         and only the first N of them (they drive roads beside buildings) */
+      var vi3 = c ? vehicleInfo(c) : { unlocked: false, count: 0 };
+      cars.forEach(function (car, ci) {
+        car.g.visible = vi3.unlocked && ci < vi3.count;
+        if (!car.g.visible) return;
+        car.t += car.dir * car.speed * 0.016;
+        if (car.t > lim + 1) car.t = -lim - 1;
+        if (car.t < -lim - 1) car.t = lim + 1;
+        if (car.horiz) { car.g.position.set(car.t, 0.02, car.lane + (car.dir > 0 ? 0.14 : -0.14)); car.g.rotation.y = car.dir > 0 ? 0 : Math.PI; }
+        else { car.g.position.set(car.lane + (car.dir > 0 ? -0.14 : 0.14), 0.02, car.t); car.g.rotation.y = car.dir > 0 ? -Math.PI / 2 : Math.PI / 2; }
+      });
+      /* smoke */
+      var srcIdx = 0;
+      smokePool.forEach(function (s) {
+        if (!smokeSources.length) { s.sp.visible = false; return; }
+        s.src = smokeSources[srcIdx % smokeSources.length]; srcIdx++;
+        s.life += 0.006;
+        if (s.life > 1) s.life = 0;
+        var src = s.src;
+        s.sp.visible = true;
+        s.sp.position.set(src.x + Math.sin(time * 0.8 + s.life * 5) * 0.12 * s.life, src.y + s.life * 1.1, src.z);
+        var sc = 0.22 + s.life * 0.55;
+        s.sp.scale.set(sc, sc, 1);
+        s.sp.material.opacity = 0.65 * (1 - s.life);
+      });
+      updateCamera();
+      renderer.render(scene, camera);
+    }
+
+    /* rebuild 3D tiles from state */
+    function syncThree(c) {
+      if (!three.ok) return;
+      three.cache = c;
+      /* park each car on a road directly beside a built tile */
+      var rowRoads = [], colRoads = [];
+      for (var bi = 0; bi < N; bi++) {
+        if (!S.grid[bi]) continue;
+        var bp = wpos(bi);
+        var rz = bp[1] + GAP / 2, cx = bp[0] + GAP / 2;
+        if (rowRoads.indexOf(rz) < 0) rowRoads.push(rz);
+        if (colRoads.indexOf(cx) < 0) colRoads.push(cx);
+      }
+      cars.forEach(function (car, ci) {
+        var pool = car.horiz ? rowRoads : colRoads;
+        if (pool.length) car.lane = pool[ci % pool.length];
+      });
+      smokeSources = [];
+      turbines = turbines.filter(function (h) { return h.parent !== null; });
+      for (var i = 0; i < N; i++) {
+        var b = S.grid[i];
+        var old = tileGroups[i];
+        var key = b ? b.type + ":" + b.level : "";
+        if (old && old.userData.key === key) { /* unchanged */ }
+        else {
+          if (old) { scene.remove(old); tileGroups[i] = null; }
+          if (markerSprites[i]) { scene.remove(markerSprites[i]); markerSprites[i] = null; }
+          if (b) {
+            var g = buildModel(b.type, b.level);
+            var p = wpos(i);
+            g.position.set(p[0], 0.05, p[1]);
+            g.userData.key = key;
+            scene.add(g); tileGroups[i] = g;
+            if (g.userData.chimney) {
+              var cp = g.userData.chimney.clone(); cp.x += p[0]; cp.z += p[1]; cp.y += 0.05;
+              smokeSources.push(cp);
+            }
+          }
+        }
+        if (b && tileGroups[i] && tileGroups[i].userData.chimney && !old) { /* handled above */ }
+        /* markers */
+        var wantTxt = "", wantCol = "#ffffff";
+        if (b) {
+          var parts = [];
+          if (RES_TYPES[b.type] && c.resInfo[i] && c.resInfo[i].remain > 0) { parts.push("污"); }
+          if (RES_TYPES[b.type] && isAllConv(i, c)) parts.push("便");
+          parts.push("Lv" + b.level);
+          wantTxt = parts.join(" ");
+          wantCol = (c.resInfo[i] && c.resInfo[i].remain > 0 && RES_TYPES[b.type]) ? "#ff9d8a" : "#ffffff";
+        }
+        var cur = markerSprites[i];
+        if (wantTxt && (!cur || cur.userData.txt !== wantTxt)) {
+          if (cur) scene.remove(cur);
+          var sp = textSprite(wantTxt, wantCol);
+          var pp = wpos(i);
+          sp.position.set(pp[0], 1.95, pp[1]);
+          sp.userData.txt = wantTxt;
+          scene.add(sp); markerSprites[i] = sp;
+        } else if (!wantTxt && cur) { scene.remove(cur); markerSprites[i] = null; }
+        /* pad highlight */
+        var pad = three.pads[i];
+        if (pad) {
+          if (i === selected) pad.material = three.hlMat;
+          else if (b && RES_TYPES[b.type] && c.resInfo[i] && c.resInfo[i].remain > 0) pad.material = three.polMat;
+          else pad.material = three.padMat;
+        }
+      }
+      /* collect smoke sources fresh (chimneys of current groups) */
+      smokeSources = [];
+      for (var j = 0; j < N; j++) {
+        var tg = tileGroups[j];
+        if (tg && tg.userData.chimney) {
+          var q = wpos(j), cp2 = tg.userData.chimney.clone();
+          cp2.x += q[0]; cp2.z += q[1]; cp2.y += 0.05;
+          smokeSources.push(cp2);
+        }
+      }
+      turbines = [];
+      for (var k = 0; k < N; k++) { var tg2 = tileGroups[k]; if (tg2 && tg2.userData.hub) turbines.push(tg2.userData.hub); }
+    }
+    function isAllConv(i, c) {
+      if (!c.resCount) return false;
+      var ok = true;
+      ["school", "shop", "hospital"].forEach(function (t) {
+        var best = 99;
+        c.conv[t].tiles.forEach(function (o) { var d = cheb(i, o); if (d < best) best = d; });
+        if (best > 2) ok = false;
+      });
+      return ok;
+    }
+    /* ============================================================
+       UI rendering
+       ============================================================ */
+    var toastTimer = null;
+    function toast(msg) {
+      var el = document.getElementById("toast");
+      el.textContent = msg; el.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
+    }
+    function fmt(n) { return (n < 0 ? "−" : "") + Math.abs(Math.round(n)); }
+    function signed(n) { return (n > 0 ? "+" : "") + fmt(n); }
+
+    function renderStatsBar(c) {
+      var satCls = c.sat.total >= 60 ? "good" : c.sat.total >= 40 ? "" : "bad";
+      var powCls = c.powerOk ? "" : "bad";
+      var chips = [
+        ["月份", "第 " + S.month + " 月"],
+        ["资金", "<span class='" + (S.funds < 0 ? "bad" : "") + "'>" + fmt(S.funds) + "</span> <small>金币</small>"],
+        ["人口 / 容量", fmt(S.pop) + " <small>/ " + fmt(c.capacity) + "</small>"],
+        ["满意度", "<span class='" + satCls + "'>" + c.sat.total + "</span> <small>/ 100</small>"],
+        ["电力 发/用", "<span class='" + powCls + "'>" + c.gen + " / " + c.use + "</span>"],
+        ["受教育度", c.education + "%"],
+        ["市民口碑", "<span class='" + (S.reputation > 0 ? "good" : S.reputation < 0 ? "bad" : "") + "'>" + signed(S.reputation) + "</span> <small>/ ±25</small>"],
+        ["月净收入", "<span class='" + (c.net >= 0 ? "good" : "bad") + "'>" + signed(c.net) + "</span> <small>收 " + c.income + " · 维 " + c.upkeep + "</small>"]
+      ];
+      document.getElementById("statsBar").innerHTML = chips.map(function (ch) {
+        return "<div class='chip'><span class='k'>" + ch[0] + "</span><span class='v'>" + ch[1] + "</span></div>";
+      }).join("");
+      var extra = [];
+      if (c.totalOffset > 0) extra.push("公园已帮全城住宅抵消 " + (Math.round(c.totalOffset * 10) / 10) + " 点污染" + (c.cleaned ? "，其中 " + c.cleaned + " 栋被完全净化" : ""));
+      if (c.resCount) extra.push("生活便利：近学校 " + c.conv.school.served + " 栋 · 近商业街 " + c.conv.shop.served + " 栋 · 近医院 " + c.conv.hospital.served + " 栋（共 " + c.resCount + " 栋住宅），三样都近 " + c.homesAllConv + " 栋");
+      var bar = document.getElementById("statsBar");
+      var note = document.createElement("div");
+      note.className = "chip"; note.style.flex = "1 1 260px";
+      note.innerHTML = "<span class='k'>城市动态</span><span style='font-size:13px'>" + (extra.length ? extra.join("；") : "在住宅旁盖公园能抵消工厂污染；学校、商业街、医院建在住宅 2 格内更便民。") + "</span>";
+      bar.appendChild(note);
+    }
+
+    function selectTile(i) { selected = i; refresh(); }
+
+    function tileDataRows(i, c) {
+      var b = S.grid[i], d = DEFS[b.type], m = mult(b.level), rows = [];
+      rows.push(["等级", b.level + " / " + MAXLV]);
+      if (d.cap) rows.push(["容纳人口", Math.round(d.cap * m) + " 人"]);
+      if (d.capBonus) rows.push(["城市容量", "+" + d.capBonus]);
+      if (d.jobs) rows.push(["工作岗位", Math.round(d.jobs * m)]);
+      if (d.gen) rows.push(["发电量", Math.round(d.gen * m) + " 点"]);
+      if (d.power) rows.push(["耗电", Math.round(d.power * m) + " 点"]);
+      if (d.income) {
+        var eduF = b.type === "office" ? 1 + c.eduBonus * 2 : 1 + c.eduBonus;
+        rows.push(["月收入", Math.round(d.income * m * eduF * c.powerFactor) + " 金币"]);
+      }
+      if (b.type === "stadium") rows.push(["门票月入", Math.round(S.pop * 0.25 * m) + " 金币"]);
+      if (b.type === "shop" && c.counts.factory) rows.push(["工厂联动税收", "+" + Math.min(30, c.counts.factory * 10) + " / 座"]);
+      rows.push(["维护费", Math.round(d.upkeep * m) + " / 月"]);
+      if (b.type === "factory") {
+        var hits = 0;
+        residences().forEach(function (r) { if (cheb(i, r) <= 2) hits++; });
+        rows.push(["污染圈内住宅", hits + " 栋"]);
+      }
+      if (b.type === "park") rows.push(["净化力", "紧挨住宅抵 " + (1 + 0.5 * (b.level - 1)) + " 点，隔一格减半"]);
+      if (RES_TYPES[b.type]) {
+        var ri = c.resInfo[i];
+        if (ri) {
+          rows.push(["原始污染", ri.raw + " 点"]);
+          rows.push(["公园抵消", ri.off + " 点"]);
+          rows.push(["剩余污染", ri.remain + " 点"]);
+        }
+        ["school", "shop", "hospital"].forEach(function (t) {
+          var best = 99;
+          c.conv[t].tiles.forEach(function (o) { var dd = cheb(i, o); if (dd < best) best = dd; });
+          rows.push(["离" + DEFS[t].name, c.conv[t].count === 0 ? "全城还没有" : best > 90 ? "—" : best + " 格" + (best <= 2 ? "（便利）" : "")]);
+        });
+      }
+      if (b.type === "school" || b.type === "shop" || b.type === "hospital")
+        rows.push(["服务的住宅", c.conv[b.type].served + " 栋"]);
+      return rows;
+    }
+
+    function renderTilePanel(c) {
+      var el = document.getElementById("tilePanel");
+      if (selected < 0) {
+        el.innerHTML = "<h2>地块</h2><p class='note'>点击 3D 地图（或平面图）上的任意地块，这里会弹出建设菜单和这块地的全部数据。</p>";
+        return;
+      }
+      var i = selected, b = S.grid[i];
+      var head = "<div class='tile-head'><h2 style='margin:0'>" + (b ? DEFS[b.type].name : "空地") + "</h2><span class='pos'>" + posLabel(i) + "</span></div>";
+      if (!b) {
+        var items = ORDER.map(function (t) {
+          var d = DEFS[t], why = buildBlockReason(t, i);
+          return "<button class='build-item' data-build='" + t + "' " + (why ? "disabled" : "") + ">" +
+            "<span class='bn'><span>" + d.name + "</span><span class='cost'>" + d.cost + " 金币</span></span>" +
+            "<span class='bd'>" + d.desc + (why ? "<br>不可建：" + why : "") + "</span></button>";
+        }).join("");
+        el.innerHTML = head + "<p class='note'>选一座建筑盖在这块地上（当前资金 " + fmt(S.funds) + "）：</p><div class='build-grid'>" + items + "</div>";
+      } else {
+        var d = DEFS[b.type];
+        var rows = tileDataRows(i, c).map(function (r) {
+          return "<div><span>" + r[0] + "</span><span>" + r[1] + "</span></div>";
+        }).join("");
+        var upBtn = b.level >= MAXLV
+          ? "<button class='btn' disabled>已满级</button>"
+          : "<button class='btn' id='btnUpgrade'>升级到 " + (b.level + 1) + " 级（" + upCost(d, b.level) + " 金币）</button>";
+        el.innerHTML = head + "<div class='kv'>" + rows + "</div>" +
+          "<div class='controls-row'>" + upBtn +
+          "<button class='btn danger' id='btnDemolish'>拆除（返还 " + Math.round(d.cost * 0.3) + "）</button></div>";
+        var ub = document.getElementById("btnUpgrade");
+        if (ub) ub.addEventListener("click", function () { doUpgrade(i); });
+        document.getElementById("btnDemolish").addEventListener("click", function () { doDemolish(i); });
+      }
+      el.querySelectorAll("[data-build]").forEach(function (btn) {
+        btn.addEventListener("click", function () { doBuild(btn.getAttribute("data-build"), i); });
+      });
+    }
+
+    function renderStatsTab(c) {
+      var total = 0, lvTotal = 0;
+      ORDER.forEach(function (t) { total += c.counts[t]; lvTotal += c.lvSum[t]; });
+      var rows = ORDER.map(function (t) {
+        var d = DEFS[t];
+        var colCss = "#" + d.color.toString(16).padStart(6, "0");
+        return "<tr><td><span class='swatch' style='background:" + colCss + "'></span>" + d.name + "</td>" +
+          "<td>" + c.counts[t] + "</td><td>" + (c.counts[t] ? (Math.round(c.lvSum[t] / c.counts[t] * 10) / 10) : "—") + "</td>" +
+          "<td>" + c.lvSum[t] + "</td></tr>";
+      }).join("");
+      document.getElementById("tab-stats").innerHTML =
+        "<table class='stat'><tr><th>建筑</th><th>个数</th><th>平均等级</th><th>总等级</th></tr>" + rows +
+        "<tr><td><strong>合计</strong></td><td><strong>" + total + "</strong></td><td>—</td><td><strong>" + lvTotal + "</strong></td></tr></table>" +
+        "<p class='note' style='margin-top:8px'>种类：" + ORDER.filter(function (t) { return c.counts[t] > 0; }).length + " / " + ORDER.length + " 种 · 空地 " + (N - total) + " 块</p>" +
+        "<h3>一键操作</h3>" +
+        "<div class='controls-row'><button class='btn' id='btnUpgradeAll'>一键升级全部（低等级优先）</button></div>" +
+        "<p class='note'>按等级从低到高轮流升级，直到全部满级或资金不够为止。</p>" +
+        "<h3>本月账目预估</h3><div class='kv'>" +
+        "<div><span>居民税收</span><span>" + c.incomeTax + "</span></div>" +
+        "<div><span>商业/工厂/办公收入</span><span>" + c.incomeBiz + "</span></div>" +
+        "<div><span>体育馆门票</span><span>" + c.incomeStadium + "</span></div>" +
+        "<div><span>维护费（警察已减免 " + Math.round(c.policeCut * 100) + "%）</span><span>−" + c.upkeep + "</span></div>" +
+        "<div><span>月净收入</span><span>" + signed(c.net) + "</span></div></div>" +
+        (c.powerOk ? "" : "<p class='note bad'>电力不足：商业、工厂、办公楼收入按一半计算。</p>");
+      document.getElementById("btnUpgradeAll").addEventListener("click", upgradeAll);
+    }
+
+    function renderSatTab(c) {
+      var rows = c.sat.items.map(function (it) {
+        var cls = it.v > 0 ? "pos-v" : it.v < 0 ? "neg-v" : "zero-v";
+        return "<li><span>" + it.label + "</span><span class='val " + cls + "'>" + signed(it.v) + "</span></li>";
+      }).join("");
+      document.getElementById("tab-sat").innerHTML =
+        "<ul class='breakdown'><li><span>基础值</span><span class='val'>50</span></li>" + rows +
+        "<li><span><strong>总满意度</strong></span><span class='val'>" + c.sat.total + " / 100</span></li></ul>" +
+        "<p class='note' style='margin-top:8px'>满意度 ≥60 人口快速增长，45–59 缓慢增长，30–44 几乎停滞，低于 30 市民会搬走。</p>";
+    }
+
+    function renderNeedsTab(c) {
+      var list = needsList(c).map(function (t) { return "<li>" + t + "</li>"; }).join("");
+      document.getElementById("tab-needs").innerHTML = "<ul class='needs'>" + list + "</ul>";
+    }
+
+    var SHORT = { house: "住", luxury: "豪", shop: "商", factory: "工", office: "办", park: "园", power: "电",
+                  wind: "风", school: "校", library: "书", hospital: "医", police: "警", fire: "消", stadium: "体" };
+
+    /* ---- vehicles: only once the city is big enough, and only on
+       roads right next to buildings ---- */
+    var VEH_POP_MIN = 25, VEH_BLD_MIN = 8;
+    function vehicleInfo(c) {
+      var total = 0;
+      ORDER.forEach(function (t) { total += c.counts[t]; });
+      var unlocked = S.pop >= VEH_POP_MIN && total >= VEH_BLD_MIN;
+      var count = 0;
+      if (unlocked) count = Math.min(8, 3 + Math.floor((S.pop - VEH_POP_MIN) / 25) + Math.floor((total - VEH_BLD_MIN) / 8));
+      return { unlocked: unlocked, count: count, total: total };
+    }
+    /* road segments hugging a building: south edge (horizontal road)
+       or east edge (vertical road) of a built tile, in world coords
+       where the world is 16x16 (2 terrain tiles of border + 12 city) */
+    function buildingRoads() {
+      var roads = [];
+      for (var i = 0; i < N; i++) {
+        if (!S.grid[i]) continue;
+        var p = xy(i), wx = p[0] + 2, wy = p[1] + 2;
+        roads.push({ horiz: true,  x: wx + 0.5, y: wy + 1.02 });
+        roads.push({ horiz: false, x: wx + 1.02, y: wy + 0.5 });
+      }
+      return roads;
+    }
+
+    /* ---- terrain outside the city grid: forest / wasteland / scrub / rock,
+       fixed per position so the landscape never reshuffles ---- */
+    function terrainAt(wx, wy) {
+      var h = Math.abs(Math.sin(wx * 127.1 + wy * 311.7) * 43758.5453) % 1;
+      /* north & west edges lean forest, south & east lean dry wasteland */
+      var forestBias = (wx + wy < 14) ? 0.12 : -0.10;
+      if (h < 0.42 + forestBias) return { cls: h < 0.22 ? "forest" : "forest2", txt: "♠♠" };
+      if (h < 0.68) return { cls: "waste", txt: "···" };
+      if (h < 0.86) return { cls: "scrub", txt: "〰" };
+      return { cls: "rock", txt: "●" };
+    }
+
+    var CAR_COLORS = ["#d94f3d", "#2b7fd4", "#f2f5f7", "#e8a812", "#39b5a8", "#8d99a6", "#e4572e", "#4a5f8a"];
+    function renderFlat(c) {
+      var WORLD = SIZE + 4, B = 2;
+      var g = document.getElementById("flatGrid");
+      g.innerHTML = "";
+      for (var wy = 0; wy < WORLD; wy++) {
+        for (var wx = 0; wx < WORLD; wx++) {
+          var inCity = wx >= B && wx < B + SIZE && wy >= B && wy < B + SIZE;
+          if (!inCity) {
+            var t = terrainAt(wx, wy);
+            var cell = document.createElement("div");
+            cell.className = "terrain " + t.cls;
+            cell.textContent = t.txt;
+            cell.title = t.cls.indexOf("forest") === 0 ? "城外森林" : t.cls === "waste" ? "城外荒地" : t.cls === "scrub" ? "城外灌木荒地" : "城外岩石地";
+            g.appendChild(cell);
+            continue;
+          }
+          (function (i2) {
+            var b = S.grid[i2];
+            var btn = document.createElement("button");
+            if (b) {
+              var d = DEFS[b.type];
+              var body = "#" + d.color.toString(16).padStart(6, "0");
+              var roof = "#" + d.roof.toString(16).padStart(6, "0");
+              btn.style.background = body;
+              btn.innerHTML = "<span class='bt-roof' style='background:" + roof + "'></span>" +
+                "<span class='bt-name'>" + SHORT[b.type] + "</span>" +
+                "<span class='bt-lv'>Lv" + b.level + "</span>";
+              btn.title = d.name + " Lv" + b.level;
+            } else {
+              btn.className = "empty";
+              btn.textContent = "·";
+              btn.title = "空地（草坪）";
+            }
+            if (b && RES_TYPES[b.type] && c.resInfo[i2] && c.resInfo[i2].remain > 0) btn.classList.add("polluted");
+            if (i2 === selected) btn.classList.add("sel");
+            btn.addEventListener("click", function () { selectTile(i2); });
+            g.appendChild(btn);
+          })(idx(wx - B, wy - B));
+        }
+      }
+      /* vehicles layer */
+      var vi = vehicleInfo(c);
+      var layer = document.getElementById("flatCars");
+      layer.innerHTML = "";
+      if (vi.unlocked) {
+        var roads = buildingRoads();
+        /* spread cars evenly over building-adjacent roads */
+        var step = Math.max(1, Math.floor(roads.length / Math.max(1, vi.count)));
+        for (var k = 0; k < vi.count && k * step < roads.length; k++) {
+          var r = roads[k * step];
+          var car = document.createElement("div");
+          car.className = "flat-car" + (r.horiz ? "" : " vert");
+          car.style.left = (r.x / WORLD * 100) + "%";
+          car.style.top = (r.y / WORLD * 100) + "%";
+          var bodyEl = document.createElement("div");
+          bodyEl.className = "car-body";
+          bodyEl.style.background = CAR_COLORS[k % CAR_COLORS.length];
+          bodyEl.style.animationDelay = (k * 0.4) + "s";
+          car.appendChild(bodyEl);
+          layer.appendChild(car);
+        }
+      }
+      var meta = document.getElementById("flatMeta");
+      if (vi.unlocked) {
+        meta.innerHTML = "<strong>车辆：</strong>已出现 " + layer.children.length + " 辆，沿着建筑旁边的街道行驶（人口 " + S.pop + " · 建筑 " + vi.total + " 栋）。";
+      } else {
+        meta.innerHTML = "<strong>车辆：</strong>暂无车辆——人口达到 " + VEH_POP_MIN + " 且建筑达到 " + VEH_BLD_MIN + " 栋后，车才会出现在建筑附近的街道上（当前人口 " + S.pop + " / " + VEH_POP_MIN + " · 建筑 " + vi.total + " / " + VEH_BLD_MIN + " 栋）。城外一圈是森林与荒地，城市只能在中间 12×12 的格子里扩建。";
+      }
+    }
+
+    function renderLog() {
+      document.getElementById("cityLog").innerHTML = S.log.map(function (t) { return "<li></li>"; }).join("");
+      var lis = document.getElementById("cityLog").children;
+      S.log.forEach(function (t, i2) { lis[i2].textContent = t; });
+    }
+
+    function refresh() {
+      var c = compute();
+      renderStatsBar(c);
+      renderTilePanel(c);
+      renderStatsTab(c);
+      renderSatTab(c);
+      renderNeedsTab(c);
+      renderFlat(c);
+      renderLog();
+      syncThree(c);
+    }
+
+    /* ---------------- save code (static edition) ---------------- */
+    function exportCode() {
+      var data = { v: 1, funds: S.funds, month: S.month, pop: S.pop, reputation: S.reputation,
+                   grid: S.grid, recentEvents: S.recentEvents, log: S.log, totalEvents: S.totalEvents };
+      return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    }
+    function importCode(str) {
+      var data = JSON.parse(decodeURIComponent(escape(atob(str.trim()))));
+      if (!data || !Array.isArray(data.grid) || data.grid.length !== N) throw new Error("bad save");
+      S = { funds: +data.funds || 0, month: +data.month || 1, pop: +data.pop || 0,
+            reputation: Math.max(-25, Math.min(25, +data.reputation || 0)),
+            grid: data.grid.map(function (b) {
+              return b && DEFS[b.type] ? { type: b.type, level: Math.max(1, Math.min(MAXLV, +b.level || 1)) } : null;
+            }),
+            recentEvents: Array.isArray(data.recentEvents) ? data.recentEvents : [],
+            log: Array.isArray(data.log) ? data.log : [], totalEvents: +data.totalEvents || 0 };
+      selected = -1;
+      /* drop cached 3D models so they rebuild */
+      if (three.ok) {
+        for (var i = 0; i < N; i++) {
+          if (tileGroups[i]) { scene.remove(tileGroups[i]); tileGroups[i] = null; }
+          if (markerSprites[i]) { scene.remove(markerSprites[i]); markerSprites[i] = null; }
+        }
+      }
+    }
+
+    /* ---------------- wiring ---------------- */
+    document.querySelectorAll(".tab").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        document.querySelectorAll(".tab").forEach(function (t) { t.setAttribute("aria-selected", "false"); });
+        tab.setAttribute("aria-selected", "true");
+        ["stats", "sat", "needs", "flat", "save"].forEach(function (k) {
+          document.getElementById("tab-" + k).hidden = k !== tab.getAttribute("data-tab");
+        });
+      });
+    });
+    document.getElementById("btnNextMonth").addEventListener("click", nextMonth);
+    document.getElementById("btnResetCam").addEventListener("click", function () {
+      camTheta = Math.PI / 4; camPhi = 0.95; camR = 19;
+    });
+    var newGameArmed = false;
+    document.getElementById("btnNewGame").addEventListener("click", function () {
+      var btn = this;
+      if (!newGameArmed) {
+        newGameArmed = true; btn.textContent = "再点一次确认重开";
+        setTimeout(function () { newGameArmed = false; btn.textContent = "重新开始"; }, 3000);
+        return;
+      }
+      S = newState(); selected = -1; newGameArmed = false; btn.textContent = "重新开始";
+      if (three.ok) {
+        for (var i = 0; i < N; i++) {
+          if (tileGroups[i]) { scene.remove(tileGroups[i]); tileGroups[i] = null; }
+          if (markerSprites[i]) { scene.remove(markerSprites[i]); markerSprites[i] = null; }
+        }
+      }
+      toast("新城市已成立。");
+      refresh();
+    });
+    document.getElementById("btnExport").addEventListener("click", function () {
+      document.getElementById("saveCode").value = exportCode();
+      document.getElementById("saveMsg").textContent = "存档码已生成，复制后自己收好。";
+    });
+    document.getElementById("btnCopyCode").addEventListener("click", function () {
+      var ta = document.getElementById("saveCode");
+      if (!ta.value) { document.getElementById("saveMsg").textContent = "先点「导出存档码」。"; return; }
+      ta.select();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ta.value).then(function () {
+          document.getElementById("saveMsg").textContent = "已复制到剪贴板。";
+        }, function () { document.getElementById("saveMsg").textContent = "自动复制失败，长按文本框手动复制。"; });
+      } else {
+        try { document.execCommand("copy"); document.getElementById("saveMsg").textContent = "已复制到剪贴板。"; }
+        catch (e) { document.getElementById("saveMsg").textContent = "自动复制失败，长按文本框手动复制。"; }
+      }
+    });
+    document.getElementById("btnImport").addEventListener("click", function () {
+      var v = document.getElementById("saveCode").value;
+      if (!v.trim()) { document.getElementById("saveMsg").textContent = "先把存档码粘贴到文本框里。"; return; }
+      try {
+        importCode(v);
+        document.getElementById("saveMsg").textContent = "导入成功，接着玩吧。";
+        toast("存档导入成功。");
+        refresh();
+      } catch (e) {
+        document.getElementById("saveMsg").textContent = "这串存档码读不了，检查一下有没有复制完整。";
+      }
+    });
+
+    initThree();
+    refresh();
+    if (three.ok) setTimeout(resizeThree, 60);
+</script>
+</body>
+</html>
