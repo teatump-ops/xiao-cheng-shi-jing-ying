@@ -253,10 +253,41 @@
       #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
       .log { font-size: 13px; color: var(--ink-soft); max-height: 180px; overflow: auto; margin: 0; padding-left: 18px; }
       .log li { margin: 2px 0; }
+
+      /* ---------- tutorial & tax ---------- */
+      #tutorial { margin-bottom: 12px; }
+      #tutorial summary { cursor: pointer; font-weight: 700; font-size: 16px; }
+      #tutorial ol { margin: 8px 0 4px; padding-left: 22px; }
+      #tutorial li { margin: 5px 0; }
+      #tutorial p { margin: 6px 0; }
+      .tax-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+      .tax-row .tlabel { font-size: 13px; color: var(--ink-soft); }
+      .tax-btn {
+        border: 1px solid var(--line); background: var(--panel-2); border-radius: 999px;
+        padding: 3px 12px; min-height: 2rem; font-weight: 600;
+      }
+      .map-caption { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; line-height: 1.6; }
     </style>
   </head>
   <body>
     <div class="wrap">
+      <details class="card" id="tutorial" open>
+        <summary>新手教程：这座城市怎么玩</summary>
+        <ol>
+          <li><strong>先住人，再挣钱。</strong>点任意一块空地会弹出建造菜单（16 种建筑都写明造价、容量、岗位、耗电和维护）。开局先盖 2–3 栋<strong>住宅区</strong>，再配一座<strong>发电厂</strong>和一条<strong>商业街</strong>，然后点「推进一个月」，市民就会搬进来、开始缴税。</li>
+          <li><strong>每月结算一次。</strong>点「推进一个月」会收税、扣维护费、按满意度涨落人口。税率可以调（下方按钮）：税越高收入越多，但超过 15% 市民会抱怨，8% 以下反而加满意度。资金跌破 <strong>-300 金币</strong>城市会被托管，本局结束。</li>
+          <li><strong>电和岗位是命脉。</strong>每栋建筑都耗电（耗电不随等级变），电力不够时商业收入按供需比打折、满意度大跌——及时盖发电厂或风力发电机。岗位不够时失业率上升、人口流失，商业街、工厂、办公楼、银行都能提供岗位。</li>
+          <li><strong>工厂离住宅远一点。</strong>工厂污染半径 2 格：紧挨最重、隔一格较轻、隔两格完全没事，所以工厂和住宅<strong>不能紧挨着建</strong>。受污染的住宅在地图上会发黄、带「污」标记。在住宅旁盖<strong>公园</strong>能抵消污染（1 级公园抵 1 点，每升一级 +0.5，隔一格效果减半，可叠加）；<strong>污水处理厂</strong>每座再削弱全城工厂污染 15%（上限 60%）。</li>
+          <li><strong>便民设施要盖在住宅旁边。</strong>学校、商业街、医院在住宅 2 格内算「便利」（紧挨最方便、隔一格打对折），三项各给满意度最高 +8 分；三样都近的住宅带绿色「便」标记。都建了却离所有住宅太远，反而各扣 3 分。</li>
+          <li><strong>教育和建筑加成。</strong>学校每座约覆盖 150 人、图书馆约 80 人（升级覆盖更多），决定<strong>受教育度</strong>：越高，商业收入加成越高（最高 +25%）。另外：每座公园全城容量 +2；每座商业街让每座工厂月税 +10（上限 +30）；每座警察局全城维护费 -4%（上限 -20%）。地不够时盖<strong>高级住宅区</strong>，一栋住 30 人。</li>
+          <li><strong>升级比新建划算。</strong>点已有建筑能看当前数值和升到下一级的数值对比。建筑最高 5 级，升级费 = 造价 × 0.9 × 当前等级。「建筑统计」页签里，每种建筑可以<strong>全部升一级</strong>，还能<strong>一键全部升一级 / 升满级</strong>，钱不够的栋会自动跳过。</li>
+          <li><strong>大事件要拍板。</strong>推进月份约有三成概率触发大事件（共 10 种，开局头两个月不触发），每个有 3 种处理方案：花钱买民心、省钱得罪人、或赚一笔。你的选择会攒下<strong>市民口碑</strong>（长期满意度修正，累计 ±25），在「满意度解析」里单列「大事抉择」一项。拿不准市民缺什么，就看「满意度解析」和「市民需求」两个页签。</li>
+          <li><strong>城市会长大。</strong>人口到 50 / 150 / 300 / 600 / 1000 / 1600，城市逐级升级并拿到拨款。街上的行人随人口变多（最多 36 人）；<strong>小汽车要人口达到 60 且建筑达到 10 栋才出现</strong>（最多 8 辆），只在紧挨建筑的路段上来回巡航、在建筑群两端掉头，拆楼跌破门槛就会消失。</li>
+          <li><strong>存档靠存档码。</strong>这个版本没有服务器存档：去「存档」页签导出存档码自己收好，下次打开把码粘贴回来导入，就能接着玩；发给朋友，对方导入后也能从你的进度继续。</li>
+        </ol>
+        <p class="note">地图说明：拖动旋转、滚轮/双指缩放、点地块建设。地块之间是带虚线中线和路灯的马路，每块地的草色略有不同，工厂、发电厂、污水处理厂脚下是砂石地，空地是带土斑、灌木、小树和石块的粗糙地面。地图之外不是草坪，而是荒地与森林：干黄斑驳的地面、成片的森林簇、岩石、枯树、干灌木、一条伸向荒地的土路和远山围着城市。</p>
+      </details>
+
       <div class="statsbar" id="statsBar"></div>
 
       <div class="layout">
@@ -266,10 +297,21 @@
             <div id="stageFallback">3D 视图没能加载，可以用「平面图」页签照常建设经营。</div>
             <div class="stage-hint">拖动旋转 · 滚轮/双指缩放 · 点击地块建设</div>
           </div>
+          <p class="map-caption">这是你的 3D 城市：地块之间是带虚线中线和路灯的马路，空地是带土斑和灌木的粗糙地面；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开。地图外围是荒地和森林——黄土、枯树、岩石和成片树林围着城市。发黄的地块在工厂污染范围内，住宅同时靠近学校、商业街和医院会带绿色「便」标记。</p>
           <div class="controls-row">
             <button class="btn primary" id="btnNextMonth">推进一个月 ▶</button>
             <button class="btn" id="btnResetCam">重置视角</button>
             <button class="btn" id="btnNewGame">重新开始</button>
+          </div>
+          <div class="tax-row" role="group" aria-label="选择税率">
+            <span class="tlabel">税率（税越高收入越多，超过 15% 市民会抱怨）：</span>
+            <button class="tax-btn" data-tax="0" aria-pressed="false">0%</button>
+            <button class="tax-btn" data-tax="5" aria-pressed="false">5%</button>
+            <button class="tax-btn" data-tax="10" aria-pressed="true">10%</button>
+            <button class="tax-btn" data-tax="15" aria-pressed="false">15%</button>
+            <button class="tax-btn" data-tax="20" aria-pressed="false">20%</button>
+            <button class="tax-btn" data-tax="25" aria-pressed="false">25%</button>
+            <button class="tax-btn" data-tax="30" aria-pressed="false">30%</button>
           </div>
           <div class="card" id="tilePanel"></div>
           <div class="card" style="margin-top:14px">
@@ -290,7 +332,7 @@
           <div id="tab-sat" hidden></div>
           <div id="tab-needs" hidden></div>
           <div id="tab-flat" hidden>
-            <p class="note">和 3D 地图是同一座城市，点任意地块即可选中建设。格子之间的灰色细线是街道，黄框 = 该住宅受污染影响。</p>
+            <p class="note">和 3D 地图是同一座城市，点任意地块即可选中建设。格子之间的灰色细线是街道，黄框 = 该住宅受污染影响。车辆规则和 3D 一样：人口达到 60 且建筑达到 10 栋后才出现（最多 8 辆），只在建筑旁边的街道上活动；中间 12×12 是可建的城市，外围一圈是固定的森林、荒地、灌木和岩石。</p>
             <div class="flat-scene">
               <div class="flat-world-wrap">
                 <div id="flatGrid"></div>
@@ -340,49 +382,65 @@
        ============================================================ */
     var SIZE = 12, N = SIZE * SIZE, MAXLV = 5;
 
-    function mult(lv) { return 1 + 0.4 * (lv - 1); }
-    function upCost(def, lv) { return Math.round(def.cost * 0.7 * lv / 5) * 5; }
+    /* 数值与测试版 game.ts 完全一致：等级系数 1+0.8×(等级-1)，
+       升级费 = round(造价 × 0.9 × 当前等级)，耗电不随等级变，
+       维护费 = round(基础维护 × 等级)。 */
+    function mult(lv) { return 1 + 0.8 * (lv - 1); }
+    function upCost(def, lv) { return Math.round(def.cost * 0.9 * lv); }
+    function fmtNum(v) { return v % 1 === 0 ? String(v) : (Math.round(v * 10) / 10).toFixed(1); }
 
     var DEFS = {
-      house:   { name: "住宅",       cost: 100, upkeep: 2,  power: 2,  cap: 12, color: 0xd96f4e, roof: 0x9e3b26,
-                 desc: "容纳 12 人 · 每位居民每月缴税 2" },
+      house:   { name: "住宅区",     cost: 100, upkeep: 3,  power: 2,  cap: 12, color: 0xd96f4e, roof: 0x9e3b26,
+                 desc: "住 12 人，是城市的根基" },
       luxury:  { name: "高级住宅区", cost: 320, upkeep: 8,  power: 5,  cap: 30, color: 0xe3b34c, roof: 0x8a6420,
-                 desc: "容纳 30 人 · 每栋满意度 +2（上限 +6）" },
-      shop:    { name: "商业街",     cost: 150, upkeep: 4,  power: 3,  jobs: 8,  income: 30, color: 0x4f9fd9, roof: 0x2b5f86,
-                 desc: "岗位 8 · 月入 30 · 每座工厂 +10 税收（上限 +30）· 吃教育加成" },
-      factory: { name: "工厂",       cost: 200, upkeep: 6,  power: 6,  jobs: 12, income: 55, color: 0x8d99a6, roof: 0x59636e,
-                 desc: "岗位 12 · 月入 55 · 污染半径 2 格，不能紧挨住宅" },
-      office:  { name: "办公楼",     cost: 260, upkeep: 6,  power: 5,  jobs: 14, income: 45, color: 0x7fb3c8, roof: 0x49707f,
-                 desc: "岗位 14 · 月入 45 · 教育加成翻倍" },
+                 desc: "住 30 人，是普通住宅的 2.5 倍，省地又体面；造价、维护和耗电都更高" },
+      shop:    { name: "商业街",     cost: 180, upkeep: 6,  power: 3,  jobs: 8,  income: 30, color: 0x4f9fd9, roof: 0x2b5f86,
+                 desc: "8 个岗位；靠近住宅购物便利，加满意度；每座让每座工厂月税 +10" },
+      factory: { name: "工厂",       cost: 260, upkeep: 10, power: 6,  jobs: 16, income: 55, color: 0x8d99a6, roof: 0x59636e,
+                 desc: "16 个岗位，税收高；污染半径 2 格，不能紧挨住宅" },
       park:    { name: "公园",       cost: 80,  upkeep: 2,  power: 0,  capBonus: 2, color: 0x58a860, roof: 0x58a860,
-                 desc: "城市容量 +2 · 紧挨住宅全额抵消污染，隔一格减半" },
-      power:   { name: "发电厂",     cost: 250, upkeep: 8,  power: 0,  gen: 40, color: 0xb08968, roof: 0x6e5138,
-                 desc: "发电 40 点" },
-      wind:    { name: "风力发电机", cost: 180, upkeep: 3,  power: 0,  gen: 22, color: 0xdfe6ea, roof: 0xdfe6ea,
-                 desc: "发电 22 点 · 清洁电力，维护便宜" },
-      school:  { name: "学校",       cost: 180, upkeep: 6,  power: 3,  jobs: 6, color: 0xe0a458, roof: 0xa56c26,
-                 desc: "岗位 6 · 提升受教育度 · 靠近住宅算上学便利" },
-      library: { name: "图书馆",     cost: 140, upkeep: 4,  power: 2,  jobs: 3, color: 0xa879c9, roof: 0x6d4a8a,
-                 desc: "岗位 3 · 与学校一起提升受教育度 · 文化满意度" },
-      hospital:{ name: "医院",       cost: 220, upkeep: 8,  power: 4,  jobs: 8, color: 0xf0f0ee, roof: 0xc23b2e,
-                 desc: "岗位 8 · 医疗覆盖加满意度 · 靠近住宅算就医便利" },
-      police:  { name: "警察局",     cost: 160, upkeep: 6,  power: 2,  jobs: 5, color: 0x4a5f8a, roof: 0x2c3a57,
-                 desc: "岗位 5 · 安全感 · 每座全城维护费 −4%（上限 −20%）" },
-      fire:    { name: "消防站",     cost: 150, upkeep: 5,  power: 2,  jobs: 4, color: 0xd94f3d, roof: 0x8f2a1e,
-                 desc: "岗位 4 · 安全感 · 工厂事故赔付减半" },
-      stadium: { name: "体育馆",     cost: 300, upkeep: 10, power: 6,  jobs: 10, color: 0x3fa08c, roof: 0x256355,
-                 desc: "岗位 10 · 满意度 +4 · 门票月入 = 人口 × 0.25" }
+                 desc: "净化周边污染，等级越高抵消越多；每座全城容量 +2" },
+      power:   { name: "发电厂",     cost: 300, upkeep: 15, power: 0,  gen: 45, color: 0xb08968, roof: 0x6e5138,
+                 desc: "提供 45 点电力" },
+      school:  { name: "学校",       cost: 220, upkeep: 8,  power: 3,  jobs: 4, color: 0xe0a458, roof: 0xa56c26,
+                 desc: "4 个岗位；提升受教育度；靠近住宅上学便利，加满意度" },
+      hospital:{ name: "医院",       cost: 320, upkeep: 14, power: 4,  jobs: 6, color: 0xf0f0ee, roof: 0xc23b2e,
+                 desc: "6 个岗位，守护市民健康；靠近住宅就医便利，加满意度" },
+      police:  { name: "警察局",     cost: 200, upkeep: 9,  power: 2,  jobs: 4, color: 0x4a5f8a, roof: 0x2c3a57,
+                 desc: "4 个岗位；每座全城维护费 -4%" },
+      office:  { name: "办公楼",     cost: 340, upkeep: 12, power: 5,  jobs: 14, income: 45, color: 0x7fb3c8, roof: 0x49707f,
+                 desc: "14 个岗位，月入约 45；受教育度越高赚得越多" },
+      library: { name: "图书馆",     cost: 160, upkeep: 5,  power: 2,  jobs: 2, color: 0xa879c9, roof: 0x6d4a8a,
+                 desc: "2 个岗位；和学校一起提升受教育度" },
+      fire:    { name: "消防站",     cost: 240, upkeep: 10, power: 2,  jobs: 5, color: 0xd94f3d, roof: 0x8f2a1e,
+                 desc: "5 个岗位；提升安全感，工厂出事故时损失减半" },
+      wind:    { name: "风力发电机", cost: 200, upkeep: 6,  power: 0,  gen: 22, color: 0xdfe6ea, roof: 0xdfe6ea,
+                 desc: "提供 22 点清洁电力，小而便宜" },
+      bank:    { name: "银行",       cost: 380, upkeep: 10, power: 4,  jobs: 7,  income: 45, color: 0xe8e2d4, roof: 0x8a6d2f,
+                 desc: "7 个岗位；金融收入约 45/月，和商业一样吃受教育度加成" },
+      amusement:{ name: "游乐园",    cost: 420, upkeep: 16, power: 6,  jobs: 12, income: 35, color: 0xe4572e, roof: 0x8a5fb0,
+                 desc: "12 个岗位；门票收入约 35/月，还能提升市民幸福感" },
+      sewage:  { name: "污水处理厂", cost: 300, upkeep: 12, power: 3,  jobs: 5, color: 0xb9c4d0, roof: 0x5b6b7a,
+                 desc: "5 个岗位；每座让全城工厂污染削弱 15%（最多削弱 60%）" }
     };
-    var ORDER = ["house","luxury","shop","factory","office","park","power","wind","school","library","hospital","police","fire","stadium"];
+    var ORDER = ["house","luxury","shop","factory","park","power","school","hospital","police","office","library","fire","wind","bank","amusement","sewage"];
     var RES_TYPES = { house: 1, luxury: 1 };
+    /* 城市等级（与测试版 TIERS 一致） */
+    var TIERS = [
+      { minPop: 0, title: "小村落" }, { minPop: 50, title: "小镇" }, { minPop: 150, title: "城镇" },
+      { minPop: 300, title: "小城市" }, { minPop: 600, title: "城市" }, { minPop: 1000, title: "大城市" },
+      { minPop: 1600, title: "都市" }
+    ];
+    function tierIndexFor(pop) { var k = 0; TIERS.forEach(function (t, i2) { if (pop >= t.minPop) k = i2; }); return k; }
+    function formatMonth(m) { var e = Math.max(0, m - 1); return "第 " + (Math.floor(e / 12) + 1) + " 年 · " + (e % 12 + 1) + " 月"; }
 
     /* ---------------- state ---------------- */
     var S;
     function newState() {
       return {
-        funds: 900, month: 1, pop: 0, reputation: 0,
+        funds: 1500, month: 1, pop: 0, reputation: 0, taxRate: 10, gameOver: false,
         grid: new Array(N).fill(null),
-        recentEvents: [], log: ["城市成立。第 1 个月，从第一栋住宅开始规划吧。"],
+        recentEvents: [], log: ["城市成立。欢迎上任！这片空地就是你的城市——先盖几栋住宅，再配上商业街和发电厂，市民就会搬进来。"],
         totalEvents: 0
       };
     }
@@ -396,48 +454,84 @@
     function residences() { var r = []; for (var i = 0; i < N; i++) if (S.grid[i] && RES_TYPES[S.grid[i].type]) r.push(i); return r; }
     function addLog(t) { S.log.unshift("第 " + S.month + " 月：" + t); if (S.log.length > 40) S.log.pop(); }
 
-    /* ---------------- derived stats ---------------- */
+    /* ---------------- derived stats（公式与测试版 computeStats 一致） ---------------- */
+    function parkAbsorb(level) { return 1 + 0.5 * (level - 1); }
+    function sewageFactor(c) { return Math.max(0.4, 1 - 0.15 * c.counts.sewage); }
+    /* 任意地块的污染明细：原始 / 公园抵消 / 剩余（工厂等级与污水厂都算） */
+    function pollutionDetailAt(i2) {
+      var sf = Math.max(0.4, 1 - 0.15 * tilesOf("sewage").length);
+      var raw = 0;
+      for (var j = 0; j < N; j++) {
+        var t = S.grid[j];
+        if (!t || t.type !== "factory" || j === i2) continue;
+        var dd = cheb(i2, j);
+        if (dd > 2) continue;
+        raw += (dd === 1 ? 2 : 1) * (1 + 0.25 * (t.level - 1)) * sf;
+      }
+      raw = Math.round(raw * 10) / 10;
+      if (raw <= 0) return { raw: 0, off: 0, remain: 0 };
+      var buffer = 0;
+      for (var k = 0; k < N; k++) {
+        var p = S.grid[k];
+        if (!p || p.type !== "park") continue;
+        var pd = cheb(i2, k);
+        if (pd === 1) buffer += parkAbsorb(p.level);
+        else if (pd === 2) buffer += parkAbsorb(p.level) * 0.5;
+      }
+      var off = Math.min(raw, Math.round(buffer * 10) / 10);
+      return { raw: raw, off: off, remain: Math.round((raw - off) * 10) / 10 };
+    }
+    function housesServedBy(i2) {
+      var n = 0;
+      for (var j = 0; j < N; j++) if (S.grid[j] && RES_TYPES[S.grid[j].type] && cheb(i2, j) <= 2) n++;
+      return n;
+    }
     function compute() {
       var c = { counts: {}, lvSum: {}, capacity: 0, jobs: 0, gen: 0, use: 0, upkeepRaw: 0 };
       ORDER.forEach(function (t) { c.counts[t] = 0; c.lvSum[t] = 0; });
+      var schoolService = 0, libraryService = 0;
       for (var i = 0; i < N; i++) {
         var b = S.grid[i]; if (!b) continue;
         var d = DEFS[b.type], m = mult(b.level);
         c.counts[b.type]++; c.lvSum[b.type] += b.level;
         if (d.cap) c.capacity += Math.round(d.cap * m);
-        if (d.capBonus) c.capacity += d.capBonus;
         if (d.jobs) c.jobs += Math.round(d.jobs * m);
         if (d.gen) c.gen += Math.round(d.gen * m);
-        c.use += Math.round((d.power || 0) * m);
-        c.upkeepRaw += Math.round(d.upkeep * m);
+        c.use += d.power || 0; /* 耗电不随等级变（测试版规则） */
+        c.upkeepRaw += Math.round(d.upkeep * b.level); /* 维护 = 基础 × 等级 */
+        if (b.type === "school") schoolService += Math.round(150 * m);
+        if (b.type === "library") libraryService += Math.round(80 * m);
       }
+      c.capacityBonus = c.counts.park * 2;
+      c.capacity += c.capacityBonus;
       c.powerOk = c.gen >= c.use;
-      c.powerFactor = c.powerOk ? 1 : 0.5;
-      c.policeCut = Math.min(0.20, c.counts.police * 0.04);
-      c.upkeep = Math.round(c.upkeepRaw * (1 - c.policeCut));
+      c.powerFactor = c.powerOk ? 1 : Math.max(0.35, c.gen / Math.max(1, c.use));
+      c.policeCut = Math.min(20, c.counts.police * 4); /* 百分比 */
+      c.upkeep = Math.round(c.upkeepRaw * (1 - c.policeCut / 100));
+      c.factoryTaxBonus = Math.min(30, c.counts.shop * 10);
+      c.employed = Math.min(S.pop, c.jobs);
+      c.unemploymentRate = S.pop > 0 ? Math.max(0, (S.pop - c.jobs) / S.pop) : 0;
+      c.sewageCutPct = Math.min(60, c.counts.sewage * 15);
 
-      /* education */
-      if (S.pop <= 0) c.education = (c.counts.school + c.counts.library) > 0 ? 50 : 0;
-      else c.education = Math.max(0, Math.min(100, Math.round((c.lvSum.school * 45 + c.lvSum.library * 25) / S.pop * 100)));
-      c.eduBonus = c.education / 100 * 0.25;
+      /* education：学校覆盖 150 人/座、图书馆 80 人/座（随等级放大） */
+      c.education = S.pop === 0 ? 0 : Math.min(100, Math.round((schoolService + libraryService) / S.pop * 100));
+      c.eduBonusPct = Math.round(c.education * 0.25);
+      c.eduBonus = c.eduBonusPct / 100;
 
-      /* pollution & parks */
-      var facs = tilesOf("factory"), parks = tilesOf("park"), res = residences();
+      /* pollution & parks（按位置算：工厂等级越强污染越重，污水厂削弱全城污染） */
+      var facs = tilesOf("factory"), res = residences();
       c.resInfo = {};
       c.totalRaw = 0; c.totalRemain = 0; c.totalOffset = 0; c.cleaned = 0; c.pollutedHomes = 0;
       res.forEach(function (r) {
-        var raw = 0, off = 0, j;
-        for (j = 0; j < facs.length; j++) { var dd = cheb(r, facs[j]); if (dd === 1) raw += 2; else if (dd === 2) raw += 1; }
-        for (j = 0; j < parks.length; j++) {
-          var pd = cheb(r, parks[j]), plv = S.grid[parks[j]].level, full = 1 + 0.5 * (plv - 1);
-          if (pd === 1) off += full; else if (pd === 2) off += full / 2;
-        }
-        var applied = Math.min(raw, off), remain = raw - applied;
-        c.resInfo[r] = { raw: raw, off: applied, remain: remain };
-        c.totalRaw += raw; c.totalRemain += remain; c.totalOffset += applied;
-        if (raw > 0 && remain <= 0) c.cleaned++;
-        if (remain > 0) c.pollutedHomes++;
+        var det = pollutionDetailAt(r);
+        c.resInfo[r] = det;
+        c.totalRaw += det.raw; c.totalRemain += det.remain; c.totalOffset += det.off;
+        if (det.raw > 0 && det.remain <= 0) c.cleaned++;
+        if (det.remain > 0) c.pollutedHomes++;
       });
+      c.totalRaw = Math.round(c.totalRaw * 10) / 10;
+      c.totalRemain = Math.round(c.totalRemain * 10) / 10;
+      c.totalOffset = Math.round(c.totalOffset * 10) / 10;
       c.factoryNearRes = false;
       facs.forEach(function (f) { res.forEach(function (r) { if (cheb(f, r) <= 2) c.factoryNearRes = true; }); });
 
@@ -465,169 +559,196 @@
       });
       c.resCount = res.length;
 
-      /* monthly income preview */
-      c.incomeTax = Math.round(S.pop * 2);
-      c.incomeBiz = 0;
-      ["shop", "factory", "office"].forEach(function (t) {
-        tilesOf(t).forEach(function (i2) {
-          var d = DEFS[t], b = S.grid[i2];
-          var inc = d.income * mult(b.level);
-          var eduF = t === "office" ? 1 + c.eduBonus * 2 : 1 + c.eduBonus;
-          c.incomeBiz += inc * eduF;
-        });
-      });
-      if (c.counts.shop && c.counts.factory) c.incomeBiz += c.counts.shop * Math.min(30, c.counts.factory * 10);
-      c.incomeBiz = Math.round(c.incomeBiz * c.powerFactor);
-      c.incomeStadium = Math.round(c.counts.stadium ? S.pop * 0.25 * (1 + 0.4 * (avgLv("stadium") - 1)) : 0);
-      c.income = c.incomeTax + c.incomeBiz + c.incomeStadium;
+      /* monthly income（与测试版 tickMonth 一致：按座数结算，吃电力与教育加成） */
+      c.incomeTax = Math.round(S.pop * 20 * (S.taxRate / 100));
+      c.incomeBiz = Math.round(
+        (c.counts.shop * 30 + c.counts.office * 45 + c.counts.bank * 45 + c.counts.amusement * 35 +
+         c.counts.factory * (55 + c.factoryTaxBonus)) * c.powerFactor * (1 + c.eduBonusPct / 100)
+      );
+      c.income = c.incomeTax + c.incomeBiz;
       c.net = c.income - c.upkeep;
+      c.totalBuildings = 0;
+      ORDER.forEach(function (t) { c.totalBuildings += c.counts[t]; });
 
       c.sat = satisfaction(c);
       return c;
     }
-    function avgLv(t) { var ts = tilesOf(t); if (!ts.length) return 1; var s = 0; ts.forEach(function (i) { s += S.grid[i].level; }); return s / ts.length; }
 
+    /* 满意度解析：基础 52 分，逐项与测试版 computeStats 完全一致 */
     function satisfaction(c) {
       var items = [];
-      function add(label, v) { items.push({ label: label, v: Math.round(v) }); }
-      if (S.pop > 0) {
-        add("住房供给", c.capacity >= S.pop ? 5 : -Math.min(20, Math.ceil((S.pop - c.capacity) / 4)));
-        if (S.pop >= 10) {
-          var emp = Math.min(1, c.jobs / Math.max(1, S.pop * 0.7));
-          add("就业", Math.max(-15, Math.min(8, (emp - 0.7) * 30)));
-        }
-      } else add("住房供给", 0);
-      add("电力供应", c.use === 0 ? 0 : (c.powerOk ? 2 : -12));
-      if (c.totalRemain > 0) add("工厂污染", -Math.min(18, c.totalRemain * 1.5));
-      else if (c.counts.factory > 0 && !c.factoryNearRes) add("工厂选址（远离住宅）", 3);
-      else if (c.counts.factory > 0) add("工厂污染", 0);
-      if (c.cleaned > 0) add("公园净化", Math.min(6, c.cleaned));
-      if (c.resCount > 0) {
-        add("上学便利", c.conv.school.avg * 8);
-        add("购物便利", c.conv.shop.avg * 8);
-        add("就医便利", c.conv.hospital.avg * 8);
+      function add(label, detail, v) {
+        var val = Math.round(v);
+        if (val !== 0) items.push({ label: label, detail: detail, v: val });
       }
-      ["school", "shop", "hospital"].forEach(function (t) {
-        if (c.conv[t].count > 0 && c.conv[t].served === 0 && c.resCount > 0)
-          add(DEFS[t].name + "离住宅太远", -3);
-      });
-      if (c.counts.luxury) add("高级住宅区品质", Math.min(6, c.counts.luxury * 2));
-      if (c.counts.park && S.pop > 0) add("公园绿化", Math.min(5, c.counts.park));
-      if (c.counts.library && S.pop > 0) add("文化氛围（图书馆）", Math.min(5, c.counts.library * 2));
-      if (S.pop > 0 && c.counts.hospital) add("医疗覆盖", Math.min(6, c.lvSum.hospital * 60 / S.pop * 6));
-      if (S.pop > 0 && (c.counts.police || c.counts.fire))
-        add("安全感（警察/消防）", Math.min(6, (c.lvSum.police + c.lvSum.fire) * 50 / S.pop * 6));
-      if (S.pop > 0) add("受教育度", (c.education >= 30 || S.pop < 10) ? c.education / 100 * 8 : -5);
-      if (c.counts.stadium) add("体育馆", 4);
-      add("大事抉择口碑", S.reputation);
-      if (S.funds < 0) add("财政赤字", -10);
-      var total = 50;
+      var pop = S.pop;
+      add("失业", pop === 0 ? "城里还没有居民" : "失业率 " + Math.round(c.unemploymentRate * 100) + "%，没工作最伤心情", -c.unemploymentRate * 45);
+      if (pop > 0 && c.jobs === 0) add("没有岗位", "全城一个工作岗位都没有", -10);
+      add("公园绿化", c.counts.park + " 座公园让市民有地方散步（上限 +14）", Math.min(14, c.counts.park * 4));
+      if (pop >= 30) add("游乐休闲", c.counts.amusement + " 座游乐园让市民有地方玩（上限 +6）", Math.min(6, c.counts.amusement * 3));
+      if (c.counts.luxury > 0) add("高级住宅", c.counts.luxury + " 栋高级住宅区居住品质高（上限 +6）", Math.min(6, c.counts.luxury * 2));
+      var schoolCover = pop === 0 ? 1 : Math.min(1, c.counts.school * 150 / pop);
+      var hospCover = pop === 0 ? 1 : Math.min(1, c.counts.hospital * 150 / pop);
+      if (pop >= 30) {
+        add("学校覆盖", "覆盖约 " + Math.round(schoolCover * 100) + "% 人口（每座约服务 150 人）", schoolCover * 9);
+        add("医院覆盖", "覆盖约 " + Math.round(hospCover * 100) + "% 人口（每座约服务 150 人）", hospCover * 9);
+      }
+      if (pop > 0 && c.resCount > 0) {
+        add("上学便利", c.conv.school.served + "/" + c.resCount + " 栋住宅在学校 2 格内（上限 +8）", c.conv.school.avg * 8);
+        add("购物便利", c.conv.shop.served + "/" + c.resCount + " 栋住宅在商业街 2 格内（上限 +8）", c.conv.shop.avg * 8);
+        add("就医便利", c.conv.hospital.served + "/" + c.resCount + " 栋住宅在医院 2 格内（上限 +8）", c.conv.hospital.avg * 8);
+        if (c.counts.school > 0 && c.conv.school.avg === 0) add("学校太远", "学校都离住宅超过 2 格——把学校盖到住宅旁边", -3);
+        if (c.counts.shop > 0 && c.conv.shop.avg === 0) add("商店太远", "商业街都离住宅超过 2 格——把商业街开到住宅旁边", -3);
+        if (c.counts.hospital > 0 && c.conv.hospital.avg === 0) add("医院太远", "医院都离住宅超过 2 格——把医院盖到住宅旁边", -3);
+      }
+      add("治安", c.counts.police + " 座警察局维护治安（上限 +8）", Math.min(8, c.counts.police * 3));
+      if (pop >= 30 || c.counts.factory > 0) add("消防安全", c.counts.fire + " 座消防站守护安全（上限 +6）", Math.min(6, c.counts.fire * 3));
+      if (pop >= 30) add("文化生活", c.counts.library + " 座图书馆丰富文化生活（上限 +5）", Math.min(5, c.counts.library * 2));
+      if (pop >= 30) add("教育水平", "受教育度 " + c.education + "%，市民素质高更宜居", c.education * 0.05);
+      if (c.counts.factory > 0 && c.resCount > 0) {
+        if (c.pollutedHomes > 0)
+          add("工厂污染", c.pollutedHomes + "/" + c.resCount + " 栋住宅还受着污染（半径 2 格，越近越重）" + (c.totalOffset > 0 ? "；公园已抵消 " + fmtNum(c.totalOffset) + " 点" : ""), -Math.min(20, c.totalRemain / c.resCount * 6));
+        else if (c.cleaned === 0)
+          add("工厂选址好", c.counts.factory + " 座工厂都离住宅两格以上，没有居民受污染", 2);
+      }
+      if (c.cleaned > 0) add("公园净化", c.cleaned + " 栋住宅的污染被周边公园完全抵消", Math.min(6, c.cleaned * 2));
+      if (!c.powerOk) add("停电", "电力 " + c.gen + "/" + c.use + "，不够用", -16);
+      if (S.taxRate > 15) add("税太重", "税率 " + S.taxRate + "%，超过 15% 市民就开始抱怨", -(S.taxRate - 15) * 1.1);
+      if (S.taxRate <= 8) add("税负轻", "税率只有 " + S.taxRate + "%，市民负担小", 3);
+      if (c.capacity > 0 && pop / c.capacity > 0.95) add("住得太挤", "住房几乎住满了，再盖些住宅", -8);
+      if (S.reputation !== 0) add("大事抉择", "历次大事件攒下的市民口碑（累计 " + (S.reputation > 0 ? "+" : "") + S.reputation + "，上限 ±25）", S.reputation);
+      var total = 52;
       items.forEach(function (it) { total += it.v; });
-      return { total: Math.max(0, Math.min(100, total)), items: items };
+      return { total: Math.max(0, Math.min(100, total)), items: items, base: 52 };
     }
 
-    /* citizen needs */
+    /* citizen needs（与测试版 CitizenNeeds 口径一致） */
     function needsList(c) {
       var n = [];
-      if (c.resCount === 0) n.push("还没有住宅，先盖一栋住宅，市民才会搬进来。");
-      if (S.pop > 0 && c.capacity < S.pop) n.push("住房不够住：人口 " + S.pop + "，容量只有 " + c.capacity + "，再盖些住宅或升级。");
-      if (c.use > c.gen) n.push("电力不足（用 " + c.use + " / 发 " + c.gen + "）：商业和工厂收入减半，盖发电厂或风力发电机。");
-      if (c.pollutedHomes > 0) n.push(c.pollutedHomes + " 栋住宅正受工厂污染，在它们旁边盖公园可以抵消，污染越少满意度越高。");
-      if (c.resCount > 0) {
-        ["school", "shop", "hospital"].forEach(function (t) {
-          var far = c.resCount - c.conv[t].served;
-          if (c.conv[t].count === 0) n.push("全城还没有" + DEFS[t].name + "，在住宅 2 格内盖一座能涨满意度。");
-          else if (far > 0) n.push(far + " 栋住宅离最近的" + DEFS[t].name + "超过 2 格，享受不到生活便利。");
-        });
-      }
-      if (S.pop > 0 && c.jobs < S.pop * 0.7) n.push("岗位不足：现有岗位 " + c.jobs + "，盖商业街、工厂或办公楼能提供工作。");
-      if (S.pop > 20 && c.education < 40) n.push("受教育度偏低（" + c.education + "%）：多盖学校和图书馆，还能给商业、工厂、办公楼加收入。");
-      if (S.pop > 0 && !c.counts.hospital) n.push("没有医院，市民看病没着落。");
-      if (S.pop > 0 && !c.counts.park) n.push("没有公园，市民没有散步的地方，公园还能抵消工厂污染。");
-      if (S.reputation <= -10) n.push("市民口碑很差（" + S.reputation + "），在大事件里多选为市民着想的方案能慢慢挽回。");
-      if (n.length === 0) n.push("市民暂时没什么大意见，城市运转良好。");
+      var jobsShort = Math.max(0, S.pop - c.jobs);
+      if (jobsShort > 0) n.push("还有 " + jobsShort + " 人没工作——盖商业街或工厂增加岗位。");
+      if (c.use > c.gen) n.push("电力还差 " + (c.use - c.gen) + " 点——再盖一座发电厂或风力发电机。");
+      var schoolsNeeded = S.pop >= 30 ? Math.max(0, Math.ceil(S.pop / 150) - c.counts.school) : 0;
+      var hospitalsNeeded = S.pop >= 30 ? Math.max(0, Math.ceil(S.pop / 150) - c.counts.hospital) : 0;
+      if (schoolsNeeded > 0) n.push("学校不够，还差 " + schoolsNeeded + " 座才能覆盖全城。");
+      if (hospitalsNeeded > 0) n.push("医院不够，还差 " + hospitalsNeeded + " 座才能覆盖全城。");
+      if (S.pop >= 30 && c.education < 60) n.push("受教育度只有 " + c.education + "%——多盖学校或给学校升级，教育高了商业和工厂赚得更多。");
+      if (c.pollutedHomes > 0) n.push(c.pollutedHomes + " 栋住宅还受着工厂污染——在受污染住宅旁盖公园抵消（公园等级越高抵消越多，隔一格的公园也能抵消一半），或把工厂和住宅拉开距离；实在不行就拆掉一处重新选址。");
+      if (c.counts.school > 0 && c.resCount - c.conv.school.served > 0) n.push("有 " + (c.resCount - c.conv.school.served) + " 栋住宅离学校太远（超过 2 格）——把学校盖到住宅旁边，孩子上学方便，满意度更高。");
+      if (c.counts.shop > 0 && c.resCount - c.conv.shop.served > 0) n.push("有 " + (c.resCount - c.conv.shop.served) + " 栋住宅离商业街太远（超过 2 格）——把商业街开到住宅旁边，购物方便，满意度更高。");
+      if (c.counts.hospital > 0 && c.resCount - c.conv.hospital.served > 0) n.push("有 " + (c.resCount - c.conv.hospital.served) + " 栋住宅离医院太远（超过 2 格）——把医院盖到住宅旁边，看病方便，满意度更高。");
+      if (c.capacity > 0 && S.pop / c.capacity > 0.95) n.push("住房快住满了——再盖些住宅，不然满意度会掉。");
+      if (c.counts.factory >= 2 && c.counts.fire === 0) n.push("工厂不少却没有消防站——盖一座消防站，市民更安心，工厂出事故时赔付还能减半。");
+      if (c.counts.factory >= 2 && c.counts.sewage === 0) n.push("工厂不少却没有污水处理厂——盖一座能削弱全城工厂污染 15%，住宅受的污染会直接变轻。");
+      if (S.pop >= 30 && c.counts.park === 0) n.push("一座公园都没有——盖座公园让市民散散步。");
+      if (S.pop >= 30 && c.counts.police === 0) n.push("没有警察局——治安没人管，市民不安心。");
+      if (n.length === 0) n.push(S.pop === 0 ? "城里还没住人，暂时没有需求。" : "市民的需求都满足啦，继续保持！");
       return n;
     }
-    /* ---------------- events ---------------- */
+    /* ---------------- 大事件：与测试版 BIG_EVENTS 完全一致（10 种 × 3 方案） ---------------- */
     var EVENTS = [
-      { id: "flood", title: "暴雨内涝", when: function (c) { return S.pop >= 20; },
-        desc: "连夜暴雨，低洼街道积水过膝，几栋老楼的地下室进水，市民在等市政府表态。",
+      { id: "flood", title: "暴雨内涝", when: function (c) { return S.pop >= 40; },
+        desc: "连日暴雨，老城区排水跟不上，好几条街泡了水，居民在网上喊话要市长给个说法。这事怎么处理？",
         opts: [
-          { t: "全额抢修并补偿受损住户", d: "花钱买民心，抢修队连夜排水。", funds: -180, rep: 6, pop: 0 },
-          { t: "只修主干道，其余慢慢来", d: "省了钱，但泡水的住户怨气不小。", funds: -60, rep: -3, pop: 0 },
-          { t: "号召市民自救，市府只出工具", d: "几乎不花钱，口碑跌得最狠。", funds: 0, rep: -7, pop: -3 }
+          { t: "全力抢修排水", d: "连夜组织抢修、补贴受灾住户，钱花得多，但人心稳。", funds: -220, rep: 6, pop: 0, outcome: "抢修队连夜清淤排水，受灾住户都拿到了补贴，市民直夸市政府靠谱。" },
+          { t: "临时安置受灾户", d: "先把泡水的住户安置到体育馆，排水慢慢修。", funds: -90, rep: 1, pop: 0, outcome: "受灾户有了临时住处，虽然修得慢些，大家基本能接受。" },
+          { t: "发个通知让大家自理", d: "一分钱不花，只在公告栏贴一张防汛通知。", funds: 0, rep: -6, pop: 0, outcome: "居民蹚着水上班，怨气冲天——「出事就贴通知」的说法传开了。" }
         ] },
-      { id: "flu", title: "流感大流行", when: function (c) { return S.pop >= 30; },
-        desc: "流感席卷全城，诊所排起长队，学校请假的学生越来越多。",
+      { id: "mall", title: "大企业想入驻", when: function (c) { return c.counts.shop >= 1; },
+        desc: "一家外地连锁企业看中了咱们城，想拿一块地盖大型商场，开出的条件是地皮要给优惠。接不接？",
         opts: [
-          { t: "免费发放药品并临时增开诊所", d: "支出不小，市民很领情。", funds: -160, rep: 6, pop: 0 },
-          { t: "只保障学校和老人", d: "重点人群稳住了，其他人有点意见。", funds: -70, rep: 1, pop: 0 },
-          { t: "发布通知，建议多喝热水", d: "没花钱，骂声一片，还有人病重搬走。", funds: 0, rep: -6, pop: -4 }
+          { t: "给优惠，欢迎入驻", d: "地皮让利 150 金币，商场开业能带来人气，新居民也会跟着来。", funds: -150, rep: 3, pop: 8, outcome: "大商场签约落地，周末人山人海，还有新居民冲着热闹搬了进来。" },
+          { t: "按市价谈，不让利", d: "不给优惠，对方犹豫了一下还是签了，市政小赚一笔签约费。", funds: 120, rep: 0, pop: 0, outcome: "商场按市价拿地开业，不温不火，市政账上多了一笔签约费。" },
+          { t: "拒绝，保护本地小店", d: "本地店主们联名反对，怕被大商场挤垮。", funds: 0, rep: 2, pop: 0, outcome: "大企业去了邻城，本地店主们松了口气，逢人就夸市长护着自己人。" }
         ] },
-      { id: "pollution_news", title: "工厂排污上新闻", when: function (c) { return c.counts.factory >= 1 && c.totalRemain > 0; },
-        desc: "本地媒体曝光工厂排污，周边居民举着横幅要求说法，记者的镜头正对着市政厅。",
+      { id: "flu", title: "流感大流行", when: function (c) { return S.pop >= 60; },
+        desc: "这一波流感来势汹汹，诊所排起了长队。要不要花钱组织全城防护？",
         opts: [
-          { t: "责令停产整改并罚款", d: "工厂交了罚款，居民拍手叫好。", funds: 120, rep: 6, pop: 0 },
-          { t: "约谈厂长，限期装净化设备", d: "两边都勉强接受。", funds: -40, rep: 2, pop: 0 },
-          { t: "发声明称排放达标", d: "罚款省了，口碑和居民一起流失。", funds: 0, rep: -8, pop: -5 }
+          { t: "全城免费接种", d: "市政买单，全民免费打疫苗、发药品。", funds: -180, rep: 5, pop: 0, outcome: "接种点排起长队，疫情很快压了下去，市民安全感满满。" },
+          { t: "重点防护学校医院", d: "钱花在刀刃上：只给学校、医院和老人重点防护。", funds: -70, rep: 1, pop: 0, outcome: "重点人群护住了，疫情小范围传播，总体平稳。" },
+          { t: "顺其自然", d: "不花钱，靠市民自己扛。", funds: 0, rep: -4, pop: -4, outcome: "不少人病倒请假，还有几户人家干脆搬去了亲戚家躲流感。" }
         ] },
-      { id: "bigcorp", title: "大企业入驻", when: function (c) { return c.counts.office + c.counts.factory >= 2; },
-        desc: "一家大企业想把区域总部搬来，开出的条件是三年税收优惠，市民担心房价被炒高。",
+      { id: "inspection", title: "上级宜居评比", when: function (c) { return S.pop >= 30; },
+        desc: "上级要来搞「宜居城市」评比，拿了名次对城市名声很有好处。迎检要做到什么程度？",
         opts: [
-          { t: "给优惠，大力欢迎", d: "先贴钱修路接电，企业随后带来一笔入驻费。", funds: 150, rep: 2, pop: 8 },
-          { t: "不给优惠，按规矩谈", d: "企业犹豫后还是来了，规模小一些。", funds: 60, rep: 0, pop: 4 },
-          { t: "婉拒，怕扰民", d: "清净保住了，年轻人觉得没前途走了几个。", funds: 0, rep: -2, pop: -4 }
+          { t: "全城大扫除冲刺", d: "突击整治环境、粉刷街面，全力冲个好名次。", funds: -120, rep: 4, pop: 0, outcome: "城市拿下「宜居示范」牌子，市民走在街上都觉得脸上有光。" },
+          { t: "正常迎检", d: "该扫的扫、该整的整，不搞突击。", funds: -30, rep: 1, pop: 0, outcome: "评比中规中矩，检查组挑不出大毛病，市民也乐得清静。" },
+          { t: "不管它", d: "平时什么样就什么样，评比爱咋咋地。", funds: 0, rep: -2, pop: 0, outcome: "评比排名垫底还上了通报，市民觉得丢了面子。" }
         ] },
-      { id: "tourism", title: "网红旅游热潮", when: function (c) { return c.counts.park >= 1 && S.pop >= 15; },
-        desc: "城里的公园突然在网上走红，周末游客暴增，小摊贩赚翻了，居民却抱怨吵。",
+      { id: "factory-pollution-news", title: "工厂排污上了新闻", when: function (c) { return c.counts.factory >= 1; },
+        desc: "记者暗访拍到工厂夜间排污，新闻播出后居民投诉电话被打爆。工厂是纳税大户，但民愤难平，怎么处置？",
         opts: [
-          { t: "顺势办市集，收摊位费", d: "赚了一笔，顺手把公园修缮了。", funds: 170, rep: 3, pop: 2 },
-          { t: "限流开放，优先居民", d: "收入一般，但居民很满意。", funds: 60, rep: 4, pop: 0 },
-          { t: "关闭公园谢客", d: "清净了，小商户的怨气却很大。", funds: -30, rep: -4, pop: 0 }
+          { t: "停产整改并罚款", d: "责令工厂停产整改，罚款 100 金币入库，给居民一个交代。", funds: 100, rep: 5, pop: 0, outcome: "工厂停产整改、罚单公示，居民拍手称快：「市长是真管事。」" },
+          { t: "组织双方调解", d: "市政出面调解，工厂出钱给周边居民装净化设备。", funds: -40, rep: 2, pop: 0, outcome: "工厂认错出钱、居民签了谅解书，一场风波平稳落地。" },
+          { t: "压下投诉保税收", d: "工厂税收重要，让投诉「内部消化」。", funds: 0, rep: -7, pop: 0, outcome: "投诉石沉大海，居民寒了心：「在市长眼里，工厂比人重要。」" }
         ] },
-      { id: "livable", title: "宜居城市评比", when: function (c) { return S.month >= 6; },
-        desc: "全省宜居城市评比开始报名，评委要看绿化、教育和居民满意度，参评要交一笔申报与整改费。",
+      { id: "tourism-boom", title: "突然走红成网红城", when: function (c) { return c.counts.park >= 1; },
+        desc: "一条短视频把咱们城带火了，游客一波波涌进来，街边小店忙不过来。这波流量怎么接？",
         opts: [
-          { t: "认真参评，该补的短板都补上", d: "花钱整改，拿了个好名次，口碑大涨。", funds: -140, rep: 8, pop: 3 },
-          { t: "简单申报，顺其自然", d: "名次中游，无功无过。", funds: -40, rep: 2, pop: 0 },
-          { t: "不参评，省下这笔钱", d: "钱省了，市民觉得城市没追求。", funds: 0, rep: -3, pop: 0 }
+          { t: "办节庆活动接住流量", d: "花 100 办市集节庆，游客消费火爆，净赚一笔还落个好名声。", funds: 80, rep: 3, pop: 0, outcome: "节庆办得热热闹闹，游客玩得开心、商家赚得开心，城市口碑出圈了。" },
+          { t: "只做基础接待", d: "加派人手维持秩序，不折腾，稳稳收一波游客钱。", funds: 60, rep: 1, pop: 0, outcome: "游客来了又走，城市小赚一笔，没出乱子。" },
+          { t: "趁机涨价宰客", d: "停车、门票、摊位费全线涨价，能宰一笔是一笔。", funds: 150, rep: -5, pop: 0, outcome: "钱是赚到了，但「宰客城」的差评刷满网络，市民都觉得丢人。" }
         ] },
-      { id: "renovation", title: "老旧小区改造", when: function (c) { return c.counts.house >= 3; },
-        desc: "最早建的一批住宅外墙脱落、管线老化，居民联名要求改造。",
+      { id: "old-housing", title: "老旧小区改造争议", when: function (c) { return S.pop >= 80 && c.resCount >= 4; },
+        desc: "老一批住宅楼龄不小了，居民天天反映漏水、没电梯，要求改造；可改造要花一大笔钱，账上并不宽裕。",
         opts: [
-          { t: "市府全额出资改造", d: "老楼焕然一新，居民逢人就夸。", funds: -200, rep: 7, pop: 2 },
-          { t: "市府和居民各出一半", d: "改造照样完成，夸的人少一些。", funds: -100, rep: 3, pop: 0 },
-          { t: "再拖两年看看", d: "省了钱，怨气攒了下来。", funds: 0, rep: -6, pop: -2 }
+          { t: "市政全额出资改造", d: "260 金币全包：修漏水、加电梯、刷外墙。", funds: -260, rep: 7, pop: 0, outcome: "老小区焕然一新，老住户们送来锦旗，这是今年最得民心的一件事。" },
+          { t: "市政居民各出一半", d: "市政出 120，居民按户分摊一部分，改造标准不打折。", funds: -120, rep: 3, pop: 0, outcome: "改造顺利完工，居民出了点钱但都说值，老小区面貌一新。" },
+          { t: "暂缓改造", d: "账上紧，先拖一拖再说。", funds: 0, rep: -4, pop: 0, outcome: "改造又黄了，老住户们失望透顶：「说了多少年，还是没动静。」" }
         ] },
-      { id: "talent_war", title: "抢人大战", when: function (c) { return S.pop >= 40; },
-        desc: "邻市开出落户补贴抢年轻人，本市的毕业生也在犹豫要不要走。",
+      { id: "talent-war", title: "周边城市抢人大战", when: function (c) { return S.pop >= 100; },
+        desc: "邻城开出高额安家补贴抢年轻人，咱们城也有人收拾行李准备走。要不要出手留人？",
         opts: [
-          { t: "发安家补贴留人", d: "花钱留住了人，还有外来人口慕名搬入。", funds: -170, rep: 5, pop: 10 },
-          { t: "打感情牌，办青年活动", d: "花得不多，留住了一部分人。", funds: -50, rep: 2, pop: 3 },
-          { t: "随他们去", d: "一批年轻人收拾行李离开了。", funds: 0, rep: -4, pop: -10 }
+          { t: "发安家补贴抢人才", d: "200 金币补贴池，新落户和返乡的年轻人都能领。", funds: -200, rep: 2, pop: 12, outcome: "补贴一出，不少年轻人留了下来，还有外漂的年轻人回了城。" },
+          { t: "办返乡活动打感情牌", d: "花 60 办返乡招聘会和老乡会，主打一个「家乡好」。", funds: -60, rep: 2, pop: 5, outcome: "老乡会上签回来好几个年轻人，气氛热烈，花小钱办了大事。" },
+          { t: "不参与，随他们去", d: "抢人烧钱，不跟。", funds: 0, rep: -1, pop: -6, outcome: "一批年轻人去了邻城，街上冷清了些，留下的人心里也犯嘀咕。" }
         ] },
-      { id: "extreme_weather", title: "极端天气", when: function () { return true; },
-        desc: "气象台发布红色预警：极端天气即将过境，老旧电线和广告牌都可能出问题。",
+      { id: "heatwave", title: "极端天气来袭", when: function (c) { return S.pop >= 50; },
+        desc: "气象台发了极端天气红色预警：接下来一个月酷热（或严寒）难耐，老人和户外工作者最难熬。市政要做点什么吗？",
         opts: [
-          { t: "提前加固并储备物资", d: "花钱买平安，天气过后城市基本无损。", funds: -120, rep: 5, pop: 0 },
-          { t: "只加固电力设施", d: "没停电，但倒了几块广告牌，赔了点钱。", funds: -70, rep: 0, pop: 0 },
-          { t: "赌它绕过去", d: "赌输了：抢修和赔付花了一大笔，口碑也跌了。", funds: -150, rep: -6, pop: -2 }
+          { t: "开放避难场所发补贴", d: "开放图书馆体育馆避暑避寒，给困难户发 130 金币补贴物资。", funds: -130, rep: 5, pop: 0, outcome: "避难场所坐满了乘凉取暖的市民，困难户领到物资，这个月平稳度过。" },
+          { t: "发放少量物资", d: "给每条街道发一批水和药品，花 50 金币意思一下。", funds: -50, rep: 1, pop: 0, outcome: "物资发了下去，虽然不多，市民觉得市政心里有大家。" },
+          { t: "只发预警通知", d: "预警短信群发一遍，剩下的靠大家自己注意。", funds: 0, rep: -3, pop: 0, outcome: "几位老人中暑（冻伤）送了医，家属抱怨市政只会发短信。" }
         ] },
-      { id: "school_seats", title: "学位紧张", when: function (c) { return S.pop >= 30 && c.education < 60; },
-        desc: "新生儿入学季，学位缺口被家长们顶上热搜，有家长在校门口拉横幅。",
+      { id: "school-seats", title: "学位紧张家长联名", when: function (c) { return S.pop >= 60 && c.counts.school >= 1; },
+        desc: "孩子多了、学校学位不够，家长们联名写信到市政：再不解决，孩子就没学上。怎么办？",
         opts: [
-          { t: "紧急扩招，租场地加开班级", d: "花钱解决了学位，家长们很感激。", funds: -150, rep: 6, pop: 0 },
-          { t: "摇号入学，公开透明", d: "没摇上的家庭有怨言，但程序服众。", funds: -30, rep: 0, pop: 0 },
-          { t: "让家长自行想办法", d: "几户人家干脆搬去了教育资源好的邻市。", funds: 0, rep: -7, pop: -6 }
+          { t: "扩建临时教室", d: "花 170 给学校扩建临时教室，今年就把学位补上。", funds: -170, rep: 5, pop: 0, outcome: "临时教室赶在开学前建好，家长们悬着的心落了地。" },
+          { t: "摇号分流到邻区", d: "花 20 组织摇号，一部分孩子去稍远的学校。", funds: -20, rep: -1, pop: 0, outcome: "摇号结果几家欢喜几家愁，没摇上的家长颇有微词。" },
+          { t: "承诺明年再说", d: "先安抚，学位的事明年预算再议。", funds: 0, rep: -5, pop: 0, outcome: "「明年」两个字家长听得太多了，联名信变成了投诉信。" }
         ] }
+    ];
+    /* ---------------- 小随机事件：与测试版 EVENTS 一致（约 35% 概率自动结算） ---------------- */
+    var SMALL_EVENTS = [
+      { when: function (c) { return c.counts.park >= 1; },
+        run: function (c) { var amt = 120 + c.counts.park * 40; S.funds += amt; return "旅游旺季到了，公园和街景吸引了不少游客，市政收入 +" + amt + " 金币。"; } },
+      { when: function (c) { return c.counts.shop >= 2; },
+        run: function (c) { S.funds += 260; return "一家外地企业看中了这里的营商环境，送来一笔投资款 +260 金币。"; } },
+      { when: function (c) { return S.pop >= 40; },
+        run: function (c) { S.funds -= 160; return "连日暴雨冲坏了几条街区道路，抢修支出 -160 金币。"; } },
+      { when: function (c) { return S.pop >= 60; },
+        run: function (c) { S.funds -= 120; if (c.counts.hospital === 0) S.pop = Math.max(0, S.pop - Math.ceil(S.pop * 0.04)); return "流感季来袭，临时医疗支出 -120 金币" + (c.counts.hospital === 0 ? "，一些市民搬去了亲戚家。" : "。"); } },
+      { when: function (c) { return c.counts.shop >= 1; },
+        run: function (c) { var amt = 100 + c.counts.shop * 35; S.funds += amt; return "美食节大获成功！夜市人头攒动，市政收入 +" + amt + " 金币。"; } },
+      { when: function (c) { return c.capacity > S.pop; },
+        run: function (c) { var add = Math.min(Math.max(0, c.capacity - S.pop), 12); S.pop += add; return "一位当红歌手来城里取景拍 MV，城市知名度大涨，慕名搬来了一批新居民。"; } },
+      { when: function (c) { return c.counts.factory >= 1; },
+        run: function (c) { var amt = c.counts.fire >= 1 ? 100 : 200; S.funds -= amt; return "工厂发生了一起小事故，" + (c.counts.fire >= 1 ? "消防站处置及时，" : "") + "停产整顿并赔付 -" + amt + " 金币。好在没人受伤。"; } },
+      { when: function (c) { return c.jobs >= 10; },
+        run: function (c) { var add = Math.min(Math.max(0, c.capacity - S.pop), 10); S.pop += add; return "周边村镇的年轻人组团来城里找工作，新居民陆续搬入。"; } },
+      { when: function (c) { return S.pop >= 30; },
+        run: function (c) { S.funds -= 90; return "今年雨水偏少，自来水公司临时调水，支出 -90 金币。"; } },
+      { when: function (c) { return c.sat.total >= 65; },
+        run: function (c) { S.funds += 180; return "市集上评上了「最宜居小城」，地产商送来贺礼 +180 金币。"; } }
     ];
     var pendingEvent = null;
 
     function rollEvent(c) {
-      if (S.month <= 2) return;
+      if (S.month <= 2 || S.gameOver) return; /* 开局头两个月不触发（与测试版一致） */
       if (Math.random() > 0.30) return;
+      var recent = S.recentEvents.slice(-3); /* 最近处理过的 3 件不重复 */
       var pool = EVENTS.filter(function (e) {
-        return S.recentEvents.indexOf(e.id) < 0 && (!e.when || e.when(c));
+        return recent.indexOf(e.id) < 0 && (!e.when || e.when(c));
       });
       if (!pool.length) return;
       pendingEvent = pool[Math.floor(Math.random() * pool.length)];
@@ -662,32 +783,73 @@
         S.pop = Math.max(0, Math.min(c.capacity, S.pop + o.pop));
       }
       S.recentEvents.push(ev.id);
-      if (S.recentEvents.length > 4) S.recentEvents.shift();
+      if (S.recentEvents.length > 12) S.recentEvents = S.recentEvents.slice(-12);
       S.totalEvents++;
       pendingEvent = null;
       document.getElementById("eventOverlay").classList.remove("open");
-      addLog("大事件「" + ev.title + "」选择了「" + o.t + "」（口碑 " + (S.reputation >= 0 ? "+" : "") + S.reputation + "）。");
+      addLog("大事件「" + ev.title + "」：你选择了「" + o.t + "」。" + (o.outcome || "") + "（口碑 " + (S.reputation >= 0 ? "+" : "") + S.reputation + "）");
       toast("已处理：" + ev.title);
       refresh();
     }
 
-    /* ---------------- monthly tick ---------------- */
+    /* ---------------- monthly tick（与测试版 tickMonth 一致） ---------------- */
     function nextMonth() {
       if (pendingEvent) { toast("先处理大事件再推进。"); return; }
+      if (S.gameOver) { toast("城市已被托管，点「重新开始」再来一局。"); return; }
       var c = compute();
+      var popBefore = S.pop, tierBefore = tierIndexFor(S.pop);
       S.funds += c.net;
-      /* population drift */
-      var sat = c.sat.total, newPop = S.pop;
-      if (c.capacity > S.pop) {
-        var rate = sat >= 60 ? 0.22 : sat >= 45 ? 0.10 : sat >= 30 ? 0.03 : -0.05;
-        newPop = S.pop + Math.ceil((c.capacity - S.pop) * rate);
-        if (sat < 30) newPop = Math.floor(S.pop * 0.95);
-      } else if (c.capacity < S.pop) newPop = c.capacity;
-      else if (sat < 30) newPop = Math.floor(S.pop * 0.94);
-      S.pop = Math.max(0, newPop);
+      /* population movement */
+      var pop = S.pop;
+      if (c.capacity === 0) {
+        pop = Math.max(0, pop - Math.ceil(pop * 0.2));
+      } else {
+        var rate;
+        if (c.sat.total >= 55) rate = 0.13;
+        else if (c.sat.total >= 40) rate = 0.06;
+        else if (c.sat.total >= 28) rate = -0.02;
+        else rate = -0.09;
+        if (c.unemploymentRate > 0.35 && pop > 0) rate -= 0.05;
+        if (rate >= 0) {
+          var room = c.capacity - pop;
+          pop += Math.min(room, Math.ceil(c.capacity * rate) + (room > 0 ? 1 : 0));
+        } else {
+          pop = Math.max(0, pop + Math.round(pop * rate));
+        }
+        pop = Math.min(pop, c.capacity);
+      }
+      S.pop = pop;
+      var settledLabel = formatMonth(S.month);
       S.month++;
-      addLog("月结：收入 " + c.income + "，维护 " + c.upkeep + "，净 " + (c.net >= 0 ? "+" : "") + c.net + "；人口 " + S.pop + "，满意度 " + compute().sat.total + "。");
+      /* 小随机事件（约 35%） */
+      if (Math.random() < 0.35) {
+        var fresh0 = compute();
+        var spool = SMALL_EVENTS.filter(function (e) { return e.when(fresh0); });
+        if (spool.length) {
+          var sev = spool[Math.floor(Math.random() * spool.length)];
+          var stext = sev.run(fresh0);
+          var capNow = compute().capacity;
+          if (S.pop > capNow) S.pop = capNow;
+          addLog(stext);
+        }
+      }
+      /* 城市升级里程碑 */
+      var tierAfter = tierIndexFor(S.pop);
+      if (tierAfter > tierBefore) {
+        var bonus = 200 + tierAfter * 150;
+        S.funds += bonus;
+        addLog("城市升级！人口突破 " + TIERS[tierAfter].minPop + "，正式成为「" + TIERS[tierAfter].title + "」，上级拨款奖励 +" + bonus + " 金币。");
+        toast("城市升级为「" + TIERS[tierAfter].title + "」，拨款 +" + bonus + "！");
+      }
+      addLog(settledLabel + "结算：税收 " + c.incomeTax + " + 商业 " + c.incomeBiz + " − 维护 " + c.upkeep + "，净 " + (c.net >= 0 ? "+" : "") + c.net + " 金币；人口 " + popBefore + " → " + S.pop + "。");
+      if (S.funds < 0 && S.funds >= -300) addLog("警告：市政资金已经赤字！再跌破 -300 金币，城市将被托管。赶紧增收节支。");
+      if (S.funds < -300) {
+        S.gameOver = true;
+        addLog("市政破产，城市被上级托管。这一局到此结束——重新开始再来一局吧。");
+        toast("资金跌破 -300，城市被托管了！");
+      }
       rollEvent(compute());
+      if (pendingEvent) addLog("⚠ 大事件：" + pendingEvent.title + "——这事得你亲自拍板，选个处理方案吧！");
       refresh();
     }
 
@@ -697,11 +859,11 @@
       if (S.funds < d.cost) return "资金不足（需要 " + d.cost + "）";
       if (type === "factory") {
         var res = residences();
-        for (var j = 0; j < res.length; j++) if (cheb(i, res[j]) <= 1) return "工厂不能紧挨住宅建（污染太重），换个离住宅远一点的地块。";
+        for (var j = 0; j < res.length; j++) if (cheb(i, res[j]) <= 1) return "位置限制：工厂不能紧挨住宅建（污染会直吹居民），至少隔一格，隔两格才完全无污染";
       }
       if (RES_TYPES[type]) {
         var facs = tilesOf("factory");
-        for (var k = 0; k < facs.length; k++) if (cheb(i, facs[k]) <= 1) return "住宅不能紧挨工厂建（污染太重），换个地块或先拆工厂。";
+        for (var k = 0; k < facs.length; k++) if (cheb(i, facs[k]) <= 1) return "位置限制：住宅不能紧挨工厂建（居民会被污染），至少隔一格，隔两格才完全无污染";
       }
       return null;
     }
@@ -731,23 +893,54 @@
       addLog("拆除" + DEFS[b.type].name + "（" + posLabel(i) + "），返还 " + refund + "。");
       refresh();
     }
-    function upgradeAll() {
-      var spent = 0, n = 0, guard = 0;
-      var list = [];
-      for (var i = 0; i < N; i++) if (S.grid[i] && S.grid[i].level < MAXLV) list.push(i);
-      list.sort(function (a, b) { return S.grid[a].level - S.grid[b].level; });
-      while (guard++ < 500) {
-        var progressed = false;
-        for (var j = 0; j < list.length; j++) {
-          var b = S.grid[list[j]];
-          if (!b || b.level >= MAXLV) continue;
-          var cost = upCost(DEFS[b.type], b.level);
-          if (S.funds >= cost) { S.funds -= cost; b.level++; spent += cost; n++; progressed = true; }
-        }
-        if (!progressed) break;
+    /* ---------------- 一键升级（与测试版 bulkUpgrade 口径一致） ----------------
+       按地块顺序逐栋结算，钱不够的那一栋跳过，绝不把资金扣成负数。 */
+    var bulkNote = "";
+    function costToMax(b) {
+      var total = 0;
+      for (var lv = b.level; lv < MAXLV; lv++) total += upCost(DEFS[b.type], lv);
+      return total;
+    }
+    function applyBulk(mode, onlyType) {
+      var levelUps = 0, spent = 0, touched = {};
+      function tryUp(i) {
+        var b = S.grid[i];
+        if (!b || b.level >= MAXLV) return false;
+        if (onlyType && b.type !== onlyType) return false;
+        var cost = upCost(DEFS[b.type], b.level);
+        if (S.funds < cost) return false;
+        S.funds -= cost; spent += cost; levelUps++; touched[i] = 1; b.level++;
+        return true;
       }
-      if (n) { addLog("一键升级：" + n + " 次升级，共花费 " + spent + "。"); toast("已升级 " + n + " 次，花费 " + spent); }
-      else toast("没有可升级的建筑，或资金不足。");
+      if (mode === "one") {
+        for (var i = 0; i < N; i++) tryUp(i);
+      } else {
+        var progressed = true, guard = 0;
+        while (progressed && guard++ < 20) {
+          progressed = false;
+          for (var j = 0; j < N; j++) if (tryUp(j)) progressed = true;
+        }
+      }
+      return { levelUps: levelUps, buildings: Object.keys(touched).length, spent: spent };
+    }
+    function doBulkAll(mode) {
+      var below = 0, expected = 0;
+      for (var i = 0; i < N; i++) if (S.grid[i] && S.grid[i].level < MAXLV) { below++; expected += mode === "one" ? 1 : MAXLV - S.grid[i].level; }
+      var r = applyBulk(mode, null);
+      if (!r.levelUps) { toast("资金不够升级任何一栋，先攒攒钱。"); return; }
+      bulkNote = "一键升级完成：" + r.buildings + " 栋建筑共升了 " + r.levelUps + " 级，花了 " + r.spent + " 金币" + (r.levelUps < expected ? "；资金不够的栋数先跳过了，攒够钱再来。" : "。");
+      addLog(bulkNote);
+      toast(bulkNote);
+      refresh();
+    }
+    function doBulkType(type) {
+      var expected = 0;
+      for (var i = 0; i < N; i++) if (S.grid[i] && S.grid[i].type === type && S.grid[i].level < MAXLV) expected++;
+      var r = applyBulk("one", type);
+      if (!r.levelUps) { toast("资金不够升级" + DEFS[type].name + "，先攒攒钱。"); return; }
+      bulkNote = DEFS[type].name + "一键升级完成：" + r.buildings + " 栋各升一级，花了 " + r.spent + " 金币" + (r.levelUps < expected ? "；资金不够的栋数先跳过了。" : "。");
+      addLog(bulkNote);
+      toast(bulkNote);
       refresh();
     }
     function posLabel(i) { var p = xy(i); return "第 " + (p[0] + 1) + " 列第 " + (p[1] + 1) + " 行"; }
@@ -759,7 +952,7 @@
     function wpos(i) { var p = xy(i); return [(p[0] - (SIZE - 1) / 2) * GAP, (p[1] - (SIZE - 1) / 2) * GAP]; }
 
     var scene, camera, renderer, raycaster, groundPlane;
-    var tileGroups = {}, markerSprites = {}, smokePool = [], turbines = [], peds = [], cars = [];
+    var tileGroups = {}, markerSprites = {}, decorGroups = {}, smokePool = [], turbines = [], peds = [], cars = [];
     var camTheta = Math.PI / 4, camPhi = 0.95, camR = 19, camTarget;
 
     function mat(color, opts) {
@@ -911,13 +1104,44 @@
           g.add(windows(W, fih, W, 0xffe1b0, 1, 2));
           break;
         }
-        case "stadium": {
-          var ring = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.46, 0.42 * hGrow, 18, 1, true),
-            new THREE.MeshStandardMaterial({ color: d.color, roughness: 0.8, side: THREE.DoubleSide }));
-          ring.position.y = 0.21 * hGrow; ring.castShadow = true; g.add(ring);
-          var pitch = cyl(0.44, 0.44, 0.04, 0x4da653, 0, 0.05, 0, 18); g.add(pitch);
-          var rim = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.035, 8, 24), mat(d.roof));
-          rim.rotation.x = Math.PI / 2; rim.position.y = 0.42 * hGrow; g.add(rim);
+        case "bank": {
+          var bh2 = 0.5 * hGrow;
+          g.add(box(W, bh2, W, d.color, 0, bh2 / 2, 0));
+          var bkroof = new THREE.Mesh(new THREE.ConeGeometry(0.74, 0.28, 4), mat(d.roof));
+          bkroof.position.y = bh2 + 0.14; bkroof.rotation.y = Math.PI / 4; bkroof.castShadow = true; g.add(bkroof);
+          [-0.3, -0.1, 0.1, 0.3].forEach(function (cx) { g.add(box(0.07, bh2 * 0.85, 0.07, 0xffffff, cx, bh2 * 0.42, W / 2 + 0.01)); });
+          var coin = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.03, 16), mat(0xf2b01e, { roughness: 0.35, metalness: 0.6 }));
+          coin.rotation.x = Math.PI / 2; coin.position.set(0, bh2 + 0.32, 0.12); coin.castShadow = true; g.add(coin);
+          break;
+        }
+        case "amusement": {
+          /* 会转的摩天轮 + 小帐篷（轮子挂到 turbines 里跟着转） */
+          var legL = box(0.05, 0.62, 0.05, 0x8d99a6, -0.16, 0.28, -0.1); legL.rotation.z = 0.22; g.add(legL);
+          var legR = box(0.05, 0.62, 0.05, 0x8d99a6, 0.16, 0.28, -0.1); legR.rotation.z = -0.22; g.add(legR);
+          var wheel = new THREE.Group(); wheel.position.set(0, 0.58, -0.1);
+          var rim2 = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.022, 8, 24), mat(0xe4572e));
+          rim2.castShadow = true; wheel.add(rim2);
+          var cabCols = [0x38618c, 0xe9a13b, 0x3e9b4f, 0xe86a92, 0x8a5fb0, 0xd95f43, 0x2a9d8f, 0xf2b01e];
+          for (var wI = 0; wI < 8; wI++) {
+            var wa = wI / 8 * Math.PI * 2;
+            wheel.add(box(0.08, 0.09, 0.07, cabCols[wI], Math.cos(wa) * 0.34, Math.sin(wa) * 0.34, 0));
+          }
+          wheel.add(new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), mat(0xf2b01e)));
+          g.add(wheel); g.userData.hub = wheel; turbines.push(wheel);
+          var tent = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.26, 8), mat(0x8a5fb0));
+          tent.position.set(0.26, 0.32, 0.24); tent.castShadow = true; g.add(tent);
+          g.add(box(0.22, 0.2, 0.22, 0xf7ead9, 0.26, 0.1, 0.24));
+          break;
+        }
+        case "sewage": {
+          var tk1 = cyl(0.24, 0.24, 0.26, 0xb9c4d0, -0.18, 0.13, -0.08, 14); g.add(tk1);
+          var wt1 = cyl(0.2, 0.2, 0.03, 0x7fc7d9, -0.18, 0.27, -0.08, 14); g.add(wt1);
+          var tk2 = cyl(0.17, 0.17, 0.2, 0xaeb9c6, 0.22, 0.1, 0.16, 12); g.add(tk2);
+          var wt2 = cyl(0.14, 0.14, 0.03, 0x7fc7d9, 0.22, 0.21, 0.16, 12); g.add(wt2);
+          var pipe = cyl(0.035, 0.035, 0.36, 0x5b6b7a, 0.02, 0.18, -0.02, 8); pipe.rotation.z = Math.PI / 2; g.add(pipe);
+          g.add(box(0.24, 0.22, 0.22, 0xdbe7f3, 0.24, 0.11, -0.22));
+          g.add(box(0.28, 0.05, 0.26, 0x38618c, 0.24, 0.24, -0.22));
+          if (level >= 3) g.add(cyl(0.13, 0.13, 0.18, 0xb9c4d0, -0.26, 0.09, 0.24, 12));
           break;
         }
       }
@@ -970,28 +1194,96 @@
         var base = new THREE.Mesh(new THREE.PlaneGeometry(extent + 3.4, extent + 3.4),
           mat(dark ? 0x2c332c : 0x565d55, { roughness: 1 }));
         base.rotation.x = -Math.PI / 2; base.position.y = -0.03; base.receiveShadow = true; scene.add(base);
-        /* beyond the city grid: wasteland plain with scattered forest & rocks */
-        var outer = new THREE.Mesh(new THREE.PlaneGeometry(90, 90),
-          mat(dark ? 0x3a3d2c : 0xb3a67e, { roughness: 1 }));
-        outer.rotation.x = -Math.PI / 2; outer.position.y = -0.09; outer.receiveShadow = true; scene.add(outer);
-        var half = extent / 2;
-        for (var oI = 0; oI < 90; oI++) {
-          var ang = (Math.sin(oI * 127.1) * 43758.5453) % 1, rad = half + 2.6 + Math.abs(Math.sin(oI * 311.7)) * 15;
-          var ox = Math.cos(oI * 2.39996) * rad, oz = Math.sin(oI * 2.39996) * rad;
-          var kind = Math.abs(ang);
-          if (kind < 0.55) { /* low-poly tree */
-            var tree = new THREE.Group();
-            tree.add(cyl(0.05, 0.07, 0.5, 0x7a5230, 0, 0.25, 0, 6));
-            var crown2 = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.0, 8), mat(kind < 0.28 ? 0x2f6b35 : 0x3e8e4f));
-            crown2.position.y = 0.95; crown2.castShadow = true; tree.add(crown2);
-            tree.position.set(ox, -0.05, oz); scene.add(tree);
-          } else if (kind < 0.8) { /* dry scrub bush */
-            var bush = new THREE.Mesh(new THREE.SphereGeometry(0.3, 7, 5), mat(0x8a9455));
-            bush.position.set(ox, 0.12, oz); bush.castShadow = true; scene.add(bush);
-          } else { /* rock */
-            var rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.32), mat(0x8d887c));
-            rock.position.set(ox, 0.1, oz); rock.castShadow = true; scene.add(rock);
+        /* 格子之外（与测试版一致）：干黄斑驳的荒地基底 + 色斑、成片森林簇、
+           岩石 / 枯树 / 干灌木、一条伸向荒地的土路和远山，不是草坪。 */
+        function seeded(s) {
+          var a = (s * 2654435761) >>> 0; a += 0x6d2b79f5; var t = a;
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        }
+        three.seeded = seeded;
+        var TREE_GREENS = [0x3e9b4f, 0x35794a, 0x55b567, 0x2f7d3a, 0x6aa84f];
+        function decoTree(scale, x, z, variant) {
+          var g = new THREE.Group();
+          var trunk = cyl(0.035 * scale, 0.05 * scale, 0.22 * scale, 0x7a4a2b, 0, 0.11 * scale, 0, 6); g.add(trunk);
+          var crown = new THREE.Mesh(new THREE.IcosahedronGeometry(0.17 * scale, 1), mat(TREE_GREENS[Math.abs(variant) % 5], { roughness: 0.95 }));
+          crown.position.y = 0.36 * scale; crown.castShadow = true; g.add(crown);
+          var crown2 = new THREE.Mesh(new THREE.IcosahedronGeometry(0.12 * scale, 1), mat(TREE_GREENS[Math.abs(variant + 2) % 5], { roughness: 0.95 }));
+          crown2.position.set(0.09 * scale, 0.28 * scale, 0.05 * scale); crown2.castShadow = true; g.add(crown2);
+          g.position.set(x, -0.05, z); g.rotation.y = (variant % 7) * 0.45;
+          return g;
+        }
+        function decoRock(scale, x, z, variant) {
+          var m = new THREE.Mesh(new THREE.DodecahedronGeometry(0.11 * scale, 0), mat(variant % 2 === 0 ? 0x8d8578 : 0x9a917f, { roughness: 1 }));
+          m.position.set(x, 0.02, z); m.rotation.set(variant * 0.7, variant * 1.3, variant * 0.4); m.scale.y = 0.65; m.castShadow = true;
+          return m;
+        }
+        function decoBush(scale, x, z, dry, variant) {
+          var g = new THREE.Group();
+          var colors = dry ? [0xa08a4f, 0x8a7a45, 0xb09a5e] : [0x4da657, 0x3e9b4f, 0x5da85f];
+          var main = new THREE.Mesh(new THREE.IcosahedronGeometry(0.09 * scale, 1), mat(colors[Math.abs(variant) % 3], { roughness: 1 }));
+          main.position.y = 0.06 * scale; main.castShadow = true; g.add(main);
+          var side = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06 * scale, 1), mat(colors[Math.abs(variant + 1) % 3], { roughness: 1 }));
+          side.position.set(0.07 * scale, 0.04 * scale, 0.03 * scale); side.castShadow = true; g.add(side);
+          g.position.set(x, -0.05, z);
+          return g;
+        }
+        function decoDeadTree(scale, x, z, variant) {
+          var g = new THREE.Group();
+          var trunk = cyl(0.025 * scale, 0.05 * scale, 0.5 * scale, 0x6e5136, 0, 0.25 * scale, 0, 6);
+          trunk.rotation.z = 0.08 * (variant % 3); g.add(trunk);
+          for (var bk = 0; bk < 3; bk++) {
+            var br = cyl(0.012 * scale, 0.02 * scale, 0.28 * scale, 0x6e5136, (bk - 1) * 0.09 * scale, (0.42 + bk * 0.05) * scale, (bk % 2) * 0.05 * scale, 5);
+            br.rotation.z = (bk - 1) * 0.9; g.add(br);
           }
+          g.position.set(x, -0.05, z); g.rotation.y = variant * 0.8;
+          return g;
+        }
+        three.deco = { tree: decoTree, rock: decoRock, bush: decoBush, deadTree: decoDeadTree };
+        var outer = new THREE.Mesh(new THREE.CircleGeometry(45, 48),
+          mat(dark ? 0x4a4630 : 0xa3a06e, { roughness: 1 }));
+        outer.rotation.x = -Math.PI / 2; outer.position.y = -0.09; outer.receiveShadow = true; scene.add(outer);
+        var patchColors = [0xc0ac7d, 0x97a05f, 0x8a9a58, 0xbfae86, 0x7d9a52, 0xa8905f];
+        for (var pI = 0; pI < 26; pI++) {
+          var pa = seeded(pI * 3 + 11) * Math.PI * 2, pr = 10 + seeded(pI * 5 + 7) * 20;
+          var patch = new THREE.Mesh(new THREE.CircleGeometry((1.6 + seeded(pI * 7 + 3) * 3.2) * GAP, 18),
+            mat(dark ? 0x55523a : patchColors[pI % 6], { roughness: 1 }));
+          patch.rotation.x = -Math.PI / 2; patch.rotation.z = seeded(pI * 13 + 5) * Math.PI;
+          patch.position.set(Math.cos(pa) * pr, -0.082 + pI * 0.0004, Math.sin(pa) * pr);
+          patch.scale.set(1, 0.62 + seeded(pI * 17 + 1) * 0.5, 1);
+          patch.receiveShadow = true; scene.add(patch);
+        }
+        var deco = new THREE.Group(); scene.add(deco);
+        var vi = 0;
+        for (var cI = 0; cI < 6; cI++) {
+          var ca = cI / 6 * Math.PI * 2 + seeded(cI * 31 + 2) * 0.7;
+          var cr = (11.5 + seeded(cI * 37 + 4) * 6) * GAP;
+          var cx0 = Math.cos(ca) * cr, cz0 = Math.sin(ca) * cr;
+          var cn = 9 + Math.floor(seeded(cI * 41 + 6) * 7);
+          for (var k2 = 0; k2 < cn; k2++) {
+            vi++;
+            var jx = (seeded(vi * 3 + 1) - 0.5) * 4.6 * GAP, jz = (seeded(vi * 5 + 2) - 0.5) * 4.6 * GAP;
+            deco.add(decoTree((1.3 + seeded(vi * 7 + 3) * 1.5) * 1.6, cx0 + jx, cz0 + jz, vi));
+            if (k2 % 3 === 0) deco.add(decoBush(1.8, cx0 + jx * 0.7, cz0 + jz * 0.7 + 0.6, false, vi));
+          }
+        }
+        for (var wI2 = 0; wI2 < 34; wI2++) {
+          var wa2 = seeded(wI2 * 43 + 9) * Math.PI * 2, wr = (8.4 + seeded(wI2 * 47 + 13) * 13) * GAP;
+          var wx2 = Math.cos(wa2) * wr, wz2 = Math.sin(wa2) * wr, wk = wI2 % 4;
+          if (wk === 0) deco.add(decoRock((0.8 + seeded(wI2 * 53) * 1.4) * 1.8, wx2, wz2, wI2));
+          else if (wk === 1) deco.add(decoDeadTree((0.9 + seeded(wI2 * 59) * 0.8) * 1.6, wx2, wz2, wI2));
+          else deco.add(decoBush((0.9 + seeded(wI2 * 61) * 0.9) * 1.8, wx2, wz2, true, wI2));
+        }
+        var track = new THREE.Mesh(new THREE.BoxGeometry(0.85 * GAP, 0.012, 7.5 * GAP), mat(0xb59a68, { roughness: 1 }));
+        track.position.set(1.5 * GAP, -0.075, extent / 2 + 4.6 * GAP);
+        track.receiveShadow = true; deco.add(track);
+        for (var hI = 0; hI < 5; hI++) {
+          var ha = hI / 5 * Math.PI * 2 + 0.5;
+          var hill = new THREE.Mesh(new THREE.ConeGeometry((5.5 + seeded(hI * 67) * 4) * GAP, (2.2 + seeded(hI * 71) * 1.6) * GAP, 7),
+            mat(hI % 2 === 0 ? 0x7d9a63 : 0x8a9a72, { roughness: 1 }));
+          hill.position.set(Math.cos(ha) * 34, -0.1, Math.sin(ha) * 34);
+          deco.add(hill);
         }
         var padGeo = new THREE.BoxGeometry(1.02, 0.05, 1.02);
         var padMat = mat(dark ? 0x3d4a3a : 0x9db38d, { roughness: 1 });
@@ -1016,6 +1308,18 @@
             d1.rotation.x = -Math.PI / 2; d1.position.set(t, 0.005, off); scene.add(d1);
             var d2 = new THREE.Mesh(dashGeo, lineMat);
             d2.rotation.x = -Math.PI / 2; d2.rotation.z = Math.PI / 2; d2.position.set(off, 0.005, t); scene.add(d2);
+          }
+        }
+        /* 路灯：每隔 3 个路口一盏，暖黄灯头（与测试版一致的街道细节） */
+        var lampPoleMat = mat(0x3a4656, { roughness: 0.6, metalness: 0.3 });
+        var lampHeadMat = new THREE.MeshStandardMaterial({ color: 0xffe9a3, emissive: 0xa86e0c, emissiveIntensity: 0.55, roughness: 0.35 });
+        for (var lx = 0; lx <= SIZE; lx += 3) {
+          for (var lz = 0; lz <= SIZE; lz += 3) {
+            var lwx = (lx - SIZE / 2) * GAP + 0.16, lwz = (lz - SIZE / 2) * GAP + 0.16;
+            var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.035, 0.62, 6), lampPoleMat);
+            pole.position.set(lwx, 0.31, lwz); pole.castShadow = true; scene.add(pole);
+            var head = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 6), lampHeadMat);
+            head.position.set(lwx, 0.66, lwz); scene.add(head);
           }
         }
         groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -1121,22 +1425,60 @@
                     speed: 0.35 + Math.random() * 0.4, phase: Math.random() * 6 });
       }
     }
+    /* ---- 车辆路段（与测试版 computeStreetSegments 一致）：
+       只有紧挨建筑的街道才有路段，巡航范围覆盖路旁建筑再留一点掉头余量 ---- */
+    function computeStreetSegments() {
+      var along = {};
+      function add(axis, street, coord) {
+        var key = axis + ":" + Math.round(street * 100);
+        if (!along[key]) along[key] = { axis: axis, street: street, coords: [] };
+        along[key].coords.push(coord);
+      }
+      for (var i = 0; i < N; i++) {
+        if (!S.grid[i]) continue;
+        var p = wpos(i);
+        add("x", p[1] - GAP / 2, p[0]); add("x", p[1] + GAP / 2, p[0]);
+        add("z", p[0] - GAP / 2, p[1]); add("z", p[0] + GAP / 2, p[1]);
+      }
+      var limit = SIZE * GAP / 2 + 1.3, segs = [];
+      Object.keys(along).forEach(function (k) {
+        var e = along[k];
+        var mn = Math.max(-limit, Math.min.apply(null, e.coords) - 1.35);
+        var mx = Math.min(limit, Math.max.apply(null, e.coords) + 1.35);
+        if (mx - mn < 1.9) { var mid = (mn + mx) / 2; mn = Math.max(-limit, mid - 0.95); mx = Math.min(limit, mid + 0.95); }
+        segs.push({ axis: e.axis, street: e.street, min: mn, max: mx });
+      });
+      return segs;
+    }
+    function placeCar(car) {
+      if (!car.seg) return;
+      var side = 0.06;
+      if (car.seg.axis === "x") {
+        car.g.position.set(car.pos, 0.02, car.seg.street + (car.dir > 0 ? side : -side));
+        car.g.rotation.y = car.dir > 0 ? 0 : Math.PI;
+      } else {
+        car.g.position.set(car.seg.street + (car.dir > 0 ? -side : side), 0.02, car.pos);
+        car.g.rotation.y = car.dir > 0 ? -Math.PI / 2 : Math.PI / 2;
+      }
+    }
     function makeCars() {
-      var cols = [0xd94f3d, 0x2b7fd4, 0xf2f5f7, 0xf2c230, 0x39b5a8, 0x8d99a6];
-      var lanes = [-GAP * 2.5, -GAP * 0.5, GAP * 1.5];
-      for (var i = 0; i < 7; i++) {
+      var cols = [0xd95f43, 0x38618c, 0xe9a13b, 0xf2f0e6, 0x2a9d8f, 0x8a5fb0, 0x3a4656, 0xe86a92];
+      for (var i = 0; i < 8; i++) {
         var g = new THREE.Group();
         var col = cols[i % cols.length];
-        g.add(box(0.42, 0.13, 0.2, col, 0, 0.13, 0));
-        g.add(box(0.22, 0.11, 0.18, 0x2c3540, -0.02, 0.24, 0, { roughness: 0.3, metalness: 0.4 }));
-        [[-0.14, -0.1], [0.14, -0.1], [-0.14, 0.1], [0.14, 0.1]].forEach(function (wp) {
-          var w = cyl(0.045, 0.045, 0.03, 0x1c1f24, wp[0], 0.05, wp[1], 10);
-          w.rotation.x = Math.PI / 2; g.add(w);
+        g.add(box(0.4, 0.1, 0.2, col, 0, 0.1, 0, { roughness: 0.45 }));
+        g.add(box(0.2, 0.09, 0.18, 0x9fd4e8, -0.02, 0.19, 0, { roughness: 0.25 }));
+        g.add(box(0.03, 0.035, 0.14, 0xfff3b0, 0.2, 0.09, 0));
+        g.add(box(0.03, 0.035, 0.14, 0xd43d2a, -0.2, 0.09, 0));
+        var wheels = [];
+        [[-0.13, -0.1], [0.13, -0.1], [-0.13, 0.1], [0.13, 0.1]].forEach(function (wp) {
+          var w = cyl(0.042, 0.042, 0.03, 0x22262b, wp[0], 0.045, wp[1], 10);
+          w.rotation.x = Math.PI / 2; g.add(w); wheels.push(w);
         });
+        g.visible = false;
         scene.add(g);
-        cars.push({ g: g, lane: lanes[i % lanes.length], horiz: i % 2 === 0,
-                    t: Math.random() * SIZE * GAP - SIZE * GAP / 2, dir: i % 3 === 0 ? -1 : 1,
-                    speed: 1.1 + Math.random() * 0.7 });
+        cars.push({ g: g, wheels: wheels, seg: null, pos: 0, dir: i % 2 === 0 ? 1 : -1,
+                    speed: 1.1 + Math.random() * 1.1 });
       }
     }
     function makeSmoke() {
@@ -1157,10 +1499,9 @@
       requestAnimationFrame(animate);
       var time = (t || 0) / 1000;
       turbines.forEach(function (h) { h.rotation.z += 0.06; });
-      /* pedestrians */
+      /* pedestrians：数量随人口（与测试版一致：最多 36 人） */
       var c = three.cache;
-      var want = 0;
-      if (c) want = Math.max(0, Math.min(36, Math.round(36 * (c.capacity ? S.pop / c.capacity : 0))));
+      var want = S.pop <= 0 ? 0 : Math.min(36, Math.max(3, Math.round(S.pop / 8)));
       var lim = SIZE * GAP / 2 - 0.4;
       peds.forEach(function (p, i2) {
         p.g.visible = i2 < want;
@@ -1172,17 +1513,17 @@
         if (p.horiz) { p.g.position.set(p.t, 0.05 + bob, p.fixed); p.g.rotation.y = p.dir > 0 ? Math.PI / 2 : -Math.PI / 2; }
         else { p.g.position.set(p.fixed, 0.05 + bob, p.t); p.g.rotation.y = p.dir > 0 ? 0 : Math.PI; }
       });
-      /* cars: appear only once population & building thresholds are met,
-         and only the first N of them (they drive roads beside buildings) */
-      var vi3 = c ? vehicleInfo(c) : { unlocked: false, count: 0 };
+      /* cars：双门槛达标才出现，只在紧挨建筑的路段上来回巡航、
+         在建筑群两端掉头；拆楼跌破门槛车辆立刻消失 */
+      var veh = three.veh || { count: 0 };
       cars.forEach(function (car, ci) {
-        car.g.visible = vi3.unlocked && ci < vi3.count;
+        car.g.visible = ci < veh.count && !!car.seg;
         if (!car.g.visible) return;
-        car.t += car.dir * car.speed * 0.016;
-        if (car.t > lim + 1) car.t = -lim - 1;
-        if (car.t < -lim - 1) car.t = lim + 1;
-        if (car.horiz) { car.g.position.set(car.t, 0.02, car.lane + (car.dir > 0 ? 0.14 : -0.14)); car.g.rotation.y = car.dir > 0 ? 0 : Math.PI; }
-        else { car.g.position.set(car.lane + (car.dir > 0 ? -0.14 : 0.14), 0.02, car.t); car.g.rotation.y = car.dir > 0 ? -Math.PI / 2 : Math.PI / 2; }
+        car.pos += car.dir * car.speed * 0.02;
+        if (car.pos > car.seg.max) { car.pos = car.seg.max; car.dir = -1; }
+        else if (car.pos < car.seg.min) { car.pos = car.seg.min; car.dir = 1; }
+        placeCar(car);
+        car.wheels.forEach(function (w) { w.rotation.z -= car.speed * 0.02 / 0.042; });
       });
       /* smoke */
       var srcIdx = 0;
@@ -1206,18 +1547,24 @@
     function syncThree(c) {
       if (!three.ok) return;
       three.cache = c;
-      /* park each car on a road directly beside a built tile */
-      var rowRoads = [], colRoads = [];
-      for (var bi = 0; bi < N; bi++) {
-        if (!S.grid[bi]) continue;
-        var bp = wpos(bi);
-        var rz = bp[1] + GAP / 2, cx = bp[0] + GAP / 2;
-        if (rowRoads.indexOf(rz) < 0) rowRoads.push(rz);
-        if (colRoads.indexOf(cx) < 0) colRoads.push(cx);
-      }
+      /* 车辆：重算建筑旁路段并给每辆车分配路段（原路段没建筑了就换一条） */
+      var segs = computeStreetSegments();
+      var viNow = vehicleInfo(c);
+      three.veh = { count: segs.length ? viNow.count : 0, segments: segs };
       cars.forEach(function (car, ci) {
-        var pool = car.horiz ? rowRoads : colRoads;
-        if (pool.length) car.lane = pool[ci % pool.length];
+        if (!segs.length) { car.seg = null; return; }
+        var cur = null;
+        if (car.seg) segs.forEach(function (s) { if (s.axis === car.seg.axis && Math.abs(s.street - car.seg.street) < 0.01) cur = s; });
+        if (cur) {
+          car.seg = cur;
+          car.pos = Math.min(cur.max, Math.max(cur.min, car.pos));
+          if (car.pos >= cur.max) car.dir = -1;
+          if (car.pos <= cur.min) car.dir = 1;
+        } else {
+          car.seg = segs[ci % segs.length];
+          car.pos = car.seg.min + ((ci * 37 + 13) % 100) / 100 * (car.seg.max - car.seg.min);
+        }
+        placeCar(car);
       });
       smokeSources = [];
       turbines = turbines.filter(function (h) { return h.parent !== null; });
@@ -1261,12 +1608,52 @@
           sp.userData.txt = wantTxt;
           scene.add(sp); markerSprites[i] = sp;
         } else if (!wantTxt && cur) { scene.remove(cur); markerSprites[i] = null; }
-        /* pad highlight */
+        /* 空地装饰：粗糙地面——土斑 + 灌木/小树/石块/野花（按地块固定，不闪烁） */
+        if (!b) {
+          if (!decorGroups[i] && three.deco && three.seeded) {
+            var dg = new THREE.Group();
+            var dp = wpos(i);
+            dg.position.set(dp[0], 0.05, dp[1]);
+            if (three.seeded(i * 7 + 2) < 0.55) {
+              var dirt = new THREE.Mesh(new THREE.CircleGeometry(0.16 + three.seeded(i * 11 + 4) * 0.14, 10), mat(0xb59a68, { roughness: 1 }));
+              dirt.rotation.x = -Math.PI / 2;
+              dirt.position.set((three.seeded(i * 13 + 6) - 0.5) * 0.3, 0.012, (three.seeded(i * 17 + 8) - 0.5) * 0.3);
+              dg.add(dirt);
+            }
+            var dkind = three.seeded(i * 19 + 3);
+            if (dkind < 0.22) {
+              var dt2 = three.deco.tree(1.15, 0, 0, i);
+              dt2.position.set((three.seeded(i * 23) - 0.5) * 0.3, 0, (three.seeded(i * 29) - 0.5) * 0.3);
+              dg.add(dt2);
+            } else if (dkind < 0.45) {
+              var db2 = three.deco.bush(1.15, 0, 0, three.seeded(i * 31) < 0.35, i);
+              db2.position.set(-0.18, 0, 0.15);
+              dg.add(db2);
+            } else if (dkind < 0.58) {
+              var dr2 = three.deco.rock(1.1, 0, 0, i);
+              dr2.position.set(0.16, 0.02, -0.14);
+              dg.add(dr2);
+            } else if (dkind < 0.78) {
+              var f1 = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 5), mat(0xe86a92, { roughness: 1 }));
+              f1.position.set(-0.25, 0.04, 0.2); dg.add(f1);
+              var f2 = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 5), mat(0xffffff, { roughness: 1 }));
+              f2.position.set(0.28, 0.04, -0.18); dg.add(f2);
+            }
+            scene.add(dg); decorGroups[i] = dg;
+          }
+        } else if (decorGroups[i]) { scene.remove(decorGroups[i]); decorGroups[i] = null; }
+        /* 地面颜色：每块地草色微差；工业地块（工厂/发电厂/污水厂）是砂石地；
+           公园更绿；选中金色、受污染住宅发黄 */
         var pad = three.pads[i];
         if (pad) {
-          if (i === selected) pad.material = three.hlMat;
-          else if (b && RES_TYPES[b.type] && c.resInfo[i] && c.resInfo[i].remain > 0) pad.material = three.polMat;
-          else pad.material = three.padMat;
+          var LAWN = [0xa5dd84, 0x9bd677, 0xadd98a, 0x97cf72];
+          var col;
+          if (i === selected) col = 0xf2c230;
+          else if (b && RES_TYPES[b.type] && c.resInfo[i] && c.resInfo[i].remain > 0) col = 0xd9c84a;
+          else if (b && (b.type === "factory" || b.type === "power" || b.type === "sewage")) col = 0xbdb098;
+          else if (b && b.type === "park") col = 0x8fce6e;
+          else col = LAWN[Math.floor((three.seeded ? three.seeded(i * 3 + 1) : 0.5) * 4) % 4];
+          pad.material.color.setHex(col);
         }
       }
       /* collect smoke sources fresh (chimneys of current groups) */
@@ -1308,13 +1695,14 @@
     function renderStatsBar(c) {
       var satCls = c.sat.total >= 60 ? "good" : c.sat.total >= 40 ? "" : "bad";
       var powCls = c.powerOk ? "" : "bad";
+      var ti = tierIndexFor(S.pop), tier = TIERS[ti], nextTier = TIERS[ti + 1];
       var chips = [
-        ["月份", "第 " + S.month + " 月"],
+        ["城市等级", tier.title + " <small>" + formatMonth(S.month) + (nextTier ? " · 距「" + nextTier.title + "」还差 " + (nextTier.minPop - S.pop) + " 人" : " · 已是最高等级") + "</small>"],
         ["资金", "<span class='" + (S.funds < 0 ? "bad" : "") + "'>" + fmt(S.funds) + "</span> <small>金币</small>"],
         ["人口 / 容量", fmt(S.pop) + " <small>/ " + fmt(c.capacity) + "</small>"],
         ["满意度", "<span class='" + satCls + "'>" + c.sat.total + "</span> <small>/ 100</small>"],
-        ["电力 发/用", "<span class='" + powCls + "'>" + c.gen + " / " + c.use + "</span>"],
-        ["受教育度", c.education + "%"],
+        ["电力 供/需", "<span class='" + powCls + "'>" + c.gen + " / " + c.use + "</span>"],
+        ["受教育度", c.education + "% <small>收入 +" + c.eduBonusPct + "%</small>"],
         ["市民口碑", "<span class='" + (S.reputation > 0 ? "good" : S.reputation < 0 ? "bad" : "") + "'>" + signed(S.reputation) + "</span> <small>/ ±25</small>"],
         ["月净收入", "<span class='" + (c.net >= 0 ? "good" : "bad") + "'>" + signed(c.net) + "</span> <small>收 " + c.income + " · 维 " + c.upkeep + "</small>"]
       ];
@@ -1322,8 +1710,16 @@
         return "<div class='chip'><span class='k'>" + ch[0] + "</span><span class='v'>" + ch[1] + "</span></div>";
       }).join("");
       var extra = [];
-      if (c.totalOffset > 0) extra.push("公园已帮全城住宅抵消 " + (Math.round(c.totalOffset * 10) / 10) + " 点污染" + (c.cleaned ? "，其中 " + c.cleaned + " 栋被完全净化" : ""));
+      if (S.gameOver) extra.push("⚠ 城市已被托管（资金跌破 -300），点「重新开始」再来一局。");
+      if (c.totalOffset > 0) extra.push("公园已帮全城住宅抵消 " + fmtNum(c.totalOffset) + " 点污染" + (c.cleaned ? "，其中 " + c.cleaned + " 栋被完全净化" : ""));
       if (c.resCount) extra.push("生活便利：近学校 " + c.conv.school.served + " 栋 · 近商业街 " + c.conv.shop.served + " 栋 · 近医院 " + c.conv.hospital.served + " 栋（共 " + c.resCount + " 栋住宅），三样都近 " + c.homesAllConv + " 栋");
+      var bonuses = [];
+      if (c.capacityBonus > 0) bonuses.push("公园让全城容量 +" + c.capacityBonus);
+      if (c.factoryTaxBonus > 0 && c.counts.factory > 0) bonuses.push("商业街让每座工厂月税 +" + c.factoryTaxBonus);
+      if (c.policeCut > 0) bonuses.push("警察局让维护费 -" + c.policeCut + "%");
+      if (c.eduBonusPct > 0) bonuses.push("受教育度让商业收入 +" + c.eduBonusPct + "%");
+      if (c.counts.sewage > 0 && c.counts.factory > 0) bonuses.push("污水处理让工厂污染 -" + c.sewageCutPct + "%");
+      if (bonuses.length) extra.push("建筑加成生效中：" + bonuses.join(" · "));
       var bar = document.getElementById("statsBar");
       var note = document.createElement("div");
       note.className = "chip"; note.style.flex = "1 1 260px";
@@ -1333,42 +1729,75 @@
 
     function selectTile(i) { selected = i; refresh(); }
 
+    /* 建筑效果说明（与测试版 tileEffectText 一致） */
+    function tileEffectText(b) {
+      var d = DEFS[b.type], f = mult(b.level), parts = [];
+      if (d.cap) parts.push("住户容量 " + Math.round(d.cap * f));
+      if (d.jobs) parts.push("岗位 " + Math.round(d.jobs * f));
+      if (d.gen) parts.push("发电 " + Math.round(d.gen * f));
+      if (d.power) parts.push("耗电 " + d.power);
+      if (b.type === "luxury") parts.push("容量是普通住宅的 2.5 倍 · 居住品质高，给满意度加分（每栋 +2，上限 +6）· 和普通住宅一样怕工厂污染、讲生活便利");
+      if (b.type === "shop") parts.push("商业税约 30/月 · 每座让每座工厂月税 +10（上限 +30）· 建在住宅 2 格内提升购物便利与满意度");
+      if (b.type === "factory") parts.push("工业税约 55/月起 · 污染半径 2 格，离住宅越近污染越重");
+      if (b.type === "park") parts.push("净化力 " + fmtNum(parkAbsorb(b.level)) + " 点：抵消紧挨着的住宅的污染，隔一格的住宅抵消一半 · 全城住户容量 +2");
+      if (b.type === "school") parts.push("覆盖约 " + Math.round(150 * f) + " 人 · 提升受教育度（收入加成）· 建在住宅 2 格内提升上学便利与满意度");
+      if (b.type === "hospital") parts.push("覆盖约 150 人 · 提升满意度 · 建在住宅 2 格内提升就医便利与满意度");
+      if (b.type === "police") parts.push("提升治安与满意度 · 全城维护费 -4%（上限 -20%）");
+      if (b.type === "office") parts.push("办公收入约 45/月 · 受教育度越高收入加成越高");
+      if (b.type === "library") parts.push("教育覆盖约 " + Math.round(80 * f) + " 人 · 提升受教育度与文化满意度");
+      if (b.type === "fire") parts.push("提升消防安全满意度 · 工厂出事故时赔付减半");
+      if (b.type === "bank") parts.push("金融收入约 45/月 · 和商业一样吃受教育度加成");
+      if (b.type === "amusement") parts.push("门票收入约 35/月 · 让市民有地方玩，满意度有加成（每座 +3，上限 +6）");
+      if (b.type === "sewage") parts.push("每座让全城工厂污染削弱 15%（多座叠加，最多削弱 60%）· 住宅的污染值会随之变小，公园再抵消剩下的");
+      parts.push("维护 " + Math.round(d.upkeep * b.level) + "/月");
+      return parts.join(" · ");
+    }
+    function defDataText(d) {
+      var parts = [];
+      if (d.cap) parts.push("住 " + d.cap + " 人");
+      if (d.jobs) parts.push(d.jobs + " 个岗位");
+      if (d.gen) parts.push("发电 " + d.gen);
+      if (d.power) parts.push("耗电 " + d.power);
+      parts.push("维护 " + d.upkeep + "/月");
+      return parts.join(" · ");
+    }
     function tileDataRows(i, c) {
-      var b = S.grid[i], d = DEFS[b.type], m = mult(b.level), rows = [];
+      var b = S.grid[i], d = DEFS[b.type], m = mult(b.level), maxed = b.level >= MAXLV, rows = [];
+      function cmp(label, now, next) { rows.push([label, String(now) + (next != null && !maxed ? " → " + next : "")]); }
       rows.push(["等级", b.level + " / " + MAXLV]);
-      if (d.cap) rows.push(["容纳人口", Math.round(d.cap * m) + " 人"]);
+      if (d.cap) cmp("住户容量", Math.round(d.cap * m), Math.round(d.cap * mult(b.level + 1)));
       if (d.capBonus) rows.push(["城市容量", "+" + d.capBonus]);
-      if (d.jobs) rows.push(["工作岗位", Math.round(d.jobs * m)]);
-      if (d.gen) rows.push(["发电量", Math.round(d.gen * m) + " 点"]);
-      if (d.power) rows.push(["耗电", Math.round(d.power * m) + " 点"]);
-      if (d.income) {
-        var eduF = b.type === "office" ? 1 + c.eduBonus * 2 : 1 + c.eduBonus;
-        rows.push(["月收入", Math.round(d.income * m * eduF * c.powerFactor) + " 金币"]);
-      }
-      if (b.type === "stadium") rows.push(["门票月入", Math.round(S.pop * 0.25 * m) + " 金币"]);
-      if (b.type === "shop" && c.counts.factory) rows.push(["工厂联动税收", "+" + Math.min(30, c.counts.factory * 10) + " / 座"]);
-      rows.push(["维护费", Math.round(d.upkeep * m) + " / 月"]);
+      if (d.jobs) cmp("工作岗位", Math.round(d.jobs * m), Math.round(d.jobs * mult(b.level + 1)));
+      if (d.gen) cmp("发电量", Math.round(d.gen * m), Math.round(d.gen * mult(b.level + 1)));
+      if (d.power) rows.push(["耗电", d.power + " 点（不随等级变）"]);
+      if (d.income) rows.push(["月收入（全城统一结算）", "约 " + d.income + " 金币/座 · 当前电力系数 ×" + (Math.round(c.powerFactor * 100) / 100) + " · 教育 +" + c.eduBonusPct + "%"]);
+      if (b.type === "factory") rows.push(["每座工厂月税", (55 + c.factoryTaxBonus) + " 金币（商业联动 +" + c.factoryTaxBonus + "）"]);
+      cmp("维护费/月", Math.round(d.upkeep * b.level), Math.round(d.upkeep * (b.level + 1)));
+      rows.push(["拆除返还", Math.round(d.cost * 0.3) + " 金币"]);
       if (b.type === "factory") {
-        var hits = 0;
-        residences().forEach(function (r) { if (cheb(i, r) <= 2) hits++; });
-        rows.push(["污染圈内住宅", hits + " 栋"]);
+        var hits = 0, hitsPolluted = 0;
+        residences().forEach(function (r) {
+          if (cheb(i, r) <= 2) { hits++; if (c.resInfo[r] && c.resInfo[r].remain > 0) hitsPolluted++; }
+        });
+        rows.push(["污染圈内住宅", hits + " 栋（其中 " + hitsPolluted + " 栋正受污染）"]);
       }
-      if (b.type === "park") rows.push(["净化力", "紧挨住宅抵 " + (1 + 0.5 * (b.level - 1)) + " 点，隔一格减半"]);
+      if (b.type === "park") rows.push(["净化力", fmtNum(parkAbsorb(b.level)) + " 点：紧挨住宅全额抵消，隔一格减半" + (maxed ? "" : " → 升级后 " + fmtNum(parkAbsorb(b.level + 1)) + " 点")]);
+      if (b.type === "sewage") rows.push(["全城污染削弱", "当前共 " + c.counts.sewage + " 座，削弱 " + c.sewageCutPct + "%（上限 60%）"]);
       if (RES_TYPES[b.type]) {
         var ri = c.resInfo[i];
         if (ri) {
-          rows.push(["原始污染", ri.raw + " 点"]);
-          rows.push(["公园抵消", ri.off + " 点"]);
-          rows.push(["剩余污染", ri.remain + " 点"]);
+          rows.push(["原始污染", fmtNum(ri.raw) + " 点"]);
+          rows.push(["公园抵消", fmtNum(ri.off) + " 点"]);
+          rows.push(["剩余污染", fmtNum(ri.remain) + " 点"]);
         }
         ["school", "shop", "hospital"].forEach(function (t) {
           var best = 99;
           c.conv[t].tiles.forEach(function (o) { var dd = cheb(i, o); if (dd < best) best = dd; });
-          rows.push(["离" + DEFS[t].name, c.conv[t].count === 0 ? "全城还没有" : best > 90 ? "—" : best + " 格" + (best <= 2 ? "（便利）" : "")]);
+          rows.push(["离" + DEFS[t].name, c.conv[t].count === 0 ? "全城还没有" : best > 90 ? "—" : best + " 格" + (best <= 2 ? "（便利）" : "（太远）")]);
         });
       }
       if (b.type === "school" || b.type === "shop" || b.type === "hospital")
-        rows.push(["服务的住宅", c.conv[b.type].served + " 栋"]);
+        rows.push(["便利范围内的住宅", housesServedBy(i) + " 栋"]);
       return rows;
     }
 
@@ -1385,18 +1814,28 @@
           var d = DEFS[t], why = buildBlockReason(t, i);
           return "<button class='build-item' data-build='" + t + "' " + (why ? "disabled" : "") + ">" +
             "<span class='bn'><span>" + d.name + "</span><span class='cost'>" + d.cost + " 金币</span></span>" +
-            "<span class='bd'>" + d.desc + (why ? "<br>不可建：" + why : "") + "</span></button>";
+            "<span class='bd'><strong>" + defDataText(d) + "</strong><br>" + d.desc + (why ? "<br>不可建：" + why : "") + "</span></button>";
         }).join("");
-        el.innerHTML = head + "<p class='note'>选一座建筑盖在这块地上（当前资金 " + fmt(S.funds) + "）：</p><div class='build-grid'>" + items + "</div>";
+        var pd = pollutionDetailAt(i), hints = "";
+        if (pd.raw > 0 && pd.remain > 0)
+          hints += "<p class='note bad'>注意：这块地原始污染 " + fmtNum(pd.raw) + " 点" + (pd.off > 0 ? "，周边公园已抵消 " + fmtNum(pd.off) + " 点，还剩 " + fmtNum(pd.remain) + " 点" : "") + "。在这里盖住宅，居民会被污染、满意度会掉；盖公园正好能帮旁边的住宅继续抵消污染。</p>";
+        else if (pd.raw > 0)
+          hints += "<p class='note good'>这块地本来有 " + fmtNum(pd.raw) + " 点工厂污染，但周边公园已经把它完全抵消了——盖住宅也没事；在这里再盖公园，能帮附近住宅抵消更多。</p>";
+        else if (c.counts.factory > 0)
+          hints += "<p class='note good'>这块地不在任何工厂的污染范围内，盖住宅很安全。</p>";
+        var servedN = housesServedBy(i);
+        if (servedN > 0) hints += "<p class='note good'>这块地 2 格内有 " + servedN + " 栋住宅：在这里盖学校、商业街或医院，能提升这些住宅的上学 / 购物 / 就医便利，满意度会涨。</p>";
+        el.innerHTML = head + hints + "<p class='note'>选一座建筑盖在这块地上（当前资金 " + fmt(S.funds) + "）：</p><div class='build-grid'>" + items + "</div>";
       } else {
         var d = DEFS[b.type];
         var rows = tileDataRows(i, c).map(function (r) {
           return "<div><span>" + r[0] + "</span><span>" + r[1] + "</span></div>";
         }).join("");
+        rows = "<p class='note' style='margin:2px 0 6px'>" + tileEffectText(b) + "</p>" + "<div class='kv'>" + rows + "</div>";
         var upBtn = b.level >= MAXLV
           ? "<button class='btn' disabled>已满级</button>"
           : "<button class='btn' id='btnUpgrade'>升级到 " + (b.level + 1) + " 级（" + upCost(d, b.level) + " 金币）</button>";
-        el.innerHTML = head + "<div class='kv'>" + rows + "</div>" +
+        el.innerHTML = head + rows +
           "<div class='controls-row'>" + upBtn +
           "<button class='btn danger' id='btnDemolish'>拆除（返还 " + Math.round(d.cost * 0.3) + "）</button></div>";
         var ub = document.getElementById("btnUpgrade");
@@ -1409,41 +1848,90 @@
     }
 
     function renderStatsTab(c) {
-      var total = 0, lvTotal = 0;
-      ORDER.forEach(function (t) { total += c.counts[t]; lvTotal += c.lvSum[t]; });
-      var rows = ORDER.map(function (t) {
+      var total = c.totalBuildings;
+      var kinds = ORDER.filter(function (t) { return c.counts[t] > 0; }).length;
+      var el = document.getElementById("tab-stats");
+      var head = "<p class='note' style='margin-top:0'>共 <strong>" + total + "</strong> 栋建筑（" + kinds + " 种） · 空地 " + (N - total) + " 块 · 每月维护合计 " + c.upkeepRaw + " 金币" +
+        (c.policeCut > 0 ? "（警察局 -" + c.policeCut + "% 后实扣 " + c.upkeep + "）" : "") + "</p>";
+      if (total === 0) {
+        el.innerHTML = head + "<p class='note'>还没有建筑——先在地图上点一块空地，盖起第一栋住宅吧。</p>" +
+          "<h3>本月账目预估</h3><div class='kv'>" +
+          "<div><span>居民税收（税率 " + S.taxRate + "%）</span><span>" + c.incomeTax + "</span></div>" +
+          "<div><span>商业收入</span><span>" + c.incomeBiz + "</span></div>" +
+          "<div><span>维护费</span><span>−" + c.upkeep + "</span></div>" +
+          "<div><span>月净收入</span><span>" + signed(c.net) + "</span></div></div>";
+        return;
+      }
+      var rowsHtml = ORDER.filter(function (t) { return c.counts[t] > 0; }).map(function (t) {
         var d = DEFS[t];
+        var tiles = tilesOf(t), byLv = {};
+        tiles.forEach(function (i2) { var lv = S.grid[i2].level; byLv[lv] = (byLv[lv] || 0) + 1; });
+        var lvText = Object.keys(byLv).sort().map(function (lv) { return byLv[lv] > 1 ? lv + " 级 ×" + byLv[lv] : lv + " 级"; }).join("、");
+        var typeUpkeep = 0, contrib = [];
+        var capSum = 0, jobSum = 0, genSum = 0;
+        tiles.forEach(function (i2) {
+          var b = S.grid[i2], m = mult(b.level);
+          typeUpkeep += Math.round(d.upkeep * b.level);
+          if (d.cap) capSum += Math.round(d.cap * m);
+          if (d.jobs) jobSum += Math.round(d.jobs * m);
+          if (d.gen) genSum += Math.round(d.gen * m);
+        });
+        if (d.cap) contrib.push("容量共 " + capSum);
+        if (d.jobs) contrib.push("岗位共 " + jobSum);
+        if (d.gen) contrib.push("发电共 " + genSum);
+        var belowMax = tiles.filter(function (i2) { return S.grid[i2].level < MAXLV; });
+        var typeCost = 0, cheapest = Infinity;
+        belowMax.forEach(function (i2) { var cc = upCost(d, S.grid[i2].level); typeCost += cc; if (cc < cheapest) cheapest = cc; });
         var colCss = "#" + d.color.toString(16).padStart(6, "0");
-        return "<tr><td><span class='swatch' style='background:" + colCss + "'></span>" + d.name + "</td>" +
-          "<td>" + c.counts[t] + "</td><td>" + (c.counts[t] ? (Math.round(c.lvSum[t] / c.counts[t] * 10) / 10) : "—") + "</td>" +
-          "<td>" + c.lvSum[t] + "</td></tr>";
+        var btn = belowMax.length === 0
+          ? "<span class='note'>全部满级</span>"
+          : "<button class='btn small' data-bulk-type='" + t + "' " + (S.funds < cheapest ? "disabled" : "") + ">全部升一级 · " + typeCost + " 金币</button>";
+        return "<div style='display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:7px 0;border-bottom:1px dashed var(--line)'>" +
+          "<span style='font-weight:700'><span class='swatch' style='background:" + colCss + "'></span>" + d.name + " <span style='color:var(--accent)'>×" + c.counts[t] + "</span></span>" +
+          "<span class='note'>" + lvText + " · 维护 " + typeUpkeep + "/月" + (contrib.length ? " · " + contrib.join(" · ") : "") + "</span>" +
+          "<span style='margin-left:auto'>" + btn + "</span></div>";
       }).join("");
-      document.getElementById("tab-stats").innerHTML =
-        "<table class='stat'><tr><th>建筑</th><th>个数</th><th>平均等级</th><th>总等级</th></tr>" + rows +
-        "<tr><td><strong>合计</strong></td><td><strong>" + total + "</strong></td><td>—</td><td><strong>" + lvTotal + "</strong></td></tr></table>" +
-        "<p class='note' style='margin-top:8px'>种类：" + ORDER.filter(function (t) { return c.counts[t] > 0; }).length + " / " + ORDER.length + " 种 · 空地 " + (N - total) + " 块</p>" +
-        "<h3>一键操作</h3>" +
-        "<div class='controls-row'><button class='btn' id='btnUpgradeAll'>一键升级全部（低等级优先）</button></div>" +
-        "<p class='note'>按等级从低到高轮流升级，直到全部满级或资金不够为止。</p>" +
+      var belowAll = [], bulkOneCost = 0, bulkMaxCost = 0, bulkMaxUps = 0, cheapestAll = Infinity;
+      for (var i = 0; i < N; i++) {
+        var bb = S.grid[i];
+        if (bb && bb.level < MAXLV) {
+          belowAll.push(i);
+          var uc = upCost(DEFS[bb.type], bb.level);
+          bulkOneCost += uc; if (uc < cheapestAll) cheapestAll = uc;
+          bulkMaxCost += costToMax(bb); bulkMaxUps += MAXLV - bb.level;
+        }
+      }
+      el.innerHTML = head + rowsHtml +
+        "<div class='controls-row' style='margin-top:10px'>" +
+        "<button class='btn primary' id='btnBulkOne' " + (belowAll.length === 0 || S.funds < cheapestAll ? "disabled" : "") + ">" +
+          (belowAll.length === 0 ? "全城建筑已全部满级" : "一键全部升一级 · " + bulkOneCost + " 金币") + "</button>" +
+        "<button class='btn' id='btnBulkMax' " + (belowAll.length === 0 || S.funds < cheapestAll ? "disabled" : "") + ">一键全部升满级 · " + bulkMaxCost + " 金币（共 " + bulkMaxUps + " 级）</button></div>" +
+        "<p class='note'>一键升级按地块顺序逐栋结算，资金不够的栋数会自动跳过（不会把钱扣成负数），攒够钱再点一次即可。</p>" +
+        (bulkNote ? "<p class='note good' role='status'>" + bulkNote + "</p>" : "") +
         "<h3>本月账目预估</h3><div class='kv'>" +
-        "<div><span>居民税收</span><span>" + c.incomeTax + "</span></div>" +
-        "<div><span>商业/工厂/办公收入</span><span>" + c.incomeBiz + "</span></div>" +
-        "<div><span>体育馆门票</span><span>" + c.incomeStadium + "</span></div>" +
-        "<div><span>维护费（警察已减免 " + Math.round(c.policeCut * 100) + "%）</span><span>−" + c.upkeep + "</span></div>" +
+        "<div><span>居民税收（税率 " + S.taxRate + "%）</span><span>" + c.incomeTax + "</span></div>" +
+        "<div><span>商业/工厂/办公/银行/游乐园收入</span><span>" + c.incomeBiz + "</span></div>" +
+        "<div><span>维护费（警察已减免 " + c.policeCut + "%）</span><span>−" + c.upkeep + "</span></div>" +
         "<div><span>月净收入</span><span>" + signed(c.net) + "</span></div></div>" +
-        (c.powerOk ? "" : "<p class='note bad'>电力不足：商业、工厂、办公楼收入按一半计算。</p>");
-      document.getElementById("btnUpgradeAll").addEventListener("click", upgradeAll);
+        (c.powerOk ? "" : "<p class='note bad'>电力不足：商业收入按供需比打折（最低 35%），满意度也会大跌。</p>");
+      el.querySelectorAll("[data-bulk-type]").forEach(function (btn) {
+        btn.addEventListener("click", function () { doBulkType(btn.getAttribute("data-bulk-type")); });
+      });
+      var b1 = document.getElementById("btnBulkOne"), b2 = document.getElementById("btnBulkMax");
+      if (b1) b1.addEventListener("click", function () { doBulkAll("one"); });
+      if (b2) b2.addEventListener("click", function () { doBulkAll("max"); });
     }
 
     function renderSatTab(c) {
       var rows = c.sat.items.map(function (it) {
         var cls = it.v > 0 ? "pos-v" : it.v < 0 ? "neg-v" : "zero-v";
-        return "<li><span>" + it.label + "</span><span class='val " + cls + "'>" + signed(it.v) + "</span></li>";
+        return "<li><span>" + it.label + (it.detail ? " <span class='note' style='font-weight:400'>" + it.detail + "</span>" : "") + "</span><span class='val " + cls + "'>" + signed(it.v) + "</span></li>";
       }).join("");
       document.getElementById("tab-sat").innerHTML =
-        "<ul class='breakdown'><li><span>基础值</span><span class='val'>50</span></li>" + rows +
+        (c.sat.items.length === 0 ? "<p class='note'>目前没有任何加减分项——" + (S.pop === 0 ? "先盖住宅把居民招进来吧。" : "城市运转平稳。") + "</p>" : "") +
+        "<ul class='breakdown'><li><span>基础值</span><span class='val'>52</span></li>" + rows +
         "<li><span><strong>总满意度</strong></span><span class='val'>" + c.sat.total + " / 100</span></li></ul>" +
-        "<p class='note' style='margin-top:8px'>满意度 ≥60 人口快速增长，45–59 缓慢增长，30–44 几乎停滞，低于 30 市民会搬走。</p>";
+        "<p class='note' style='margin-top:8px'>满意度 ≥55 人口较快增长，40–54 缓慢增长，28–39 人口微跌，低于 28 明显流失；失业率超过 35% 还会额外流失。</p>";
     }
 
     function renderNeedsTab(c) {
@@ -1452,17 +1940,16 @@
     }
 
     var SHORT = { house: "住", luxury: "豪", shop: "商", factory: "工", office: "办", park: "园", power: "电",
-                  wind: "风", school: "校", library: "书", hospital: "医", police: "警", fire: "消", stadium: "体" };
+                  wind: "风", school: "校", library: "书", hospital: "医", police: "警", fire: "消", bank: "银", amusement: "乐", sewage: "水" };
 
-    /* ---- vehicles: only once the city is big enough, and only on
-       roads right next to buildings ---- */
-    var VEH_POP_MIN = 25, VEH_BLD_MIN = 8;
+    /* ---- 车辆（与测试版 carTargetFor 一致）：人口 ≥60 且建筑 ≥10 栋才出现，
+       最多 8 辆，只在紧挨建筑的路段上活动 ---- */
+    var VEH_POP_MIN = 60, VEH_BLD_MIN = 10;
     function vehicleInfo(c) {
-      var total = 0;
-      ORDER.forEach(function (t) { total += c.counts[t]; });
+      var total = c.totalBuildings;
       var unlocked = S.pop >= VEH_POP_MIN && total >= VEH_BLD_MIN;
       var count = 0;
-      if (unlocked) count = Math.min(8, 3 + Math.floor((S.pop - VEH_POP_MIN) / 25) + Math.floor((total - VEH_BLD_MIN) / 8));
+      if (unlocked) count = Math.min(8, 2 + Math.floor((S.pop - VEH_POP_MIN) / 70) + Math.floor((total - VEH_BLD_MIN) / 10));
       return { unlocked: unlocked, count: count, total: total };
     }
     /* road segments hugging a building: south edge (horizontal road)
@@ -1568,8 +2055,18 @@
       S.log.forEach(function (t, i2) { lis[i2].textContent = t; });
     }
 
+    function renderTaxRow() {
+      document.querySelectorAll("[data-tax]").forEach(function (b) {
+        var on = +b.getAttribute("data-tax") === S.taxRate;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.background = on ? "var(--accent)" : "";
+        b.style.color = on ? "var(--accent-ink)" : "";
+        b.style.borderColor = on ? "var(--accent)" : "";
+      });
+    }
     function refresh() {
       var c = compute();
+      renderTaxRow();
       renderStatsBar(c);
       renderTilePanel(c);
       renderStatsTab(c);
@@ -1582,7 +2079,8 @@
 
     /* ---------------- save code (static edition) ---------------- */
     function exportCode() {
-      var data = { v: 1, funds: S.funds, month: S.month, pop: S.pop, reputation: S.reputation,
+      var data = { v: 2, funds: S.funds, month: S.month, pop: S.pop, reputation: S.reputation,
+                   taxRate: S.taxRate, gameOver: S.gameOver,
                    grid: S.grid, recentEvents: S.recentEvents, log: S.log, totalEvents: S.totalEvents };
       return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
     }
@@ -1591,17 +2089,25 @@
       if (!data || !Array.isArray(data.grid) || data.grid.length !== N) throw new Error("bad save");
       S = { funds: +data.funds || 0, month: +data.month || 1, pop: +data.pop || 0,
             reputation: Math.max(-25, Math.min(25, +data.reputation || 0)),
+            taxRate: [0, 5, 10, 15, 20, 25, 30].indexOf(+data.taxRate) >= 0 ? +data.taxRate : 10,
+            gameOver: !!data.gameOver,
             grid: data.grid.map(function (b) {
-              return b && DEFS[b.type] ? { type: b.type, level: Math.max(1, Math.min(MAXLV, +b.level || 1)) } : null;
+              if (!b) return null;
+              var t = b.type === "stadium" ? "amusement" : b.type; /* 旧存档的体育馆并入游乐园 */
+              return DEFS[t] ? { type: t, level: Math.max(1, Math.min(MAXLV, +b.level || 1)) } : null;
             }),
             recentEvents: Array.isArray(data.recentEvents) ? data.recentEvents : [],
             log: Array.isArray(data.log) ? data.log : [], totalEvents: +data.totalEvents || 0 };
       selected = -1;
+      pendingEvent = null;
+      document.getElementById("eventOverlay").classList.remove("open");
+      renderTaxRow();
       /* drop cached 3D models so they rebuild */
       if (three.ok) {
         for (var i = 0; i < N; i++) {
           if (tileGroups[i]) { scene.remove(tileGroups[i]); tileGroups[i] = null; }
           if (markerSprites[i]) { scene.remove(markerSprites[i]); markerSprites[i] = null; }
+          if (decorGroups[i]) { scene.remove(decorGroups[i]); decorGroups[i] = null; }
         }
       }
     }
@@ -1614,6 +2120,12 @@
         ["stats", "sat", "needs", "flat", "save"].forEach(function (k) {
           document.getElementById("tab-" + k).hidden = k !== tab.getAttribute("data-tab");
         });
+      });
+    });
+    document.querySelectorAll("[data-tax]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        S.taxRate = +b.getAttribute("data-tax");
+        refresh();
       });
     });
     document.getElementById("btnNextMonth").addEventListener("click", nextMonth);
@@ -1633,6 +2145,7 @@
         for (var i = 0; i < N; i++) {
           if (tileGroups[i]) { scene.remove(tileGroups[i]); tileGroups[i] = null; }
           if (markerSprites[i]) { scene.remove(markerSprites[i]); markerSprites[i] = null; }
+          if (decorGroups[i]) { scene.remove(decorGroups[i]); decorGroups[i] = null; }
         }
       }
       toast("新城市已成立。");
