@@ -255,11 +255,6 @@
       .log li { margin: 2px 0; }
 
       /* ---------- tutorial & tax ---------- */
-      #tutorial { margin-bottom: 12px; }
-      #tutorial summary { cursor: pointer; font-weight: 700; font-size: 16px; }
-      #tutorial ol { margin: 8px 0 4px; padding-left: 22px; }
-      #tutorial li { margin: 5px 0; }
-      #tutorial p { margin: 6px 0; }
       .tax-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
       .tax-row .tlabel { font-size: 13px; color: var(--ink-soft); }
       .tax-btn {
@@ -267,26 +262,29 @@
         padding: 3px 12px; min-height: 2rem; font-weight: 600;
       }
       .map-caption { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; line-height: 1.6; }
+      /* ---------- interactive (hands-on) tutorial ---------- */
+      #tutRing { position: fixed; z-index: 79; pointer-events: none; border: 3px solid #f2c230; border-radius: 12px; display: none; animation: tutBreathe 1.2s ease-in-out infinite; }
+      #tutRing .tut-arrow { position: absolute; left: 50%; top: -32px; transform: translateX(-50%); font-size: 22px; line-height: 1; color: #b97f16; text-shadow: 0 1px 3px rgba(0,0,0,.35); animation: tutBounce .9s ease-in-out infinite; }
+      @keyframes tutBreathe { 0%,100% { box-shadow: 0 0 0 3px rgba(242,194,48,.30), 0 0 14px rgba(242,194,48,.40); } 50% { box-shadow: 0 0 0 10px rgba(242,194,48,.10), 0 0 30px rgba(242,194,48,.75); } }
+      @keyframes tutBounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+      @media (prefers-reduced-motion: reduce) { #tutRing, #tutRing .tut-arrow { animation: none; } }
+      #tutBubble { position: fixed; z-index: 80; width: min(320px, 92vw); background: var(--panel); color: var(--ink); border: 2px solid #f2c230; border-radius: 12px; box-shadow: 0 10px 32px rgba(0,0,0,.28); padding: 12px 14px; display: none; }
+      #tutBubble .tut-step { font-size: 12px; color: var(--gold); font-weight: 700; }
+      #tutBubble .tut-text { font-size: 16px; font-weight: 700; margin: 2px 0 4px; }
+      #tutBubble .tut-sub { font-size: 13px; color: var(--ink-soft); margin: 0 0 8px; }
+      #tutBubble .tut-row { display: flex; gap: 8px; flex-wrap: wrap; }
+      #tutorialBar { margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+      #tutorialBar .note { flex: 1 1 220px; }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <details class="card" id="tutorial" open>
-        <summary>新手教程：这座城市怎么玩</summary>
-        <ol>
-          <li><strong>先住人，再挣钱。</strong>点任意一块空地会弹出建造菜单（16 种建筑都写明造价、容量、岗位、耗电和维护）。开局先盖 2–3 栋<strong>住宅区</strong>，再配一座<strong>发电厂</strong>和一条<strong>商业街</strong>，然后点「推进一个月」，市民就会搬进来、开始缴税。</li>
-          <li><strong>每月结算一次。</strong>点「推进一个月」会收税、扣维护费、按满意度涨落人口。税率可以调（下方按钮）：税越高收入越多，但超过 15% 市民会抱怨，8% 以下反而加满意度。资金跌破 <strong>-300 金币</strong>城市会被托管，本局结束。</li>
-          <li><strong>电和岗位是命脉。</strong>每栋建筑都耗电（耗电不随等级变），电力不够时商业收入按供需比打折、满意度大跌——及时盖发电厂或风力发电机。岗位不够时失业率上升、人口流失，商业街、工厂、办公楼、银行都能提供岗位。</li>
-          <li><strong>工厂离住宅远一点。</strong>工厂污染半径 2 格：紧挨最重、隔一格较轻、隔两格完全没事，所以工厂和住宅<strong>不能紧挨着建</strong>。受污染的住宅在地图上会发黄、带「污」标记。在住宅旁盖<strong>公园</strong>能抵消污染（1 级公园抵 1 点，每升一级 +0.5，隔一格效果减半，可叠加）；<strong>污水处理厂</strong>每座再削弱全城工厂污染 15%（上限 60%）。</li>
-          <li><strong>便民设施要盖在住宅旁边。</strong>学校、商业街、医院在住宅 2 格内算「便利」（紧挨最方便、隔一格打对折），三项各给满意度最高 +8 分；三样都近的住宅带绿色「便」标记。都建了却离所有住宅太远，反而各扣 3 分。</li>
-          <li><strong>教育和建筑加成。</strong>学校每座约覆盖 150 人、图书馆约 80 人（升级覆盖更多），决定<strong>受教育度</strong>：越高，商业收入加成越高（最高 +25%）。另外：每座公园全城容量 +2；每座商业街让每座工厂月税 +10（上限 +30）；每座警察局全城维护费 -4%（上限 -20%）。地不够时盖<strong>高级住宅区</strong>，一栋住 30 人。</li>
-          <li><strong>升级比新建划算。</strong>点已有建筑能看当前数值和升到下一级的数值对比。建筑最高 5 级，升级费 = 造价 × 0.9 × 当前等级。「建筑统计」页签里，每种建筑可以<strong>全部升一级</strong>，还能<strong>一键全部升一级 / 升满级</strong>，钱不够的栋会自动跳过。</li>
-          <li><strong>大事件要拍板。</strong>推进月份约有三成概率触发大事件（共 10 种，开局头两个月不触发），每个有 3 种处理方案：花钱买民心、省钱得罪人、或赚一笔。你的选择会攒下<strong>市民口碑</strong>（长期满意度修正，累计 ±25），在「满意度解析」里单列「大事抉择」一项。拿不准市民缺什么，就看「满意度解析」和「市民需求」两个页签。</li>
-          <li><strong>城市会长大。</strong>人口到 50 / 150 / 300 / 600 / 1000 / 1600，城市逐级升级并拿到拨款。街上的行人随人口变多（最多 36 人）；<strong>小汽车要人口达到 60 且建筑达到 10 栋才出现</strong>（最多 8 辆），只在紧挨建筑的路段上来回巡航、在建筑群两端掉头，拆楼跌破门槛就会消失。</li>
-          <li><strong>存档靠存档码。</strong>这个版本没有服务器存档：去「存档」页签导出存档码自己收好，下次打开把码粘贴回来导入，就能接着玩；发给朋友，对方导入后也能从你的进度继续。</li>
-        </ol>
-        <p class="note">地图说明：拖动旋转、滚轮/双指缩放、点地块建设。地块之间是带虚线中线和路灯的马路，每块地的草色略有不同，工厂、发电厂、污水处理厂脚下是砂石地，空地是带土斑、灌木、小树和石块的粗糙地面。地图之外不是草坪，而是荒地与森林：干黄斑驳的地面、成片的森林簇、岩石、枯树、干灌木、一条伸向荒地的土路和远山围着城市。</p>
-      </details>
+      <div class="card" id="tutorialBar">
+        <strong>新手教程</strong>
+        <span class="note">不用读长文——跟着金色光圈和箭头，真的点一遍就会玩：选地块、盖住宅、推进一个月、看满意度解析、再自己盖一座建筑。</span>
+        <button class="btn" id="btnTutStart">开始实操教程</button>
+        <span class="note" id="tutStatus"></span>
+      </div>
 
       <div class="statsbar" id="statsBar"></div>
 
@@ -368,6 +366,17 @@
         <h2 id="eventTitle"></h2>
         <p id="eventDesc"></p>
         <div id="eventOpts"></div>
+      </div>
+    </div>
+    <div id="tutRing" aria-hidden="true"><span class="tut-arrow">&#9660;</span></div>
+    <div id="tutBubble" role="dialog" aria-label="新手教程操作指引">
+      <div class="tut-step" id="tutStepLabel"></div>
+      <div class="tut-text" id="tutText"></div>
+      <p class="tut-sub" id="tutSub"></p>
+      <div class="tut-row">
+        <button class="btn small" id="tutSkipStep">跳过此步</button>
+        <button class="btn small" id="tutQuit">结束教程</button>
+        <button class="btn small primary" id="tutDone" hidden>完成</button>
       </div>
     </div>
     <div id="toast" role="status"></div>
@@ -851,6 +860,7 @@
       rollEvent(compute());
       if (pendingEvent) addLog("⚠ 大事件：" + pendingEvent.title + "——这事得你亲自拍板，选个处理方案吧！");
       refresh();
+      tutOnMonth();
     }
 
     /* ---------------- build rules ---------------- */
@@ -874,6 +884,7 @@
       S.grid[i] = { type: type, level: 1 };
       addLog("建成" + DEFS[type].name + "（" + posLabel(i) + "）。");
       refresh();
+      tutOnBuild(type);
     }
     function doUpgrade(i) {
       var b = S.grid[i]; if (!b || b.level >= MAXLV) return;
@@ -1727,7 +1738,7 @@
       bar.appendChild(note);
     }
 
-    function selectTile(i) { selected = i; refresh(); }
+    function selectTile(i) { selected = i; refresh(); tutOnSelect(i); }
 
     /* 建筑效果说明（与测试版 tileEffectText 一致） */
     function tileEffectText(b) {
@@ -2120,6 +2131,7 @@
         ["stats", "sat", "needs", "flat", "save"].forEach(function (k) {
           document.getElementById("tab-" + k).hidden = k !== tab.getAttribute("data-tab");
         });
+        tutOnTab(tab.getAttribute("data-tab"));
       });
     });
     document.querySelectorAll("[data-tax]").forEach(function (b) {
@@ -2181,8 +2193,127 @@
       }
     });
 
+
+    /* ============================================================
+       新手教程（实操版）：不给长文，只用呼吸光圈 + 箭头高亮真实
+       界面元素，玩家真的点下去才进下一步；老存档重看同样按
+       真实操作走（选空地 → 盖住宅 → 推进月份 → 满意度解析 →
+       再选空地 → 任选一座建筑）。
+       ============================================================ */
+    var TUT_STEPS = [
+      { key: "select",  text: "点一块空地", sub: "点地图上任意一块空地（平面图里点也行）。" },
+      { key: "house",   text: "点「住宅区」盖第一栋房", sub: "在下面的建造菜单里点住宅区那一项。" },
+      { key: "month",   text: "点「推进一个月」", sub: "点左下角绿色的推进按钮，市民就会搬进来。" },
+      { key: "sat",     text: "点「满意度解析」", sub: "点右侧的这个页签，看市民为什么满意或不满。" },
+      { key: "select2", text: "再点一块空地", sub: "这次你自己选位置——想想下一座建筑盖哪儿。" },
+      { key: "build",   text: "选一座建筑盖下去", sub: "发电厂、商业街都行。记住：住宅别紧挨工厂。" }
+    ];
+    var tutState = { active: false, step: 0, timer: null };
+    function tutTarget() {
+      var st = TUT_STEPS[tutState.step];
+      if (!st) return null;
+      if (st.key === "select" || st.key === "select2") return document.getElementById("stageWrap");
+      if (st.key === "house") return document.querySelector("[data-build='house']") || document.getElementById("tilePanel");
+      if (st.key === "build") return document.querySelector(".build-grid") || document.getElementById("tilePanel");
+      if (st.key === "month") return document.getElementById("btnNextMonth");
+      if (st.key === "sat") return document.querySelector("[data-tab='sat']");
+      return null;
+    }
+    function tutPlace() {
+      if (!tutState.active) return;
+      var ring = document.getElementById("tutRing"), bub = document.getElementById("tutBubble");
+      var done = tutState.step >= TUT_STEPS.length;
+      var el = done ? document.getElementById("btnTutStart") : tutTarget();
+      if (!el) { ring.style.display = "none"; return; }
+      var r = el.getBoundingClientRect();
+      ring.style.display = "block";
+      ring.style.left = (r.left - 5) + "px"; ring.style.top = (r.top - 5) + "px";
+      ring.style.width = (r.width + 10) + "px"; ring.style.height = (r.height + 10) + "px";
+      var bw = Math.min(320, window.innerWidth * 0.92), bh = bub.offsetHeight || 150;
+      var bx = Math.max(8, Math.min(window.innerWidth - bw - 8, r.left + r.width / 2 - bw / 2));
+      var by = r.bottom + 40;
+      if (by + bh > window.innerHeight - 8) by = r.top - bh - 42;
+      if (by < 8) by = Math.min(window.innerHeight - bh - 8, r.bottom + 40);
+      bub.style.left = bx + "px"; bub.style.top = Math.max(8, by) + "px";
+    }
+    function tutShow(scroll) {
+      var bub = document.getElementById("tutBubble");
+      if (!tutState.active) {
+        bub.style.display = "none";
+        document.getElementById("tutRing").style.display = "none";
+        return;
+      }
+      var done = tutState.step >= TUT_STEPS.length;
+      document.getElementById("tutStepLabel").textContent = done ? "教程完成" : "第 " + (tutState.step + 1) + " 步 / 共 " + TUT_STEPS.length + " 步 · 跟着光圈点";
+      document.getElementById("tutText").textContent = done ? "你已经会玩了！" : TUT_STEPS[tutState.step].text;
+      document.getElementById("tutSub").textContent = done ? "接下来自己经营：缺电盖发电厂，缺岗位盖商业街，工厂离住宅远一点。" : TUT_STEPS[tutState.step].sub;
+      document.getElementById("tutSkipStep").hidden = done;
+      document.getElementById("tutQuit").hidden = done;
+      document.getElementById("tutDone").hidden = !done;
+      bub.style.display = "block";
+      if (scroll && !done) {
+        var el = tutTarget();
+        if (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < 60 || r.bottom > window.innerHeight - 170) el.scrollIntoView({ block: "center", behavior: "smooth" });
+        }
+      }
+      setTimeout(tutPlace, 60);
+      setTimeout(tutPlace, 380);
+    }
+    function tutStart() {
+      tutState.active = true; tutState.step = 0;
+      document.getElementById("tutStatus").textContent = "教程进行中——跟着金色光圈点。";
+      if (tutState.timer) clearInterval(tutState.timer);
+      tutState.timer = setInterval(tutPlace, 350);
+      tutShow(true);
+      toast("新手教程开始：跟着光圈点第一块空地。");
+    }
+    function tutEnd(finished) {
+      tutState.active = false;
+      if (tutState.timer) { clearInterval(tutState.timer); tutState.timer = null; }
+      document.getElementById("tutStatus").textContent = finished ? "教程已完成，随时可以再点「开始实操教程」重看。" : "教程已结束，随时可以再点「开始实操教程」重看。";
+      tutShow(false);
+    }
+    function tutNext() {
+      if (!tutState.active) return;
+      tutState.step++;
+      tutShow(true);
+    }
+    /* ---- real-action hooks: only the real click advances the step ---- */
+    function tutOnSelect(i) {
+      if (!tutState.active) return;
+      var st = TUT_STEPS[tutState.step];
+      if (st && (st.key === "select" || st.key === "select2") && !S.grid[i]) tutNext();
+    }
+    function tutOnBuild(type) {
+      if (!tutState.active) return;
+      var st = TUT_STEPS[tutState.step];
+      if (!st) return;
+      if (st.key === "house" && type === "house") tutNext();
+      else if (st.key === "build") tutNext();
+    }
+    function tutOnMonth() {
+      if (!tutState.active) return;
+      var st = TUT_STEPS[tutState.step];
+      if (st && st.key === "month") tutNext();
+    }
+    function tutOnTab(k) {
+      if (!tutState.active) return;
+      var st = TUT_STEPS[tutState.step];
+      if (st && st.key === "sat" && k === "sat") tutNext();
+    }
+    document.getElementById("btnTutStart").addEventListener("click", tutStart);
+    document.getElementById("tutSkipStep").addEventListener("click", tutNext);
+    document.getElementById("tutQuit").addEventListener("click", function () { tutEnd(false); });
+    document.getElementById("tutDone").addEventListener("click", function () { tutEnd(true); });
+    window.addEventListener("resize", tutPlace);
+    window.addEventListener("scroll", tutPlace, true);
+
     initThree();
     refresh();
+    /* 全新空城自动开始实操教程；导入/已有的老存档不打扰，点上方按钮重看 */
+    if (compute().totalBuildings === 0) setTimeout(tutStart, 500);
     if (three.ok) setTimeout(resizeThree, 60);
 </script>
 </body>
