@@ -579,6 +579,55 @@
       .ach-item.done { border-color: var(--gold); }
       .ach-item.done .ap { color: var(--accent-deep); font-weight: 700; }
       .ach-item .pbar { width: 100%; margin-top: 5px; }
+
+      /* ---------- 成就界面（主页总览卡 + 整页图鉴） ---------- */
+      .ach-sum-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+      .ach-stat {
+        flex: 1 1 96px; background: var(--surface-2); border-radius: 10px; padding: 8px 10px;
+      }
+      .ach-stat .as-v { font-size: 20px; line-height: 1.25; font-weight: 700; display: block; }
+      .ach-stat .as-k { font-size: 12px; color: var(--dim); display: block; }
+      .ach-next-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+      .ach-next-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 14px; }
+      .ach-next-list .nn { font-weight: 600; }
+      .ach-next-list .np { font-size: 12px; color: var(--dim); margin-left: auto; white-space: nowrap; }
+      .ach-next-list .pbar { width: 100%; }
+      .ach-recent { font-size: 13px; color: var(--dim); margin: 8px 0 0; line-height: 1.7; }
+      .ach-recent strong { color: var(--accent-deep); }
+      /* 图鉴整页：弹窗放大成一页，顶部横幅 + 页签吸顶 */
+      #achOverlay { padding: 16px 8px; }
+      #achOverlay .ach-dialog { max-width: 880px; }
+      @media (min-width: 640px) { #achOverlay .ach-dialog { max-width: 880px; } }
+      @media (min-width: 1024px) { #achOverlay .ach-dialog { max-width: 880px; } }
+      .ach-hero {
+        background: var(--surface-2); border-radius: 12px; padding: 12px 14px; margin-top: 4px;
+      }
+      .ach-hero-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+      .ach-hero-pct { font-size: 30px; line-height: 1.2; font-weight: 700; color: var(--accent-deep); }
+      .ach-hero-note { font-size: 13px; color: var(--dim); }
+      .ach-hero .pbar { width: 100%; height: 10px; margin-top: 8px; }
+      .ach-hero .ach-sum-row { margin-top: 10px; }
+      .ach-hero .ach-stat { background: var(--surface); }
+      .ach-tabs {
+        display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 2px;
+        position: sticky; top: 0; background: var(--surface); padding: 6px 0; z-index: 2;
+      }
+      .ach-tab {
+        border: 1px solid var(--border); background: var(--surface-2); color: var(--dim);
+        border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 600; min-height: 2rem;
+      }
+      .ach-tab[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .ach-cat-h { font-size: 15px; margin: 14px 0 0; display: flex; align-items: baseline; gap: 8px; }
+      .ach-cat-h .ach-cat-n { font-size: 12px; color: var(--dim); font-family: ui-sans-serif, system-ui, sans-serif; font-weight: 400; }
+      .ach-item .acat {
+        display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px;
+        padding: 1px 8px; background: var(--surface); color: var(--dim); margin-bottom: 4px;
+      }
+      .ach-item.done .acat { background: rgba(233,161,59,.25); color: #8a5a08; }
+      @media (prefers-color-scheme: dark) { .ach-item.done .acat { color: var(--gold); } }
+      .ach-item .arw { font-size: 12px; color: var(--gold); font-weight: 600; display: block; margin-top: 3px; }
+      .ach-item.locked { opacity: .78; }
+      .ach-empty { font-size: 14px; color: var(--dim); margin: 10px 0 4px; }
       .rep-highs { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }
       .rh { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--gold); }
       .rh.bad { border-color: var(--brick); color: var(--brick); }
@@ -619,6 +668,9 @@
 
       <!-- ---------- 阶段目标 & 成就图鉴 ---------- -->
       <section id="tut-goals" class="card" aria-label="阶段目标与成就图鉴"></section>
+
+      <!-- ---------- 成就总览（主页常驻卡：总进度 / 最近解锁 / 最接近达成，点按钮进成就界面） ---------- -->
+      <section id="tut-achievements" class="card" aria-label="成就总览"></section>
 
       <!-- ---------- 地图 ---------- -->
       <section aria-label="城市地图" style="margin-top:12px">
@@ -758,11 +810,11 @@
           <p>25. 建设随机事件 + 标示≠实际：盖建筑时也有约 20% 概率随机触发事件（工地挖出老物件、建材商变卦、工地猫、新房被抢订、老树保留之争、义诊队上门……共 12 种，不少只在盖对口建筑时出现；教程期间不触发）。所有要你拍板的事件（大事件、天灾人祸、社会矛盾事件、建设随机事件）都一样：方案上明面标出的是「预估影响」，选完会再弹一个「实际结果」弹窗，逐项对照标示和实际——实际可能和标示对不上：花费可能超支（严重时接近标示的 10 倍）、说好赚钱可能倒贴、不花钱也可能冒出隐藏支出，原因由系统随机生成（有合理的，也有离谱的），弹窗和市政日志里都写明。另外两条：①坏事不全坏——灾害、坏方案、建筑问题处理后，可能随机迎来意外之喜（企业捐款、保险赔付、处置被报道后口碑反涨、外地人慕名迁入）；②误打误撞——选了便宜、摆烂、看起来做错的方案，也有概率阴差阳错出好结果（口碑翻正、人口反涨、还倒赚一笔），原因同样写进实际结果弹窗和日志。</p>
           <p>26. 页面显示简化了：页面上只留关键数字（资金、人口、满意度、教育、电力、治安、矛盾值、绿化率、舒适度、月收入/维护、污染率、下月人口预估和影响最大的一项、满意度每项的加减分）。详细的构成、逐项贡献、权重和计算方法都收进了按钮弹窗：矛盾值看「构成详情」、绿化看「绿化详情」、收入/污染/生活便利/治安构成看「城市详情」、人口九项贡献看「人口详情」、满意度逐项原因和治安/教育/矛盾/绿化构成看「查看加减详情」、建筑问题明细看「哪些建筑」，点开才看，页面更清爽。</p>
           <p>27. 比例重新核对了：行人模型整体缩小（身高约 0.43、体宽约 0.11），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.32，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。</p>
-          <p>28. 阶段目标 + 成就图鉴：地图上方有「阶段目标」面板——一条 9 阶段的主线（人口里程碑、满意度评级、城市等级进阶），面板显示当前阶段、进度条、完成奖励和下一个目标，完成一个弹提示、发小额资金/口碑/人口奖励。点「成就图鉴」打开图鉴页：15 个成就（人口突破、满意度满分、全建筑解锁、资金、绿化、治安、教育、矛盾、经营时长……）逐个显示已达成/未达成和进度，点任意一条看详情页。成就、目标进度都存进存档码，导入老存档自动补空记录，不丢档。</p>
+          <p>28. 阶段目标 + 成就界面：地图上方有「阶段目标」面板——一条 9 阶段的主线（人口里程碑、满意度评级、城市等级进阶），面板显示当前阶段、进度条、完成奖励和下一个目标，完成一个弹提示、发小额资金/口碑/人口奖励。下方还有一张常驻的「成就」总览卡：成就 / 彩蛋 / 阶段目标三项计数、图鉴收集百分比、最近解锁的两项和最接近达成的三条成就，一眼看清进度。点总览卡或阶段目标面板里的按钮打开「成就界面」：整页图鉴，顶部是收集完成度横幅，下面有页签可以按「全部 / 已达成 / 未达成 / 彩蛋 / 阶段目标」筛选，15 个成就（人口突破、满意度满分、全建筑解锁、资金、绿化、治安、教育、矛盾、经营时长……）按人口里程碑、满意度、建设发展、财政经营、环境绿化、治安安全、教育文化、经营历程八类分组，每条都写明分类、达成条件、奖励、已达成月份或当前进度条，点任意一条看详情页。成就、目标进度都存进存档码，导入老存档自动补空记录，不丢档。</p>
           <p>29. 随机城市事件（定期触发）：和大事件分开的一套城市日常治理题——返乡潮、流出预警、上级福利政策窗口、环保督查、商业热潮、租金风波、老龄化、就业寒冬、夜市经济，共 9 种。开局满 4 个月、人口 20 以上才开始，距上次至少隔 3 个月、约 22% 概率，拖满 6 个月必来一件，频率适中，不和大事件/灾害同月撞车。应对不只是花钱：有的方案直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板；选不同方案结果不同，同样走「标示 ≠ 实际」的实际结果引擎，全部记进市政日志。</p>
           <p>30. 结算高亮 + 预估下月：每月结算卡顶部会把重点变化单独亮出来——人口暴涨/骤减（±10 人以上）、满意度大跌/大涨（±8 分以上）、资金大额变动（±400 金币以上）、资金转负警告。「推进一个月」旁有「预估下月」按钮：推进前先按当前建筑、税率、人口静态推算下月的收入/维护/资金、人口增减和主要原因、满意度走向和风险提示；大事件、天灾、随机城市事件无法预知，预估里会写明。</p>
           <p>31. 隐藏彩蛋：图鉴里有 10 个彩蛋等你撞——特定人口数（111、520）、特定日期（跨年）、特定建筑组合（学校+图书馆+办公楼、5 座公园、双警局+双消防站）、吉利资金数、三座 5 级建筑、甚至「空城之计」都有。触发时弹提示、发小奖励、记进日志；没发现的彩蛋在图鉴里只显示「？？？」和一条线索，收集进度随存档码保存。</p>
-          <p>32. 日志收起 + 详情页：市政日志默认收起，点标题旁的「展开」才看，再点收起，不再一直占页面；展开后有筛选标签（全部｜建筑｜人口｜灾害｜财政）。详情页无处不在：点建筑看建筑详情，点顶部城市等级标题看等级详情，点 HUD 里的详情按钮看指标构成，点成就/彩蛋看图鉴详情，点任意一条日志看那条记录的详情页（月份、分类、全文）——主页面只留关键数字，细账都在详情页里。</p>
+          <p>32. 面板收起 + 详情页：市政日志、满意度解析和建筑统计都默认收起，不再一直占页面——满意度解析收起时只留标题和当前总分，建筑统计收起时只留标题和建筑总数 / 维护合计，点标题旁的「展开 ▾」才看明细（加减分项、市民需求、建筑问题、分类型统计和一键升级都在展开区里），再点「收起 ▴」收回去；日志展开后有筛选标签（全部｜建筑｜人口｜灾害｜财政）。详情页无处不在：点建筑看建筑详情，点顶部城市等级标题看等级详情，点 HUD 里的详情按钮看指标构成，点成就/彩蛋看图鉴详情，点任意一条日志看那条记录的详情页（月份、分类、全文）——主页面只留关键数字，细账都在详情页里。</p>
         </div>
       </details>
     </div>
@@ -815,7 +867,7 @@
 
     <!-- ---------- 成就图鉴弹窗：成就 + 彩蛋收集进度，点任意一条看详情页 ---------- -->
     <div id="achOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="achTitle">
-      <div class="dialog-card">
+      <div class="dialog-card ach-dialog">
         <div class="dlg-head">
           <div>
             <h2 id="achTitle" class="dlg-title font-display">成就图鉴</h2>
@@ -906,37 +958,37 @@
     function fmtNum(v) { return v % 1 === 0 ? String(v) : (Math.round(v * 10) / 10).toFixed(1); }
 
     var DEFS = {
-      house:   { name: "住宅区",     cost: 100, upkeep: 3,  power: 2,  cap: 12, color: 0xd96f4e, roof: 0x9e3b26,
+      house:   { name: "住宅区",     cost: 100, upkeep: 3,  power: 2,  cap: 12, color: 0xc2522c, roof: 0x8c2f1a,
                  desc: "住 12 人，是城市的根基" },
-      luxury:  { name: "高级住宅区", cost: 320, upkeep: 8,  power: 5,  cap: 30, color: 0xe3b34c, roof: 0x8a6420,
+      luxury:  { name: "高级住宅区", cost: 320, upkeep: 8,  power: 5,  cap: 30, color: 0xda9a22, roof: 0x7d5514,
                  desc: "住 30 人，是普通住宅的 2.5 倍，省地又体面；造价、维护和耗电都更高" },
-      shop:    { name: "商业街",     cost: 180, upkeep: 6,  power: 3,  jobs: 8,  income: 30, color: 0x4f9fd9, roof: 0x2b5f86,
+      shop:    { name: "商业街",     cost: 180, upkeep: 6,  power: 3,  jobs: 8,  income: 30, color: 0x2e7fc2, roof: 0x1e4f74,
                  desc: "8 个岗位；靠近住宅购物便利，加满意度；每座让每座工厂月税 +10" },
-      factory: { name: "工厂",       cost: 260, upkeep: 10, power: 6,  jobs: 16, income: 55, color: 0x8d99a6, roof: 0x59636e,
+      factory: { name: "工厂",       cost: 260, upkeep: 10, power: 6,  jobs: 16, income: 55, color: 0x68798a, roof: 0x424f5b,
                  desc: "16 个岗位，税收高；污染半径 2 格，不能紧挨住宅" },
-      park:    { name: "公园",       cost: 80,  upkeep: 2,  power: 0,  capBonus: 2, color: 0x58a860, roof: 0x58a860,
+      park:    { name: "公园",       cost: 80,  upkeep: 2,  power: 0,  capBonus: 2, color: 0x3d9950, roof: 0x3d9950,
                  desc: "净化周边污染，等级越高抵消越多；每座全城容量 +2" },
-      power:   { name: "发电厂",     cost: 300, upkeep: 15, power: 0,  gen: 45, color: 0xb08968, roof: 0x6e5138,
+      power:   { name: "发电厂",     cost: 300, upkeep: 15, power: 0,  gen: 45, color: 0x96683f, roof: 0x5e4027,
                  desc: "提供 45 点电力" },
-      school:  { name: "学校",       cost: 220, upkeep: 8,  power: 3,  jobs: 4, color: 0xe0a458, roof: 0xa56c26,
+      school:  { name: "学校",       cost: 220, upkeep: 8,  power: 3,  jobs: 4, color: 0xcf8627, roof: 0x8f5a18,
                  desc: "4 个岗位；1 级教育覆盖 150 人，每升一级多覆盖约 120 人，受教育人数和受教育度跟着涨；靠近住宅上学便利，加满意度" },
-      hospital:{ name: "医院",       cost: 320, upkeep: 14, power: 4,  jobs: 6, color: 0xf0f0ee, roof: 0xc23b2e,
+      hospital:{ name: "医院",       cost: 320, upkeep: 14, power: 4,  jobs: 6, color: 0xdfd9cb, roof: 0xa82a1e,
                  desc: "6 个岗位，守护市民健康；靠近住宅就医便利，加满意度" },
-      police:  { name: "警察局",     cost: 200, upkeep: 9,  power: 2,  jobs: 4, color: 0x4a5f8a, roof: 0x2c3a57,
+      police:  { name: "警察局",     cost: 200, upkeep: 9,  power: 2,  jobs: 4, color: 0x39518c, roof: 0x22304c,
                  desc: "4 个岗位；治安管理率的主力，一座约覆盖 160 人，升级覆盖更多；每座全城维护费 -4%" },
-      office:  { name: "办公楼",     cost: 340, upkeep: 12, power: 5,  jobs: 14, income: 45, color: 0x7fb3c8, roof: 0x49707f,
+      office:  { name: "办公楼",     cost: 340, upkeep: 12, power: 5,  jobs: 14, income: 45, color: 0x4a90b4, roof: 0x33596a,
                  desc: "14 个岗位，月入约 45；受教育度越高赚得越多" },
-      library: { name: "图书馆",     cost: 160, upkeep: 5,  power: 2,  jobs: 2, color: 0xa879c9, roof: 0x6d4a8a,
+      library: { name: "图书馆",     cost: 160, upkeep: 5,  power: 2,  jobs: 2, color: 0x8a4fb5, roof: 0x5a3576,
                  desc: "2 个岗位；1 级教育覆盖 80 人，每升一级多覆盖约 64 人，和学校一起提升受教育人数与受教育度" },
-      fire:    { name: "消防站",     cost: 240, upkeep: 10, power: 2,  jobs: 5, color: 0xd94f3d, roof: 0x8f2a1e,
+      fire:    { name: "消防站",     cost: 240, upkeep: 10, power: 2,  jobs: 5, color: 0xc23220, roof: 0x7a2115,
                  desc: "5 个岗位；提升安全感，也给治安管理率加分；工厂出事故、火灾和爆炸时损失更小" },
-      wind:    { name: "风力发电机", cost: 200, upkeep: 6,  power: 0,  gen: 22, color: 0xdfe6ea, roof: 0xdfe6ea,
+      wind:    { name: "风力发电机", cost: 200, upkeep: 6,  power: 0,  gen: 22, color: 0xbfccd4, roof: 0xbfccd4,
                  desc: "提供 22 点清洁电力，小而便宜" },
-      bank:    { name: "银行",       cost: 380, upkeep: 10, power: 4,  jobs: 7,  income: 45, color: 0xe8e2d4, roof: 0x8a6d2f,
+      bank:    { name: "银行",       cost: 380, upkeep: 10, power: 4,  jobs: 7,  income: 45, color: 0xd6bd85, roof: 0x755a20,
                  desc: "7 个岗位；金融收入约 45/月，和商业一样吃受教育度加成" },
-      amusement:{ name: "游乐园",    cost: 420, upkeep: 16, power: 6,  jobs: 12, income: 35, color: 0xe4572e, roof: 0x8a5fb0,
+      amusement:{ name: "游乐园",    cost: 420, upkeep: 16, power: 6,  jobs: 12, income: 35, color: 0xd2431a, roof: 0x76479e,
                  desc: "12 个岗位；门票收入约 35/月，还能提升市民幸福感" },
-      sewage:  { name: "污水处理厂", cost: 300, upkeep: 12, power: 3,  jobs: 5, color: 0xb9c4d0, roof: 0x5b6b7a,
+      sewage:  { name: "污水处理厂", cost: 300, upkeep: 12, power: 3,  jobs: 5, color: 0x87a0b4, roof: 0x46586a,
                  desc: "5 个岗位；每座让全城工厂污染削弱 15%（最多削弱 60%）" }
     };
     var ORDER = ["house","luxury","shop","factory","park","power","school","hospital","police","office","library","fire","wind","bank","amusement","sewage"];
@@ -972,6 +1024,8 @@
     var lastReport = null;
     var confirmDemolish = false, confirmLoad = false, confirmRestart = false;
     var saveNote = "";
+    /* 满意度解析 / 建筑统计默认收起（点标题旁按钮展开/收起），只是界面状态，不进存档 */
+    var statsOpen = false, buildStatsOpen = false;
 
     function idx(x, y) { return y * SIZE + x; }
     function xy(i) { return [i % SIZE, Math.floor(i / SIZE)]; }
@@ -2905,7 +2959,7 @@
         case "hospital": {
           var hh = 0.85 * hGrow;
           g.add(box(W, hh, W, d.color, 0, hh / 2, 0));
-          g.add(box(W + 0.06, 0.07, W + 0.06, 0xb9beb9, 0, hh + 0.035, 0));
+          g.add(box(W + 0.06, 0.07, W + 0.06, 0x939c94, 0, hh + 0.035, 0));
           g.add(box(0.3, 0.09, 0.03, 0xd23b2e, 0, hh * 0.72, W / 2 + 0.02));
           g.add(box(0.09, 0.3, 0.03, 0xd23b2e, 0, hh * 0.72, W / 2 + 0.02));
           g.add(windows(W, hh, W, 0xcfe8ff, Math.min(5, 2 + level), 3));
@@ -2932,7 +2986,7 @@
           g.add(box(W, bh2, W, d.color, 0, bh2 / 2, 0));
           var bkroof = new THREE.Mesh(new THREE.ConeGeometry(0.74, 0.28, 4), mat(d.roof));
           bkroof.position.y = bh2 + 0.14; bkroof.rotation.y = Math.PI / 4; bkroof.castShadow = true; g.add(bkroof);
-          [-0.3, -0.1, 0.1, 0.3].forEach(function (cx) { g.add(box(0.07, bh2 * 0.85, 0.07, 0xffffff, cx, bh2 * 0.42, W / 2 + 0.01)); });
+          [-0.3, -0.1, 0.1, 0.3].forEach(function (cx) { g.add(box(0.07, bh2 * 0.85, 0.07, 0xe9dcbc, cx, bh2 * 0.42, W / 2 + 0.01)); });
           var coin = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.03, 16), mat(0xf2b01e, { roughness: 0.35, metalness: 0.6 }));
           coin.rotation.x = Math.PI / 2; coin.position.set(0, bh2 + 0.32, 0.12); coin.castShadow = true; g.add(coin);
           break;
@@ -2957,14 +3011,14 @@
           break;
         }
         case "sewage": {
-          var tk1 = cyl(0.24, 0.24, 0.26, 0xb9c4d0, -0.18, 0.13, -0.08, 14); g.add(tk1);
+          var tk1 = cyl(0.24, 0.24, 0.26, 0x87a0b4, -0.18, 0.13, -0.08, 14); g.add(tk1);
           var wt1 = cyl(0.2, 0.2, 0.03, 0x7fc7d9, -0.18, 0.27, -0.08, 14); g.add(wt1);
-          var tk2 = cyl(0.17, 0.17, 0.2, 0xaeb9c6, 0.22, 0.1, 0.16, 12); g.add(tk2);
+          var tk2 = cyl(0.17, 0.17, 0.2, 0x7d94a8, 0.22, 0.1, 0.16, 12); g.add(tk2);
           var wt2 = cyl(0.14, 0.14, 0.03, 0x7fc7d9, 0.22, 0.21, 0.16, 12); g.add(wt2);
           var pipe = cyl(0.035, 0.035, 0.36, 0x5b6b7a, 0.02, 0.18, -0.02, 8); pipe.rotation.z = Math.PI / 2; g.add(pipe);
           g.add(box(0.24, 0.22, 0.22, 0xdbe7f3, 0.24, 0.11, -0.22));
           g.add(box(0.28, 0.05, 0.26, 0x38618c, 0.24, 0.24, -0.22));
-          if (level >= 3) g.add(cyl(0.13, 0.13, 0.18, 0xb9c4d0, -0.26, 0.09, 0.24, 12));
+          if (level >= 3) g.add(cyl(0.13, 0.13, 0.18, 0x87a0b4, -0.26, 0.09, 0.24, 12));
           break;
         }
       }
@@ -3017,7 +3071,7 @@
            ACES 电影级色调映射，颜色不再发灰发白，画面立刻通透一截 */
         renderer.setPixelRatio(Math.min(2.5, window.devicePixelRatio || 1));
         if ("outputEncoding" in renderer && THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
-        if (THREE.ACESFilmicToneMapping) { renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.06; }
+        if (THREE.ACESFilmicToneMapping) { renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0; }
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         scene = new THREE.Scene();
@@ -3027,7 +3081,7 @@
         camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
         camTarget = new THREE.Vector3(0, 0, 0);
 
-        var hemi = new THREE.HemisphereLight(0xffffff, 0x54604a, 0.85); scene.add(hemi);
+        var hemi = new THREE.HemisphereLight(0xffffff, 0x54604a, 0.6); scene.add(hemi);
         var sun = new THREE.DirectionalLight(0xfff2d8, 1.15);
         sun.position.set(10, 16, 6); sun.castShadow = true;
         sun.shadow.mapSize.set(4096, 4096);
@@ -4309,7 +4363,9 @@
       var posSum = 0, negSum = 0;
       c.sat.items.forEach(function (it) { if (it.v > 0) posSum += it.v; else negSum += it.v; });
       var html = "<div class='sat-head'><h2 class='sec-h font-display'>满意度解析</h2>"
-        + "<p>基础 " + c.sat.base + " 分 → 现在 <strong class='" + (c.sat.total >= 50 ? "pos-t" : "neg-t") + "'>" + c.sat.total + " 分（" + satisfactionWord(c.sat.total) + "）</strong></p></div>"
+        + "<p>基础 " + c.sat.base + " 分 → 现在 <strong class='" + (c.sat.total >= 50 ? "pos-t" : "neg-t") + "'>" + c.sat.total + " 分（" + satisfactionWord(c.sat.total) + "）</strong></p>"
+        + "<button type='button' class='log-toggle' id='btnStatsToggle' aria-expanded='" + statsOpen + "' aria-controls='statsBody'>" + (statsOpen ? "收起 ▴" : "展开 ▾") + "</button></div>"
+        + "<div id='statsBody'" + (statsOpen ? "" : " hidden") + ">"
         + "<div class='sat-sum-row'>"
         + "<span class='sat-chip'>基础 " + c.sat.base + "</span>"
         + "<span class='sat-chip pos'>加分合计 +" + posSum + "</span>"
@@ -4350,6 +4406,7 @@
         }).join("") + "</ul>"
           + "<p class='note' style='margin:4px 0 0'>拖满 3 个月起会扣满意度、赶人走——先解决拖最久的那条。</p>";
       }
+      html += "</div>";
       el.innerHTML = html;
       /* 文案用 textContent 填，避免任何转义问题 */
       var fls = el.querySelectorAll(".factors .fl");
@@ -4368,6 +4425,8 @@
       });
       var bd = el.querySelector("#btnSatDetail");
       if (bd) bd.addEventListener("click", function () { openSatDetail(c); });
+      var stg = el.querySelector("#btnStatsToggle");
+      if (stg) stg.addEventListener("click", function () { statsOpen = !statsOpen; sfxClick(); refresh(); });
     }
 
     /* ---------- 满意度加减详情弹窗 ----------
@@ -4502,9 +4561,12 @@
       var el = document.getElementById("tut-buildstats");
       var head = "<div class='bs-head'><h2 class='sec-h font-display'>建筑统计</h2>"
         + "<p class='bs-sum'>共 <strong>" + total + "</strong> 栋建筑（" + kinds + " 种） · 空地 " + (N - total) + " 块 · 每月维护合计 " + c.upkeepRaw + " 金币"
-        + (c.policeCut > 0 ? "（警察局 -" + c.policeCut + "% 后实扣 " + c.upkeep + "）" : "") + "</p></div>";
+        + (c.policeCut > 0 ? "（警察局 -" + c.policeCut + "% 后实扣 " + c.upkeep + "）" : "") + "</p>"
+        + "<button type='button' class='log-toggle' id='btnBsToggle' aria-expanded='" + buildStatsOpen + "' aria-controls='bsBody'>" + (buildStatsOpen ? "收起 ▴" : "展开 ▾") + "</button></div>";
       if (total === 0) {
-        el.innerHTML = head + "<p class='note' style='margin:6px 0 0'>还没有建筑——先在下面的地图上点一块空地，盖起第一栋住宅吧。</p>";
+        el.innerHTML = head + "<div id='bsBody'" + (buildStatsOpen ? "" : " hidden") + "><p class='note' style='margin:6px 0 0'>还没有建筑——先在下面的地图上点一块空地，盖起第一栋住宅吧。</p></div>";
+        var btg0 = el.querySelector("#btnBsToggle");
+        if (btg0) btg0.addEventListener("click", function () { buildStatsOpen = !buildStatsOpen; sfxClick(); refresh(); });
         return;
       }
       var rowsHtml = ORDER.filter(function (t) { return c.counts[t] > 0; }).map(function (t) {
@@ -4547,13 +4609,13 @@
           bulkMaxCost += costToMax(bb); bulkMaxUps += MAXLV - bb.level;
         }
       }
-      el.innerHTML = head + "<ul class='bs-list'>" + rowsHtml + "</ul>"
+      el.innerHTML = head + "<div id='bsBody'" + (buildStatsOpen ? "" : " hidden") + ">" + "<ul class='bs-list'>" + rowsHtml + "</ul>"
         + "<div class='bs-actions'>"
         + "<button type='button' class='btn-bulk-one' id='btnBulkOne' " + (belowAll.length === 0 || S.funds < cheapestAll ? "disabled" : "") + " aria-label='一键把全城" + belowAll.length + "栋未满级建筑各升一级，总花费" + bulkOneCost + "金币'>"
         + (belowAll.length === 0 ? "全城建筑已全部满级" : "一键全部升一级 · " + bulkOneCost + " 金币") + "</button>"
         + "<button type='button' class='btn-bulk-max' id='btnBulkMax' " + (belowAll.length === 0 || S.funds < cheapestAll ? "disabled" : "") + " aria-label='一键把全城建筑全部升到满级，共升" + bulkMaxUps + "级，总花费" + bulkMaxCost + "金币'>一键全部升满级 · " + bulkMaxCost + " 金币</button></div>"
         + "<p class='bs-note'>一键升级按地块顺序逐栋结算，资金不够的栋数会自动跳过（不会把钱扣成负数），攒够钱再点一次即可。</p>"
-        + (bulkNote ? "<p class='bs-result' role='status'></p>" : "");
+        + (bulkNote ? "<p class='bs-result' role='status'></p>" : "") + "</div>";
       var bn = el.querySelector(".bs-result");
       if (bn) bn.textContent = bulkNote;
       el.querySelectorAll("[data-bulk-type]").forEach(function (btn) {
@@ -4562,6 +4624,8 @@
       var b1 = document.getElementById("btnBulkOne"), b2 = document.getElementById("btnBulkMax");
       if (b1) b1.addEventListener("click", function () { doBulkAll("one"); });
       if (b2) b2.addEventListener("click", function () { doBulkAll("max"); });
+      var btg = el.querySelector("#btnBsToggle");
+      if (btg) btg.addEventListener("click", function () { buildStatsOpen = !buildStatsOpen; sfxClick(); refresh(); });
     }
 
     /* ---------- 地块弹窗（点地块直接弹出的独立界面，与原版一致） ---------- */
@@ -4964,6 +5028,15 @@
       { id: "veteran", name: "老市长", desc: "经营城市满 36 个月（三年）", prog: function (c) { return [S.month, 36]; }, reward: { rep: 2 } },
       { id: "events", name: "见多识广", desc: "累计处理 10 次事件拍板", prog: function (c) { return [S.totalEvents, 10]; }, reward: { funds: 200 } }
     ];
+    /* 成就分类（成就界面按类分组展示） */
+    var ACH_CAT = {
+      pop100: "人口里程碑", pop300: "人口里程碑", pop600: "人口里程碑", pop1000: "人口里程碑",
+      sat100: "满意度", harmony: "满意度",
+      alltypes: "建设发展", builder: "建设发展", maxlv: "建设发展",
+      rich: "财政经营", green: "环境绿化", secure: "治安安全", edu: "教育文化",
+      veteran: "经营历程", events: "经营历程"
+    };
+    var ACH_CATS = ["人口里程碑", "满意度", "建设发展", "财政经营", "环境绿化", "治安安全", "教育文化", "经营历程"];
     var GOALS = [
       { id: "settle", name: "安家落户", desc: "让人口达到 10 人——先盖住宅、配上发电，市民就会搬进来。", prog: function (c) { return [S.pop, 10]; }, reward: { funds: 100 } },
       { id: "town", name: "初具规模", desc: "人口达到 50 人，城市升为「小镇」。", prog: function (c) { return [S.pop, 50]; }, reward: { funds: 150 } },
@@ -5043,37 +5116,141 @@
         });
         openInfo("阶段目标一览", "按顺序推进，完成一个解锁下一个，每个都发小额奖励", lines);
       });
+      renderAchPreview(c);
     }
-    function openAch() {
-      var c = compute();
-      document.getElementById("achSub").textContent = "成就 " + achCount() + " / " + ACH.length + " · 彩蛋 " + eggCount() + " / " + EGGS.length + "——点任意一条看详情页；达成记录随存档码保存";
+    /* ---------- 成就界面：主页总览卡 + 整页图鉴（横幅 / 页签 / 分类分组） ---------- */
+    var achFilter = "all";
+    function goalDoneCount() { return Object.keys(S.goals || {}).length; }
+    function achPctOf(a, c) { var p = a.prog(c); return p[1] > 0 ? Math.max(0, Math.min(100, Math.round(p[0] / p[1] * 100))) : 0; }
+    function renderAchPreview(c) {
+      var el = document.getElementById("tut-achievements");
+      if (!el) return;
+      var total = ACH.length + EGGS.length, got = achCount() + eggCount();
+      var pct = total ? Math.round(got / total * 100) : 0;
+      var html = "<div class='sat-head'><h2 class='sec-h font-display'>成就</h2>"
+        + "<button type='button' class='btn-sat-detail' id='btnAchOpen2' aria-label='打开成就界面'>成就界面 →</button></div>"
+        + "<div class='ach-sum-row'>"
+        + "<div class='ach-stat'><span class='as-v'>★ " + achCount() + " / " + ACH.length + "</span><span class='as-k'>成就已达成</span></div>"
+        + "<div class='ach-stat'><span class='as-v'>" + eggCount() + " / " + EGGS.length + "</span><span class='as-k'>彩蛋已发现</span></div>"
+        + "<div class='ach-stat'><span class='as-v'>" + goalDoneCount() + " / " + GOALS.length + "</span><span class='as-k'>阶段目标已完成</span></div>"
+        + "</div>"
+        + "<div class='goal-now'><div class='goal-bar'><div class='pbar'><div class='pbar-in' style='width:" + pct + "%'></div></div></div>"
+        + "<span class='pbar-note'>图鉴收集 " + pct + "%</span></div>";
+      /* 最近解锁（成就 + 彩蛋按达成月份倒序取前两条） */
+      var recent = [];
+      ACH.forEach(function (a) { if (S.ach[a.id] != null) recent.push({ name: a.name, m: S.ach[a.id] }); });
+      EGGS.forEach(function (e) { if (S.eggs[e.id] != null) recent.push({ name: e.name, m: S.eggs[e.id] }); });
+      recent.sort(function (x, y) { return y.m - x.m; });
+      if (recent.length) {
+        html += "<p class='ach-recent'>最近解锁：" + recent.slice(0, 2).map(function (r) { return "<strong>「" + r.name + "」</strong>（" + formatMonth(r.m) + "）"; }).join("、") + "</p>";
+      } else {
+        html += "<p class='ach-recent'>还没有解锁成就——先把人口带到 100 人，就能拿下第一个成就「人口破百」。</p>";
+      }
+      /* 最接近达成的三条未达成成就 */
+      var nexts = ACH.filter(function (a) { return S.ach[a.id] == null; })
+        .map(function (a) { return { a: a, pct: achPctOf(a, c), p: a.prog(c) }; })
+        .sort(function (x, y) { return y.pct - x.pct; }).slice(0, 3);
+      if (nexts.length) {
+        html += "<ul class='ach-next-list'>";
+        nexts.forEach(function (n) {
+          html += "<li><span class='nn'>☆ " + n.a.name + "</span><span class='np'>进度 " + Math.min(n.p[0], n.p[1]) + " / " + n.p[1] + " · " + n.pct + "%</span>"
+            + "<span class='pbar' style='display:block'><span class='pbar-in' style='display:block;width:" + n.pct + "%'></span></span></li>";
+        });
+        html += "</ul>";
+      }
+      el.innerHTML = html;
+      var b2 = document.getElementById("btnAchOpen2");
+      if (b2) b2.addEventListener("click", openAch);
+    }
+    function achCardHtml(a, c) {
+      var done = S.ach[a.id] != null, p = a.prog(c), pct = achPctOf(a, c);
+      return "<button type='button' class='ach-item" + (done ? " done" : " locked") + "' data-ach='" + a.id + "' aria-label='查看成就详情：" + a.name + "'>"
+        + "<span class='acat'>" + (ACH_CAT[a.id] || "成就") + "</span>"
+        + "<span class='an'>" + (done ? "★ " : "☆ ") + a.name + "</span><span class='ad'>" + a.desc + "</span>"
+        + "<span class='arw'>奖励：" + rewardText(a.reward) + "</span>"
+        + (done ? "<span class='ap'>已达成 · " + formatMonth(S.ach[a.id]) + "</span>"
+                : "<span class='ap'>进度 " + Math.min(p[0], p[1]) + " / " + p[1] + " · " + pct + "%</span><span class='pbar' style='display:block'><span class='pbar-in' style='display:block;width:" + pct + "%'></span></span>")
+        + "</button>";
+    }
+    function eggCardHtml(e) {
+      var done = S.eggs[e.id] != null;
+      return "<button type='button' class='ach-item" + (done ? " done" : " locked") + "' data-egg='" + e.id + "' aria-label='查看彩蛋详情'>"
+        + "<span class='acat'>隐藏彩蛋</span>"
+        + (done ? "<span class='an'>★ " + e.name + "</span><span class='ad'>" + e.desc + "</span><span class='arw'>奖励：" + rewardText(e.reward) + "</span><span class='ap'>已发现 · " + formatMonth(S.eggs[e.id]) + "</span>"
+                : "<span class='an'>？？？</span><span class='ad'>还没发现。线索：" + e.hint + "。</span><span class='arw'>奖励：" + rewardText(e.reward) + "</span><span class='ap'>未发现</span>")
+        + "</button>";
+    }
+    function renderAchBody(c) {
+      document.getElementById("achSub").textContent = "点任意一条看详情页；达成记录随存档码保存，导入老存档也不会丢";
       var body = document.getElementById("achBody");
-      var html = "<h3 class='sec-h font-display'>成就</h3><div class='ach-grid'>";
-      ACH.forEach(function (a) {
-        var done = S.ach[a.id] != null, p = a.prog(c);
-        html += "<button type='button' class='ach-item" + (done ? " done" : "") + "' data-ach='" + a.id + "' aria-label='查看成就详情：" + a.name + "'>"
-          + "<span class='an'>" + (done ? "★ " : "☆ ") + a.name + "</span><span class='ad'>" + a.desc + "</span>"
-          + (done ? "<span class='ap'>已达成 · " + formatMonth(S.ach[a.id]) + "</span>"
-                  : "<span class='ap'>进度 " + Math.min(p[0], p[1]) + " / " + p[1] + "</span><span class='pbar' style='display:block'><span class='pbar-in' style='display:block;width:" + Math.max(0, Math.min(100, Math.round(p[0] / p[1] * 100))) + "%'></span></span>")
-          + "</button>";
-      });
-      html += "</div><h3 class='sec-h font-display' style='margin-top:10px'>隐藏彩蛋</h3><div class='ach-grid'>";
-      EGGS.forEach(function (e) {
-        var done = S.eggs[e.id] != null;
-        html += "<button type='button' class='ach-item" + (done ? " done" : "") + "' data-egg='" + e.id + "' aria-label='查看彩蛋详情'>"
-          + (done ? "<span class='an'>🥚 " + e.name + "</span><span class='ad'>" + e.desc + "</span><span class='ap'>已发现 · " + formatMonth(S.eggs[e.id]) + "</span>"
-                  : "<span class='an'>？？？</span><span class='ad'>还没发现。线索：" + e.hint + "。</span><span class='ap'>未发现</span>")
-          + "</button>";
+      var total = ACH.length + EGGS.length, got = achCount() + eggCount();
+      var pct = total ? Math.round(got / total * 100) : 0;
+      var html = "<div class='ach-hero'><div class='ach-hero-top'><span class='ach-hero-pct font-display'>" + pct + "%</span>"
+        + "<span class='ach-hero-note'>" + (got >= total ? "图鉴全集齐了——这座城市的故事被你讲完了。" : "图鉴已收集 " + got + " / " + total + "，还差 " + (total - got) + " 项集齐。") + "</span></div>"
+        + "<div class='pbar'><div class='pbar-in' style='width:" + pct + "%'></div></div>"
+        + "<div class='ach-sum-row'>"
+        + "<div class='ach-stat'><span class='as-v'>★ " + achCount() + " / " + ACH.length + "</span><span class='as-k'>成就</span></div>"
+        + "<div class='ach-stat'><span class='as-v'>" + eggCount() + " / " + EGGS.length + "</span><span class='as-k'>隐藏彩蛋</span></div>"
+        + "<div class='ach-stat'><span class='as-v'>" + goalDoneCount() + " / " + GOALS.length + "</span><span class='as-k'>阶段目标</span></div>"
+        + "</div></div>";
+      var tabs = [["all", "全部"], ["done", "已达成"], ["todo", "未达成"], ["eggs", "彩蛋"], ["goals", "阶段目标"]];
+      html += "<div class='ach-tabs' role='group' aria-label='成就界面筛选'>";
+      tabs.forEach(function (t) {
+        html += "<button type='button' class='ach-tab' data-achtab='" + t[0] + "' aria-pressed='" + (achFilter === t[0] ? "true" : "false") + "'>" + t[1] + "</button>";
       });
       html += "</div>";
+      if (achFilter === "eggs") {
+        html += "<h3 class='ach-cat-h font-display'>隐藏彩蛋 <span class='ach-cat-n'>已发现 " + eggCount() + " / " + EGGS.length + "</span></h3><div class='ach-grid'>";
+        EGGS.forEach(function (e) { html += eggCardHtml(e); });
+        html += "</div>";
+      } else if (achFilter === "goals") {
+        html += "<h3 class='ach-cat-h font-display'>阶段目标 <span class='ach-cat-n'>已完成 " + goalDoneCount() + " / " + GOALS.length + " · 按顺序推进</span></h3><div class='ach-grid'>";
+        GOALS.forEach(function (g, gi) {
+          var done = S.goals[g.id] != null, p = g.prog(c);
+          html += "<button type='button' class='ach-item" + (done ? " done" : " locked") + "' data-goal='" + g.id + "' aria-label='查看阶段目标详情：" + g.name + "'>"
+            + "<span class='acat'>第 " + (gi + 1) + " 阶段</span>"
+            + "<span class='an'>" + (done ? "★ " : "☆ ") + g.name + "</span><span class='ad'>" + g.desc + "</span>"
+            + "<span class='arw'>奖励：" + rewardText(g.reward) + "</span>"
+            + (done ? "<span class='ap'>已完成 · " + formatMonth(S.goals[g.id]) + "</span>"
+                    : "<span class='ap'>进度 " + Math.min(p[0], p[1]) + " / " + p[1] + "</span><span class='pbar' style='display:block'><span class='pbar-in' style='display:block;width:" + achPctOf(g, c) + "%'></span></span>")
+            + "</button>";
+        });
+        html += "</div>";
+      } else {
+        var shown = 0;
+        ACH_CATS.forEach(function (cat) {
+          var items = ACH.filter(function (a) {
+            if ((ACH_CAT[a.id] || "") !== cat) return false;
+            if (achFilter === "done") return S.ach[a.id] != null;
+            if (achFilter === "todo") return S.ach[a.id] == null;
+            return true;
+          });
+          if (!items.length) return;
+          var catDone = items.filter(function (a) { return S.ach[a.id] != null; }).length;
+          var catTotal = ACH.filter(function (a) { return (ACH_CAT[a.id] || "") === cat; }).length;
+          html += "<h3 class='ach-cat-h font-display'>" + cat + " <span class='ach-cat-n'>" + catDone + " / " + catTotal + " 已达成</span></h3><div class='ach-grid'>";
+          items.forEach(function (a) { html += achCardHtml(a, c); shown++; });
+          html += "</div>";
+        });
+        if (!shown) html += "<p class='ach-empty'>" + (achFilter === "done" ? "还没有达成任何成就——先从「人口破百」开始吧。" : "这一类都达成了，漂亮。") + "</p>";
+        if (achFilter === "all") {
+          html += "<h3 class='ach-cat-h font-display'>隐藏彩蛋 <span class='ach-cat-n'>已发现 " + eggCount() + " / " + EGGS.length + "</span></h3><div class='ach-grid'>";
+          EGGS.forEach(function (e) { html += eggCardHtml(e); });
+          html += "</div>";
+        }
+      }
       body.innerHTML = html;
+      body.querySelectorAll("[data-achtab]").forEach(function (b) {
+        b.addEventListener("click", function () { achFilter = b.getAttribute("data-achtab"); sfxClick(); renderAchBody(compute()); });
+      });
       body.querySelectorAll("[data-ach]").forEach(function (b) {
         b.addEventListener("click", function () {
           var a = ACH.filter(function (x) { return x.id === b.getAttribute("data-ach"); })[0];
           var done = S.ach[a.id] != null, p = a.prog(c);
           openInfo("成就详情 · " + a.name, a.desc, [
+            "分类：" + (ACH_CAT[a.id] || "成就") + "。",
             "达成条件：" + a.desc + "。",
-            done ? "状态：已达成（" + formatMonth(S.ach[a.id]) + "），奖励已经发过啦。" : "状态：未达成，当前进度 " + Math.min(p[0], p[1]) + " / " + p[1] + "。",
+            done ? "状态：已达成（" + formatMonth(S.ach[a.id]) + "），奖励已经发过啦。" : "状态：未达成，当前进度 " + Math.min(p[0], p[1]) + " / " + p[1] + "（" + achPctOf(a, c) + "%）。",
             "奖励：" + rewardText(a.reward) + "（达成时自动到账，并记进市政日志）。",
             "成就保存在存档码里：导出存档码带走，导入后进度还在。"
           ]);
@@ -5091,6 +5268,21 @@
           ]);
         });
       });
+      body.querySelectorAll("[data-goal]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var g = GOALS.filter(function (x) { return x.id === b.getAttribute("data-goal"); })[0];
+          var done = S.goals[g.id] != null, p = g.prog(c), gi = GOALS.indexOf(g);
+          openInfo("阶段目标 · " + g.name, g.desc, [
+            "阶段：第 " + (gi + 1) + " / " + GOALS.length + " 阶段，阶段目标按顺序推进，完成一个才推进下一个。",
+            done ? "状态：已完成（" + formatMonth(S.goals[g.id]) + "），奖励已经发过啦。" : "状态：进行中，当前进度 " + Math.min(p[0], p[1]) + " / " + p[1] + "。",
+            "奖励：" + rewardText(g.reward) + "（完成时自动到账，并记进市政日志）。",
+            "阶段目标进度保存在存档码里，导入老存档自动补空记录。"
+          ]);
+        });
+      });
+    }
+    function openAch() {
+      renderAchBody(compute());
       document.getElementById("achOverlay").classList.add("open");
     }
     function closeAch() { document.getElementById("achOverlay").classList.remove("open"); }
@@ -5680,8 +5872,8 @@
       function hl(id) { var el = document.getElementById(id); if (el) el.classList.add("tut-highlight"); }
       if (st.id === "welcome") hl("btnTutBegin");
       else if (st.id === "hud" || st.id === "education") hl("tut-hud");
-      else if (st.id === "stats") hl("tut-stats");
-      else if (st.id === "buildstats" || st.id === "bulk") hl("tut-buildstats");
+      else if (st.id === "stats") { hl("tut-stats"); if (!statsOpen) { statsOpen = true; renderStatsSection(compute()); } }
+      else if (st.id === "buildstats" || st.id === "bulk") { hl("tut-buildstats"); if (!buildStatsOpen) { buildStatsOpen = true; renderBuildStats(compute()); } }
       else if (st.id === "report") hl(lastReport ? "tut-report" : "btnNextMonth");
       else if (st.id === "tax") hl("tut-tax");
       else if (st.id === "save") hl("btnSaveNow");
