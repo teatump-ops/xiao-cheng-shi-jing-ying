@@ -510,7 +510,7 @@
           <summary>地块列表（点选建设，适合键盘和读屏操作）</summary>
           <div id="flatGrid" role="grid" aria-label="12乘12城市地块"></div>
         </details>
-        <p class="map-caption">这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。</p>
+        <p class="map-caption">这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道走、到路口才拐弯，绕开所有建筑，不会穿过地块；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。</p>
       </section>
 
       <!-- ---------- 地块操作（未选地块时的说明卡；弹窗本体在页面末尾） ---------- -->
@@ -590,7 +590,7 @@
           <p>9. 人口达到 50 / 150 / 300 / 600 / 1000 / 1600，城市会逐级升级并拿到拨款奖励。</p>
           <p>10. 高级住宅区：一栋能住 30 人，是普通住宅（12 人）的 2.5 倍，地不够用时最省地；造价 320、维护和耗电也更高，居住品质好，每栋给满意度 +2（上限 +6）。它和普通住宅一样受工厂污染、位置限制和生活便利规则影响——别把它盖在工厂旁边，学校、商业街、医院也要盖近一点。</p>
           <p>11. 资金跌破 -300 金币城市会被托管，本局结束。进度用存档码保存，导出后下次粘贴回来接着玩。</p>
-          <p>12. 地图是 3D 的（12×12，一共 144 块地）：拖动旋转、滚轮或双指缩放、点地块建设，右下角按钮可以重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位）；小汽车要等人口达到 60、建筑达到 10 栋才会出现（最多 8 辆），而且只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上是没人也没车的。</p>
+          <p>12. 地图是 3D 的（12×12，一共 144 块地）：拖动旋转、滚轮或双指缩放、点地块建设，右下角按钮可以重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才会出现（最多 8 辆），而且只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上是没人也没车的。</p>
           <p>13. 大事件：推进月份时有约三成概率碰上大事件（暴雨内涝、流感大流行、工厂排污上新闻、大企业入驻、抢人大战……一共 10 种，城市规模和建筑不同，能碰上的事件也不同）。大事件不会自动结算，会弹窗让你在几个处理方案里拍板：有的方案花钱买民心，有的省钱但得罪人，有的还能赚一笔或招来人口。你每次的选择都会攒下「市民口碑」——一个长期生效的满意度修正（累计最高 ±25），在「满意度解析」里单列为「大事抉择」一项：一路当好市长，满意度会一直受益；一路糊弄，市民也会一直记着。刚处理过的事件短期内不会重复出现。</p>
           <p>14. 建筑统计与一键升级：地图上方的「建筑统计」栏会数清全城有多少栋建筑、分哪几种、每种各有几栋、各在几级、每月维护花多少、总共提供多少容量 / 岗位 / 发电，还剩多少空地。升级不用再一栋栋点：每种建筑一行末尾有「全部升一级」，栏底还有「一键全部升一级」和「一键全部升满级」，按钮上写明总花费；钱不够时按地块顺序先升能升的、跳过不够的，不会把资金扣成负数，攒够钱再点一次就行。</p>
           <p>15. 新建筑：银行（7 个岗位，金融收入约 45/月，和商业一样吃受教育度加成）、游乐园（12 个岗位，门票约 35/月，还给满意度加分）、污水处理厂（5 个岗位，每座削弱全城工厂污染 15%，多座叠加最多削弱 60%，住宅的污染值会直接变小）。点任意地块会直接弹出操作界面：空地能看着每种建筑的造价、容量、岗位、耗电、维护这些数值挑着盖；已有建筑会列出当前等级的数值和升到下一级的数值对比，升级、拆除都在弹窗里办。</p>
@@ -1749,6 +1749,67 @@
 
     /* pedestrians & cars */
     var PED_COLORS = [0xe4572e, 0x2b7fd4, 0xf2c230, 0x7bc950, 0xc95fd0, 0xf28bb4, 0x39b5a8, 0xe8e3d8];
+    /* ---- 行人路网寻路：街道是地块之间的空隙，路口网格共 (SIZE+1)×(SIZE+1)
+       个节点，节点坐标与道路虚线中线、路灯所在街道完全一致。行人严格沿
+       街道正中心线行走：中心线离地块中心 0.59，最宽的建筑部件（商业街
+       遮阳棚 0.51、工厂屋顶 0.5）加上行人身体半径后仍留有间隙，不会碰到
+       任何建筑；行人只在路口拐弯，每段行程出发前用 BFS 在路口网格上
+       规划好最短路线，走到终点再规划下一段，绝不直线穿过地块。 ---- */
+    var ROAD_N = SIZE + 1;
+    function streetCoord(k) { return (k - SIZE / 2) * GAP; }
+    function roadNodeId(ix, iz) { return iz * ROAD_N + ix; }
+    function roadNodeXY(id) { return [id % ROAD_N, Math.floor(id / ROAD_N)]; }
+    function planRoadRoute(from, to) {
+      if (from === to) return [from];
+      var prev = new Array(ROAD_N * ROAD_N).fill(-1);
+      var seen = new Array(ROAD_N * ROAD_N).fill(false);
+      var queue = [from]; seen[from] = true;
+      while (queue.length) {
+        var cur = queue.shift();
+        if (cur === to) break;
+        var cp = roadNodeXY(cur);
+        var nb = [[cp[0] + 1, cp[1]], [cp[0] - 1, cp[1]], [cp[0], cp[1] + 1], [cp[0], cp[1] - 1]];
+        for (var nI = 0; nI < 4; nI++) {
+          var nx = nb[nI][0], nz = nb[nI][1];
+          if (nx < 0 || nz < 0 || nx >= ROAD_N || nz >= ROAD_N) continue;
+          var nid = roadNodeId(nx, nz);
+          if (seen[nid]) continue;
+          seen[nid] = true; prev[nid] = cur; queue.push(nid);
+        }
+      }
+      if (!seen[to]) return [from];
+      var route = [], c2 = to;
+      while (c2 !== -1) { route.unshift(c2); if (c2 === from) break; c2 = prev[c2]; }
+      return route;
+    }
+    /* 给行人规划下一段行程：随机挑一个至少隔 4 个路口的目的地路口，
+       用 BFS 规划沿路网的最短路线 */
+    function pedPlanRoute(p) {
+      var from = p.node, dest = from;
+      for (var tries = 0; tries < 12; tries++) {
+        var cand = roadNodeId(Math.floor(Math.random() * ROAD_N), Math.floor(Math.random() * ROAD_N));
+        var fp = roadNodeXY(from), tp = roadNodeXY(cand);
+        if (Math.abs(fp[0] - tp[0]) + Math.abs(fp[1] - tp[1]) >= 4) { dest = cand; break; }
+        dest = cand;
+      }
+      if (dest === from) dest = (from === roadNodeId(0, 0)) ? roadNodeId(ROAD_N - 1, ROAD_N - 1) : roadNodeId(0, 0);
+      p.route = planRoadRoute(from, dest);
+      p.seg = 0;
+    }
+    /* 当前路段的前进方向（单位向量，沿街道轴线） */
+    function pedDirVec(p) {
+      if (!p.route || p.seg >= p.route.length - 1) return [1, 0];
+      var a = roadNodeXY(p.route[p.seg]), b = roadNodeXY(p.route[p.seg + 1]);
+      return [Math.sign(b[0] - a[0]), Math.sign(b[1] - a[1])];
+    }
+    /* 当前路段的目标点：下一个路口（街道正中心线上） */
+    function pedTarget(p) {
+      var b = roadNodeXY(p.route[p.seg + 1]);
+      var d = pedDirVec(p);
+      var wx = streetCoord(b[0]), wz = streetCoord(b[1]);
+      if (d[0] !== 0) wz += p.lane; else wx += p.lane;
+      return [wx, wz];
+    }
     function makePeds() {
       for (var i = 0; i < 36; i++) {
         var g = new THREE.Group();
@@ -1760,9 +1821,18 @@
         g.add(box(0.05, 0.2, 0.05, 0x3a3f4a, -0.05, 0.08, 0));
         g.add(box(0.05, 0.2, 0.05, 0x3a3f4a, 0.05, 0.08, 0));
         g.visible = false; scene.add(g);
-        peds.push({ g: g, horiz: Math.random() < 0.5, fixed: (Math.floor(Math.random() * (SIZE + 1)) - SIZE / 2) * GAP + 0.32,
-                    t: Math.random() * SIZE * GAP - SIZE * GAP / 2, dir: Math.random() < 0.5 ? 1 : -1,
-                    speed: 0.35 + Math.random() * 0.4, phase: Math.random() * 6 });
+        var startNode = roadNodeId(Math.floor(Math.random() * ROAD_N), Math.floor(Math.random() * ROAD_N));
+        var ped = { g: g, node: startNode, route: null, seg: 0,
+                    lane: 0,
+                    x: 0, z: 0,
+                    speed: 0.35 + Math.random() * 0.4, phase: Math.random() * 6 };
+        pedPlanRoute(ped);
+        var sp = roadNodeXY(startNode);
+        var sd = pedDirVec(ped);
+        ped.x = streetCoord(sp[0]) + (sd[0] === 0 ? ped.lane : 0);
+        ped.z = streetCoord(sp[1]) + (sd[0] !== 0 ? ped.lane : 0);
+        g.position.set(ped.x, 0.05, ped.z);
+        peds.push(ped);
       }
     }
     /* ---- 车辆路段（与测试版 computeStreetSegments 一致）：
@@ -1846,19 +1916,36 @@
         pu.ring.scale.set(sc2, 1, sc2);
         pu.arrow.position.y = 1.04 + 0.07 * Math.sin(time * 3 + mi);
       });
-      /* pedestrians：数量随人口（与测试版一致：最多 36 人） */
+      /* pedestrians：数量随人口（最多 36 人，数量与速度不变）；
+         只沿路网行走——按 BFS 规划好的路线一段段走街道，
+         只在路口拐弯，永远不进入地块、不穿建筑 */
       var c = three.cache;
       var want = S.pop <= 0 ? 0 : Math.min(36, Math.max(3, Math.round(S.pop / 8)));
-      var lim = SIZE * GAP / 2 - 0.4;
       peds.forEach(function (p, i2) {
         p.g.visible = i2 < want;
         if (!p.g.visible) return;
-        p.t += p.dir * p.speed * 0.016;
-        if (p.t > lim) { p.t = lim; p.dir = -1; }
-        if (p.t < -lim) { p.t = -lim; p.dir = 1; }
+        if (!p.route || p.seg >= p.route.length - 1) pedPlanRoute(p);
+        var tgt = pedTarget(p);
+        var mdx = tgt[0] - p.x, mdz = tgt[1] - p.z;
+        var mdist = Math.hypot(mdx, mdz);
+        var mstep = p.speed * 0.016;
+        if (mdist <= mstep) {
+          /* 到达路口：对齐到路口点，沿路线进入下一段（在此处才拐弯） */
+          p.x = tgt[0]; p.z = tgt[1];
+          p.node = p.route[p.seg + 1];
+          p.seg++;
+          if (p.seg >= p.route.length - 1) pedPlanRoute(p);
+        } else {
+          p.x += mdx / mdist * mstep;
+          p.z += mdz / mdist * mstep;
+        }
+        var dv = pedDirVec(p);
+        if (dv[0] > 0) p.g.rotation.y = Math.PI / 2;
+        else if (dv[0] < 0) p.g.rotation.y = -Math.PI / 2;
+        else if (dv[1] > 0) p.g.rotation.y = 0;
+        else if (dv[1] < 0) p.g.rotation.y = Math.PI;
         var bob = Math.abs(Math.sin(time * 7 + p.phase)) * 0.03;
-        if (p.horiz) { p.g.position.set(p.t, 0.05 + bob, p.fixed); p.g.rotation.y = p.dir > 0 ? Math.PI / 2 : -Math.PI / 2; }
-        else { p.g.position.set(p.fixed, 0.05 + bob, p.t); p.g.rotation.y = p.dir > 0 ? 0 : Math.PI; }
+        p.g.position.set(p.x, 0.05 + bob, p.z);
       });
       /* cars：双门槛达标才出现，只在紧挨建筑的路段上来回巡航、
          在建筑群两端掉头；拆楼跌破门槛车辆立刻消失 */
