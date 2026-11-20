@@ -145,7 +145,19 @@
 
       /* ---------- 3D 地图 ---------- */
       #stageWrap { position: relative; }
-      #stage { width: 100%; height: clamp(320px, 58vw, 540px); display: block; border-radius: var(--radius); box-shadow: inset 0 1px 4px rgba(35,64,42,.18); touch-action: none; }
+      #stage { width: 100%; height: var(--stage-h, clamp(320px, 58vw, 540px)); display: block; border-radius: var(--radius); box-shadow: inset 0 1px 4px rgba(35,64,42,.18); touch-action: none; }
+      /* 地图高度拖条：上下拖调地图高矮，手机电脑都能拖 */
+      .map-resize {
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        width: 100%; height: 32px; margin-top: 6px; padding: 0 12px;
+        border: 1px solid var(--border); border-radius: 999px;
+        background: var(--surface-2); color: var(--dim);
+        font-size: 12px; font-weight: 500; cursor: ns-resize; touch-action: none;
+        user-select: none; -webkit-user-select: none;
+      }
+      .map-resize:hover { color: var(--text); border-color: var(--gold); }
+      .map-resize:active, .map-resize:focus-visible { color: var(--text); border-color: var(--gold); outline: none; background: var(--surface); }
+      .map-resize .mr-arrow { font-size: 14px; line-height: 1; }
       .chip-tl {
         position: absolute; top: 8px; left: 8px; pointer-events: none;
         background: rgba(0,0,0,.35); color: #fff; font-size: 11px; padding: 4px 10px;
@@ -306,6 +318,11 @@
       }
       .seg-btn.on { background: var(--accent); color: #fff; font-weight: 600; }
       .width-note { font-size: 11px; color: var(--dim); }
+      /* 界面缩放行：滑杆 + 步进按钮，整体缩放整个界面 */
+      .zoom-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; }
+      .zoom-row .wlabel { color: var(--dim); }
+      .zoom-row input[type="range"] { flex: 1 1 120px; min-width: 100px; height: 2rem; accent-color: var(--accent); cursor: pointer; }
+      .zoom-val { font-weight: 600; min-width: 42px; text-align: center; font-size: 13px; }
       #btnTutorial {
         margin-left: auto; background: none; border: 0; color: var(--accent-deep);
         font-size: 12px; font-weight: 500; padding: 4px 8px;
@@ -486,6 +503,9 @@
             <button type="button" id="btnResetCam" aria-label="重置3D视角">⟲ 重置视角</button>
           </div>
         </div>
+        <button type="button" id="mapResize" class="map-resize" aria-label="拖动调整3D地图高度：上下拖动拉高或压矮地图，双击恢复默认高度，聚焦后也可以用上下方向键调整">
+          <span class="mr-arrow" aria-hidden="true">↕</span><span>拖动调整地图高度</span><span aria-hidden="true">· 双击复位</span>
+        </button>
         <details class="flat-details" id="flatDetails">
           <summary>地块列表（点选建设，适合键盘和读屏操作）</summary>
           <div id="flatGrid" role="grid" aria-label="12乘12城市地块"></div>
@@ -529,6 +549,15 @@
           <span class="width-note">拉伸窗口或切宽屏，地图和面板都会自动重新适配。</span>
           <button type="button" id="btnTutorial" aria-label="重新打开新手教程">新手教程</button>
         </div>
+        <div class="zoom-row">
+          <span class="wlabel">界面缩放</span>
+          <button type="button" id="btnZoomOut" class="seg-btn" aria-label="缩小界面">−</button>
+          <input type="range" id="zoomRange" min="80" max="130" step="5" value="100" aria-label="界面缩放比例，80%到130%" />
+          <button type="button" id="btnZoomIn" class="seg-btn" aria-label="放大界面">＋</button>
+          <span class="zoom-val" id="zoomVal">100%</span>
+          <button type="button" id="btnZoomReset" class="seg-btn" aria-label="界面缩放恢复100%">复位</button>
+          <span class="width-note">拖滑杆或点 − / ＋ 放大缩小整个界面，地图、平面图、面板和弹窗立刻按新尺寸重新适配。</span>
+        </div>
         <div id="tut-save" class="save-row">
           <span class="lbl">进度用存档码保存，也可以手动存 / 读：</span>
           <span id="saveNote" role="status"></span>
@@ -565,7 +594,7 @@
           <p>13. 大事件：推进月份时有约三成概率碰上大事件（暴雨内涝、流感大流行、工厂排污上新闻、大企业入驻、抢人大战……一共 10 种，城市规模和建筑不同，能碰上的事件也不同）。大事件不会自动结算，会弹窗让你在几个处理方案里拍板：有的方案花钱买民心，有的省钱但得罪人，有的还能赚一笔或招来人口。你每次的选择都会攒下「市民口碑」——一个长期生效的满意度修正（累计最高 ±25），在「满意度解析」里单列为「大事抉择」一项：一路当好市长，满意度会一直受益；一路糊弄，市民也会一直记着。刚处理过的事件短期内不会重复出现。</p>
           <p>14. 建筑统计与一键升级：地图上方的「建筑统计」栏会数清全城有多少栋建筑、分哪几种、每种各有几栋、各在几级、每月维护花多少、总共提供多少容量 / 岗位 / 发电，还剩多少空地。升级不用再一栋栋点：每种建筑一行末尾有「全部升一级」，栏底还有「一键全部升一级」和「一键全部升满级」，按钮上写明总花费；钱不够时按地块顺序先升能升的、跳过不够的，不会把资金扣成负数，攒够钱再点一次就行。</p>
           <p>15. 新建筑：银行（7 个岗位，金融收入约 45/月，和商业一样吃受教育度加成）、游乐园（12 个岗位，门票约 35/月，还给满意度加分）、污水处理厂（5 个岗位，每座削弱全城工厂污染 15%，多座叠加最多削弱 60%，住宅的污染值会直接变小）。点任意地块会直接弹出操作界面：空地能看着每种建筑的造价、容量、岗位、耗电、维护这些数值挑着盖；已有建筑会列出当前等级的数值和升到下一级的数值对比，升级、拆除都在弹窗里办。</p>
-          <p>16. 界面伸缩：整个界面是流式的——拉伸或缩小窗口、旋转手机、浏览器缩放，3D 地图、平面地块图、面板和弹窗都会自动重新适应尺寸，不溢出不错位；「市政操作」里还有「界面宽度：标准 / 宽屏」开关，电脑上切到宽屏，满意度解析、建筑统计和市政日志会并排成两列，建造菜单也更宽。</p>
+          <p>16. 界面伸缩（都是能上手拖的控件）：「市政操作」里有「界面缩放」滑杆（80%–130%，也能点 − / ＋ 按钮、点「复位」回到 100%），拖动后整个界面立刻放大或缩小，3D 地图、平面地块图、面板和弹窗随即按新尺寸重新适配，不变形、不溢出；3D 地图正下方有一条「拖动调整地图高度」的拖条，上下拖就能把地图拉高或压矮（220–760，双击拖条或按 Home 恢复默认高度，聚焦拖条后用上下方向键也能调），拖完画布马上按新高度重绘。另外拉伸窗口、旋转手机时界面也会自动重新适配；「界面宽度：标准 / 宽屏」开关在电脑上切到宽屏时，满意度解析、建筑统计和市政日志会并排成两列，建造菜单也更宽。</p>
         </div>
       </details>
     </div>
@@ -2836,6 +2865,62 @@
     document.getElementById("btnWidthStd").addEventListener("click", function () { setWide(false); });
     document.getElementById("btnWidthWide").addEventListener("click", function () { setWide(true); });
     document.getElementById("btnTutorial").addEventListener("click", function () { tutStart(); });
+    /* ---------- 界面缩放：滑杆 / − ＋ 按钮整体缩放 80%–130% ----------
+       用 CSS zoom 缩放整个界面（布局按新尺寸重新排布），缩放后立刻
+       让 3D 画布按新尺寸重设渲染大小与相机比例，不变形不溢出 */
+    var uiZoom = 100;
+    function applyZoom(z) {
+      uiZoom = Math.max(80, Math.min(130, Math.round(z / 5) * 5));
+      document.body.style.zoom = uiZoom / 100;
+      var r = document.getElementById("zoomRange"), v = document.getElementById("zoomVal");
+      if (r) r.value = uiZoom;
+      if (v) v.textContent = uiZoom + "%";
+      requestAnimationFrame(function () { resizeThree(); });
+      setTimeout(resizeThree, 80);
+    }
+    document.getElementById("zoomRange").addEventListener("input", function (e) { applyZoom(Number(e.target.value)); });
+    document.getElementById("btnZoomOut").addEventListener("click", function () { applyZoom(uiZoom - 10); });
+    document.getElementById("btnZoomIn").addEventListener("click", function () { applyZoom(uiZoom + 10); });
+    document.getElementById("btnZoomReset").addEventListener("click", function () { applyZoom(100); });
+    /* ---------- 地图高度拖条：上下拖把 3D 地图拉高 / 压矮 ----------
+       拖动改 --stage-h，stageWrap 的 ResizeObserver 会立刻触发
+       resizeThree 按新高度重设画布；双击复位，方向键也能调 */
+    (function () {
+      var bar = document.getElementById("mapResize");
+      var stage = document.getElementById("stage");
+      if (!bar || !stage) return;
+      var MINH = 220, MAXH = 760, curH = 0;
+      function currentH() { return curH || stage.clientHeight || 360; }
+      function setH(h) {
+        curH = Math.max(MINH, Math.min(MAXH, Math.round(h)));
+        stage.style.setProperty("--stage-h", curH + "px");
+        resizeThree();
+      }
+      var dragging = false, startY = 0, startH = 0;
+      bar.addEventListener("pointerdown", function (e) {
+        dragging = true; startY = e.clientY; startH = currentH();
+        try { bar.setPointerCapture(e.pointerId); } catch (err) {}
+        e.preventDefault();
+      });
+      bar.addEventListener("pointermove", function (e) {
+        if (!dragging) return;
+        var z = uiZoom / 100 || 1;
+        setH(startH + (e.clientY - startY) / z);
+      });
+      function endDrag() { dragging = false; }
+      bar.addEventListener("pointerup", endDrag);
+      bar.addEventListener("pointercancel", endDrag);
+      bar.addEventListener("dblclick", function () {
+        curH = 0;
+        stage.style.removeProperty("--stage-h");
+        resizeThree();
+      });
+      bar.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp" || e.key === "ArrowRight") { setH(currentH() + 24); e.preventDefault(); }
+        else if (e.key === "ArrowDown" || e.key === "ArrowLeft") { setH(currentH() - 24); e.preventDefault(); }
+        else if (e.key === "Home") { curH = 0; stage.style.removeProperty("--stage-h"); resizeThree(); e.preventDefault(); }
+      });
+    })();
     /* 教程的点面板类步：点中对应区域才算达标（与原版一致） */
     document.getElementById("tut-hud").addEventListener("click", tutOnHud);
     document.getElementById("tut-report").addEventListener("click", tutOnReportCard);
