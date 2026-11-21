@@ -689,7 +689,7 @@
           <summary>地块列表（点选建设，适合键盘和读屏操作）</summary>
           <div id="flatGrid" role="grid" aria-label="12乘12城市地块"></div>
         </details>
-        <p class="map-caption">这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆遇到前方有行人会减速停车礼让，也会和前车保持距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。</p>
+        <p class="map-caption">这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。</p>
       </section>
 
       <!-- ---------- 地块操作（未选地块时的说明卡；弹窗本体在页面末尾） ---------- -->
@@ -804,12 +804,12 @@
           <p>21. 需求拖久了会赶人走：市民需求每连续一个月没被满足，列表里就标上「已拖 N 个月」。拖满 2 个月人口就开始流失，拖满 3 个月满意度还会多一项「需求积压」扣分，拖得越久、积压的需求越多，走的人越多——先解决拖最久的那条，满足后计数清零。</p>
           <p>22. 社会矛盾值（新指标，顶部能看）：由四项相加——住房紧张（占用率超 55% 开始涨，最高 30）、环境污染（污染率 ×0.25，最高 25）、教育率低（(100 − 受教育度) ×0.20，最高 20）、治安管理率低（(100 − 治安率) ×0.25，最高 25）。矛盾 30 以上开始扣满意度（最高 −18），40 以上加速人口流失，65 以上每月约 20% 概率爆发「市民上街抗议」或「治安事件集中爆发」，要你弹窗拍板处理；低于 15 则城市稳定、满意度 +2。满意度详情里有「社会矛盾值构成」，逐项写明每一项贡献了多少；市民需求里也会提示矛盾主要来自哪一项、怎么降。</p>
           <p>23. 绿化率（新指标，顶部能看）：公园数量和等级决定——每座公园按等级提供绿化面积（1 级 10、每升一级 +5，5 级 30），除以全城 144 块地就是绿化率。绿化率决定居民舒适度（舒适度 = 45 +（绿化率 − 20）× 0.5 − 污染率 × 0.25 + 生活便利 × 15）：绿化高，舒适度和满意度都涨（满意度按（绿化率 − 22）× 0.22 计，−8～+9 分），还能压低全城污染率（绿化率 × 0.3%，最高压 30%）；绿化太低则舒适度低、污染压不下去。满意度详情里有「绿化率构成」，写明公园贡献、舒适度和对污染的影响；市民需求里会提示绿化不足时多盖公园、给公园升级。</p>
-          <p>24. 3D 模型更精细了：建筑加了入户门、招牌、阳台栏杆、烟囱、屋顶水箱和空调、商店橱窗玻璃、医院门口的救护车、公园长椅小径和喷泉（3 级以上）；行人有了衣服裤子鞋、不同肤色发型（有人戴帽子），走路时胳膊和腿会前后摆动；车辆分轿车、SUV、出租车（带顶灯）、货车和公交五种车型，带玻璃车窗、前后车灯和带轮毂的车轮；街道上多了斑马线、带灯臂的路灯和路口行道树，整体配色压灰、更贴近真实街景。</p>
-          <p>25. 穿模修复与画质提升：行人改成靠右分道行走（对向不再面对面穿过彼此），同向有人会放慢跟随、贴得太近会互相避让；车辆遇到行人会减速停车礼让、和前车保持跟车距离，不再直穿行人；医院门口雨棚的立柱撤掉改成贴墙悬挑（原来正好立在行人走线中间）、路口行道树移除（树冠原来正好垂在走线和车行线上方）；行人和车轮都落回地面不再悬空。画质方面：渲染分辨率上限提高、高清屏更锐利，开了电影级色调映射（颜色不再发灰）、阴影精度翻倍，人物头部、躯干、车轮、树冠的模型分段都加密，轮廓更圆润。</p>
+          <p>24. 3D 模型更精细了：建筑按写实风格重做：四面带窗框的玻璃窗、带门框把手和门头灯的入户门、两级台阶、招牌、阳台栏杆、烟囱、屋顶水箱和空调、楼层腰线、矮围墙和绿篱，每种建筑还有各自的特征——商店的遮阳棚和立牌、工厂的卷帘门和通风百叶、学校的门廊柱和时钟、图书馆的楣梁和玻璃穹顶、医院的屋顶停机坪、发电厂的变压器和围栏、污水厂的护栏圆环、公园的拱门园灯和花坛；行人有了衣服裤子鞋、衣领腰带和双肩包，不同肤色发型（有人戴帽子、有人扎发髻、有人留长发），走路时胳膊和腿会前后摆动，遇到车开过来还会加快脚步通过；车辆分轿车、SUV、出租车（带顶灯）、货车和公交五种车型，带玻璃车窗、前后车灯和带轮毂的车轮；街道上多了斑马线、带灯臂的路灯和路口行道树，整体配色饱满深沉、更贴近真实街景。</p>
+          <p>25. 穿模修复与画质提升：行人改成靠右分道行走（对向不再面对面穿过彼此），同向有人会放慢跟随、贴得太近会互相避让；车辆按车头到行人的真实净距刹车（旧算法按车中心算距离，车头先顶到人还没停），净距内立刻停住礼让、每一步落点都再验算一遍绝不与行人重叠，和前车按保险杠距离跟车，不再直穿行人；医院门口雨棚的立柱撤掉改成贴墙悬挑（原来正好立在行人走线中间）、路口行道树移除（树冠原来正好垂在走线和车行线上方）；行人和车轮都落回地面不再悬空。画质方面：渲染分辨率上限提高、高清屏更锐利，开了电影级色调映射（颜色不再发灰）、阴影精度翻倍，人物头部、躯干、车轮、树冠的模型分段都加密，轮廓更圆润。</p>
           <p>26. 声音与特效：「市政操作」里有声音控制——点地块、建造、升级、拆除、推进一个月、事件弹出和结果揭晓都有对应音效，普通按钮也有轻点声，钱不够时是低沉的拒绝音；建造和升级时建筑会从半空落下回弹到位并迸出粒子和光圈，拆除扬起灰尘，点中地块有金色光圈扩散、选中后还有一圈呼吸光环。背景音乐是程序生成的轻柔城市氛围曲（和弦垫 + 风铃音），默认关、不打扰，想听点「音乐：开」，可随时关、可调音量，手机和电脑都能播；所有声音都是网页现场合成的，没有音频文件，加载零等待。</p>
           <p>25. 建设随机事件 + 标示≠实际：盖建筑时也有约 20% 概率随机触发事件（工地挖出老物件、建材商变卦、工地猫、新房被抢订、老树保留之争、义诊队上门……共 12 种，不少只在盖对口建筑时出现；教程期间不触发）。所有要你拍板的事件（大事件、天灾人祸、社会矛盾事件、建设随机事件）都一样：方案上明面标出的是「预估影响」，选完会再弹一个「实际结果」弹窗，逐项对照标示和实际——实际可能和标示对不上：花费可能超支（严重时接近标示的 10 倍）、说好赚钱可能倒贴、不花钱也可能冒出隐藏支出，原因由系统随机生成（有合理的，也有离谱的），弹窗和市政日志里都写明。另外两条：①坏事不全坏——灾害、坏方案、建筑问题处理后，可能随机迎来意外之喜（企业捐款、保险赔付、处置被报道后口碑反涨、外地人慕名迁入）；②误打误撞——选了便宜、摆烂、看起来做错的方案，也有概率阴差阳错出好结果（口碑翻正、人口反涨、还倒赚一笔），原因同样写进实际结果弹窗和日志。</p>
           <p>26. 页面显示简化了：页面上只留关键数字（资金、人口、满意度、教育、电力、治安、矛盾值、绿化率、舒适度、月收入/维护、污染率、下月人口预估和影响最大的一项、满意度每项的加减分）。详细的构成、逐项贡献、权重和计算方法都收进了按钮弹窗：矛盾值看「构成详情」、绿化看「绿化详情」、收入/污染/生活便利/治安构成看「城市详情」、人口九项贡献看「人口详情」、满意度逐项原因和治安/教育/矛盾/绿化构成看「查看加减详情」、建筑问题明细看「哪些建筑」，点开才看，页面更清爽。</p>
-          <p>27. 比例重新核对了：行人模型整体缩小（身高约 0.43、体宽约 0.11），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.32，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。</p>
+          <p>27. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.32，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。</p>
           <p>28. 阶段目标 + 成就界面：地图上方有「阶段目标」面板——一条 9 阶段的主线（人口里程碑、满意度评级、城市等级进阶），面板显示当前阶段、进度条、完成奖励和下一个目标，完成一个弹提示、发小额资金/口碑/人口奖励。下方还有一张常驻的「成就」总览卡：成就 / 彩蛋 / 阶段目标三项计数、图鉴收集百分比、最近解锁的两项和最接近达成的三条成就，一眼看清进度。点总览卡或阶段目标面板里的按钮打开「成就界面」：整页图鉴，顶部是收集完成度横幅，下面有页签可以按「全部 / 已达成 / 未达成 / 彩蛋 / 阶段目标」筛选，15 个成就（人口突破、满意度满分、全建筑解锁、资金、绿化、治安、教育、矛盾、经营时长……）按人口里程碑、满意度、建设发展、财政经营、环境绿化、治安安全、教育文化、经营历程八类分组，每条都写明分类、达成条件、奖励、已达成月份或当前进度条，点任意一条看详情页。成就、目标进度都存进存档码，导入老存档自动补空记录，不丢档。</p>
           <p>29. 随机城市事件（定期触发）：和大事件分开的一套城市日常治理题——返乡潮、流出预警、上级福利政策窗口、环保督查、商业热潮、租金风波、老龄化、就业寒冬、夜市经济，共 9 种。开局满 4 个月、人口 20 以上才开始，距上次至少隔 3 个月、约 22% 概率，拖满 6 个月必来一件，频率适中，不和大事件/灾害同月撞车。应对不只是花钱：有的方案直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板；选不同方案结果不同，同样走「标示 ≠ 实际」的实际结果引擎，全部记进市政日志。</p>
           <p>30. 结算高亮 + 预估下月：每月结算卡顶部会把重点变化单独亮出来——人口暴涨/骤减（±10 人以上）、满意度大跌/大涨（±8 分以上）、资金大额变动（±400 金币以上）、资金转负警告。「推进一个月」旁有「预估下月」按钮：推进前先按当前建筑、税率、人口静态推算下月的收入/维护/资金、人口增减和主要原因、满意度走向和风险提示；大事件、天灾、随机城市事件无法预知，预估里会写明。</p>
@@ -2745,13 +2745,30 @@
       var d = DEFS[type], hGrow = 1 + 0.22 * (level - 1);
       var W = 0.86;
       function windows(w, h, dd, color, rows, cols) {
+        /* 写实窗户：深色窗框 + 玻璃 + 中梃，四面都开窗——以前只有前后
+           两面有窗、侧面是光秃秃一面墙，现在转到任何角度都有窗 */
         var grp = new THREE.Group();
-        var wm = new THREE.MeshBasicMaterial({ color: color });
-        for (var r = 0; r < rows; r++) for (var cI = 0; cI < cols; cI++) {
-          var p = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.11), wm);
-          p.position.set(-w / 2 + (cI + 0.5) * (w / cols), 0.18 + r * ((h - 0.3) / Math.max(1, rows)), dd / 2 + 0.006);
-          grp.add(p);
-          var p2 = p.clone(); p2.rotation.y = Math.PI; p2.position.z = -dd / 2 - 0.006; grp.add(p2);
+        var wm = new THREE.MeshStandardMaterial({ color: color, roughness: 0.22, metalness: 0.35 });
+        var fm = mat(0x33383e, { roughness: 0.85 });
+        function win(x, y, z, ry) {
+          var fr = new THREE.Mesh(new THREE.PlaneGeometry(0.135, 0.155), fm);
+          fr.position.set(x, y, z); fr.rotation.y = ry; grp.add(fr);
+          var gl = new THREE.Mesh(new THREE.PlaneGeometry(0.098, 0.118), wm);
+          gl.position.set(x + Math.sin(ry) * 0.0025, y, z + Math.cos(ry) * 0.0025); gl.rotation.y = ry; grp.add(gl);
+        }
+        for (var r = 0; r < rows; r++) {
+          var wy = 0.18 + r * ((h - 0.3) / Math.max(1, rows));
+          for (var cI = 0; cI < cols; cI++) {
+            var wx = -w / 2 + (cI + 0.5) * (w / cols);
+            win(wx, wy, dd / 2 + 0.006, 0);
+            win(wx, wy, -dd / 2 - 0.006, Math.PI);
+          }
+          var sideCols = Math.max(2, cols - 1);
+          for (var sI = 0; sI < sideCols; sI++) {
+            var wz = -dd / 2 + (sI + 0.5) * (dd / sideCols);
+            win(w / 2 + 0.006, wy, wz, Math.PI / 2);
+            win(-w / 2 - 0.006, wy, wz, -Math.PI / 2);
+          }
         }
         return grp;
       }
@@ -2768,28 +2785,72 @@
           g2.add(box(w2, 0.018, 0.018, 0x6e6a63, 0, y2 + 0.1, front + 0.07, { roughness: 0.7, metalness: 0.3 }));
         }
         function acBox(x2, y2, z2) { g2.add(box(0.16, 0.09, 0.13, 0xb9bcba, x2, y2, z2, { roughness: 0.55, metalness: 0.35 })); }
+        /* ---- 写实通用件（所有外伸件都收在离地块中心 0.50 以内，
+           行人走线最近 0.52，绝不伸进街道和行人/车辆相撞） ---- */
+        function steps(w2, col2) { /* 两级入户台阶，贴墙收尾 */
+          g2.add(box(w2, 0.03, 0.15, col2 || 0xb5aa96, 0, 0.015, front - 0.005, { roughness: 0.95 }));
+          g2.add(box(w2 - 0.09, 0.03, 0.11, col2 || 0xcac0aa, 0, 0.045, front - 0.02, { roughness: 0.95 }));
+        }
+        function doorFull(w2, col2) { /* 门框 + 门扇 + 金把手 + 门头灯 */
+          g2.add(box(w2 + 0.055, 0.245, 0.02, 0xe6dfd0, 0, 0.122, front + 0.003, { roughness: 0.9 }));
+          door(w2, col2);
+          g2.add(box(0.015, 0.015, 0.015, 0xd8b13a, w2 * 0.33, 0.1, front + 0.022, { roughness: 0.35, metalness: 0.6 }));
+          g2.add(box(0.075, 0.02, 0.02, 0xffe9a8, 0, 0.265, front + 0.012, { roughness: 0.4 }));
+        }
+        function fence(col2, h2) { /* 矮围墙 + 立柱：围三边半，正面留门洞 */
+          var fh = h2 || 0.09, fc = col2 || 0x8d8578;
+          g2.add(box(0.98, fh, 0.025, fc, 0, fh / 2 + 0.01, -0.485, { roughness: 0.95 }));
+          g2.add(box(0.025, fh, 0.95, fc, -0.485, fh / 2 + 0.01, 0, { roughness: 0.95 }));
+          g2.add(box(0.025, fh, 0.95, fc, 0.485, fh / 2 + 0.01, 0, { roughness: 0.95 }));
+          g2.add(box(0.3, fh, 0.025, fc, -0.34, fh / 2 + 0.01, 0.485, { roughness: 0.95 }));
+          g2.add(box(0.3, fh, 0.025, fc, 0.34, fh / 2 + 0.01, 0.485, { roughness: 0.95 }));
+          for (var fI = -2; fI <= 2; fI++) g2.add(box(0.035, fh + 0.05, 0.035, fc, fI * 0.24, (fh + 0.05) / 2 + 0.01, -0.485, { roughness: 0.95 }));
+        }
+        function hedge() { /* 门前绿篱两丛 */
+          g2.add(box(0.26, 0.09, 0.07, 0x2f7d3a, -0.3, 0.055, front + 0.02, { roughness: 1 }));
+          g2.add(box(0.26, 0.09, 0.07, 0x35794a, 0.3, 0.055, front + 0.02, { roughness: 1 }));
+        }
+        function roofTank(x2, y2, z2) { /* 屋顶水箱：罐体 + 罐盖 */
+          g2.add(cyl(0.085, 0.095, 0.15, 0x9aa2a8, x2, y2, z2, 12));
+          g2.add(cyl(0.09, 0.09, 0.02, 0x707a85, x2, y2 + 0.085, z2, 12));
+        }
+        function floorBands(h2, n2, col2) { /* 高层每层一道腰线，不再是一根光柱 */
+          for (var b2 = 1; b2 < n2; b2++) g2.add(box(W + 0.03, 0.03, W + 0.03, col2, 0, h2 * b2 / n2, 0, { roughness: 0.8 }));
+        }
         switch (type2) {
           case "house":
-            door(0.13); balcony(0.3, 0.4);
+            doorFull(0.13); balcony(0.3, 0.4); steps(0.36); hedge(); fence(0x9a8a72, 0.07);
             g2.add(box(0.09, 0.16, 0.09, 0x8a4a3a, 0.22, 0.62 * hGrow + 0.14, -0.14, { roughness: 0.95 }));
-            g2.add(box(0.3, 0.03, 0.14, 0xa89f92, 0, 0.015, front + 0.05));
+            g2.add(box(0.11, 0.03, 0.11, 0x6e3524, 0.22, 0.62 * hGrow + 0.235, -0.14, { roughness: 0.95 }));
+            g2.add(box(0.2, 0.04, 0.05, 0x8a4a3a, -0.22, 0.115, front + 0.015, { roughness: 0.95 }));
             break;
           case "luxury":
-            door(0.16, 0x3c4652); balcony(0.52, 0.52); balcony(0.88, 0.52);
+            doorFull(0.16, 0x3c4652); balcony(0.52, 0.52); balcony(0.88, 0.52);
+            steps(0.42, 0x9a958c); fence(0x6e6a63, 0.08); floorBands(0.95 * hGrow, Math.min(4, 1 + lv2), 0xb57e1e);
             g2.add(cyl(0.09, 0.09, 0.14, 0xb9bcba, -0.22, 1.0 * hGrow + 0.15, -0.18, 10));
             acBox(0.2, 1.0 * hGrow + 0.12, 0.16);
-            g2.add(box(0.34, 0.03, 0.2, 0x8a6420, 0, 0.26, front + 0.08));
+            roofTank(-0.28, 0.95 * hGrow + 0.16, 0.25);
+            /* 入口雨棚收进地块内（原版伸到 0.61，正好压在行人走线上方） */
+            g2.add(box(0.34, 0.03, 0.12, 0x8a6420, 0, 0.26, front + 0.0));
             break;
           case "shop":
             var glass = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.2), new THREE.MeshStandardMaterial({ color: 0x39525c, roughness: 0.18, metalness: 0.55 }));
             glass.position.set(0, 0.13, front + 0.008); g2.add(glass);
             sign(0.56, 0.11, 0.44 * hGrow + 0.1, 0xc75146);
-            for (var aw = 0; aw < 3; aw++) g2.add(box(0.2, 0.02, 0.14, aw % 2 ? 0xe8e2d4 : 0xb6503f, -0.22 + aw * 0.22, 0.3, front + 0.06, { roughness: 0.9 }));
+            /* 遮阳棚同样收进 0.50 以内，不压行人走线 */
+            for (var aw = 0; aw < 3; aw++) g2.add(box(0.2, 0.02, 0.12, aw % 2 ? 0xe8e2d4 : 0xb6503f, -0.22 + aw * 0.22, 0.3, front + 0.01, { roughness: 0.9 }));
+            doorFull(0.15, 0x39525c); steps(0.4);
+            g2.add(box(W + 0.06, 0.05, W + 0.06, 0x1e4f74, 0, 0.5 * hGrow + 0.025, 0, { roughness: 0.8 }));
+            acBox(-0.2, 0.5 * hGrow + 0.08, -0.15);
+            var aframe = box(0.16, 0.2, 0.02, 0xe9a13b, 0.33, 0.1, front - 0.05, { roughness: 0.8 }); aframe.rotation.x = -0.18; g2.add(aframe);
             break;
           case "office":
-            door(0.18, 0x2f3a44);
-            g2.add(box(0.4, 0.03, 0.18, 0x7d8894, 0, 0.3, front + 0.07, { roughness: 0.4, metalness: 0.4 }));
+            doorFull(0.18, 0x2f3a44); steps(0.46, 0x8d99a6);
+            floorBands(1.25 * hGrow, Math.min(6, 2 + lv2), 0x33596a);
+            /* 入口雨棚收进地块内（原版伸到 0.59，压行人走线） */
+            g2.add(box(0.4, 0.03, 0.14, 0x7d8894, 0, 0.3, front + 0.01, { roughness: 0.4, metalness: 0.4 }));
             acBox(-0.18, 1.25 * hGrow + 0.1, -0.1); acBox(0.14, 1.25 * hGrow + 0.1, 0.14);
+            roofTank(-0.26, 1.25 * hGrow + 0.15, 0.22);
             g2.add(cyl(0.012, 0.012, 0.34, 0x555c63, 0.3, 1.25 * hGrow + 0.22, -0.28, 6));
             break;
           case "factory":
@@ -2797,6 +2858,12 @@
             g2.add(box(0.16, 0.12, 0.16, 0x7d6a4a, 0.3, 0.06, 0.08, { roughness: 1 }));
             var pipe2 = cyl(0.03, 0.03, 0.6, 0x8d99a6, -0.1, 0.42 * hGrow, front + 0.03, 8); pipe2.rotation.z = Math.PI / 2; g2.add(pipe2);
             sign(0.4, 0.09, 0.5 * hGrow, 0x707a85);
+            /* 卷帘大门（带横棱）+ 侧墙通风百叶 + 副烟囱 + 黄色警示牌 */
+            g2.add(box(0.34, 0.27, 0.02, 0x424f5b, -0.12, 0.135, front + 0.032, { roughness: 0.55, metalness: 0.4 }));
+            for (var sl = 0; sl < 3; sl++) g2.add(box(0.34, 0.014, 0.012, 0x8d99a6, -0.12, 0.07 + sl * 0.085, front + 0.045, { roughness: 0.5, metalness: 0.4 }));
+            g2.add(box(0.02, 0.16, 0.3, 0x424f5b, 0.465, 0.32, 0, { roughness: 0.7, metalness: 0.3 }));
+            g2.add(cyl(0.05, 0.06, 0.42, 0x707a85, -0.3, 0.55 * hGrow + 0.18, -0.22, 10));
+            g2.add(box(0.11, 0.11, 0.015, 0xf2b01e, 0.24, 0.2, front + 0.038, { roughness: 0.6 }));
             break;
           case "park":
             g2.add(box(0.7, 0.012, 0.09, 0xcac2b2, 0, 0.065, 0, { roughness: 1 }));
@@ -2810,27 +2877,56 @@
               var wat = cyl(0.11, 0.11, 0.02, 0x7fc7d9, 0, 0.13, 0, 14); g2.add(wat);
               g2.add(cyl(0.015, 0.02, 0.12, 0x9aa2a8, 0, 0.17, 0, 8));
             }
+            /* 公园围栏 + 入口拱门 + 园灯 + 花坛 */
+            fence(0x6a7d5a, 0.07);
+            g2.add(box(0.035, 0.24, 0.035, 0x7a5c3e, -0.15, 0.12, front + 0.02, { roughness: 0.95 }));
+            g2.add(box(0.035, 0.24, 0.035, 0x7a5c3e, 0.15, 0.12, front + 0.02, { roughness: 0.95 }));
+            g2.add(box(0.37, 0.045, 0.045, 0x7a5c3e, 0, 0.26, front + 0.02, { roughness: 0.95 }));
+            [[-0.33, -0.33], [0.33, 0.33]].forEach(function (lp) {
+              g2.add(cyl(0.014, 0.018, 0.3, 0x3a4656, lp[0], 0.15, lp[1], 6));
+              var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.032, 10, 8), mat(0xffe9a8, { roughness: 0.4 }));
+              bulb.position.set(lp[0], 0.32, lp[1]); g2.add(bulb);
+            });
+            g2.add(box(0.2, 0.045, 0.13, 0x8a4a3a, -0.3, 0.045, -0.3, { roughness: 1 }));
+            g2.add(box(0.17, 0.03, 0.1, 0xc75146, -0.3, 0.08, -0.3, { roughness: 1 }));
+            g2.add(box(0.2, 0.045, 0.13, 0x8a4a3a, 0.3, 0.045, 0.3, { roughness: 1 }));
+            g2.add(box(0.17, 0.03, 0.1, 0xe9a13b, 0.3, 0.08, 0.3, { roughness: 1 }));
             break;
           case "power":
             g2.add(box(0.24, 0.18, 0.18, 0x6e6258, 0.3, 0.09, 0.28, { roughness: 0.8 }));
             g2.add(cyl(0.02, 0.02, 0.3, 0x8a97a3, 0.3, 0.32, 0.28, 6));
+            /* 变压器 + 绝缘子串 + 围栏 + 高压警示牌 */
+            g2.add(box(0.24, 0.2, 0.17, 0x51665a, -0.28, 0.1, 0.3, { roughness: 0.6, metalness: 0.3 }));
+            for (var ins = -1; ins <= 1; ins++) g2.add(cyl(0.018, 0.018, 0.07, 0xd8d2c2, -0.28 + ins * 0.07, 0.235, 0.3, 8));
+            fence(0x707a85, 0.1);
+            sign(0.2, 0.12, 0.32, 0xf2b01e);
             break;
           case "school":
-            door(0.15, 0x6e3b26); sign(0.44, 0.1, 0.52 * hGrow + 0.06, 0xc75146);
-            g2.add(box(0.36, 0.03, 0.16, 0xbdb2a0, 0, 0.015, front + 0.06));
-            g2.add(box(0.44, 0.03, 0.2, 0xbdb2a0, 0, 0.045, front + 0.03));
+            doorFull(0.15, 0x6e3b26); sign(0.44, 0.1, 0.52 * hGrow + 0.06, 0xc75146);
+            steps(0.46); fence(0x8a6d4a, 0.08);
+            /* 门廊双柱 + 墙面时钟 */
+            g2.add(box(0.05, 0.3, 0.05, 0xe8e2d4, -0.17, 0.15, front - 0.02, { roughness: 0.9 }));
+            g2.add(box(0.05, 0.3, 0.05, 0xe8e2d4, 0.17, 0.15, front - 0.02, { roughness: 0.9 }));
+            var clk = cyl(0.05, 0.05, 0.02, 0xf5f2e8, 0, 0.38, front + 0.008, 16); clk.rotation.x = Math.PI / 2; g2.add(clk);
             break;
           case "library":
-            door(0.15, 0x4a3560);
-            g2.add(box(0.4, 0.03, 0.16, 0xbdb2a0, 0, 0.015, front + 0.06));
+            doorFull(0.15, 0x4a3560); steps(0.44);
             sign(0.4, 0.09, 0.58 * hGrow, 0x6d4a8a);
+            /* 楣梁 + 屋顶玻璃穹顶 */
+            g2.add(box(0.72, 0.05, 0.05, 0xe8e2f2, 0, 0.6 * hGrow * 0.82, front + 0.008, { roughness: 0.85 }));
+            var dome = new THREE.Mesh(new THREE.SphereGeometry(0.14, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), mat(0x9fc6d8, { roughness: 0.25, metalness: 0.3 }));
+            dome.position.set(0, 0.6 * hGrow + 0.09, 0); dome.castShadow = true; g2.add(dome);
             break;
           case "hospital":
             /* 雨棚改成贴墙悬挑：原来的两根棚柱正好立在门前街道的行人走线
                正中间（柱心离地块中心 0.60，走线就在 0.59），行人必穿柱。
                现在去掉立柱、雨棚收进到离墙 0.11 以内，不再伸进走线。 */
             g2.add(box(0.44, 0.03, 0.16, 0xd8d8d2, 0, 0.3, front + 0.03, { roughness: 0.5 }));
-            door(0.16, 0x707880);
+            doorFull(0.16, 0x707880); steps(0.46, 0xd8d8d2);
+            /* 屋顶停机坪 + 空调外机 */
+            g2.add(box(0.42, 0.012, 0.42, 0x51665a, 0, 0.85 * hGrow + 0.078, 0.02, { roughness: 0.9 }));
+            g2.add(box(0.2, 0.014, 0.05, 0xf5f5f0, 0, 0.85 * hGrow + 0.086, 0.02, { roughness: 0.9 }));
+            acBox(-0.3, 0.85 * hGrow + 0.11, -0.3);
             var amb = new THREE.Group(); amb.position.set(0.27, 0, 0.3); amb.rotation.y = Math.PI / 2;
             amb.add(box(0.3, 0.13, 0.15, 0xf0f0ea, 0, 0.11, 0, { roughness: 0.4 }));
             amb.add(box(0.09, 0.03, 0.02, 0xd23b2e, -0.04, 0.13, 0.078));
@@ -2839,29 +2935,49 @@
             g2.add(amb);
             break;
           case "police":
-            sign(0.42, 0.1, 0.55 * hGrow + 0.04, 0x2b4acb); door(0.14, 0x232c40);
+            sign(0.42, 0.1, 0.55 * hGrow + 0.04, 0x2b4acb); doorFull(0.14, 0x232c40); steps(0.4, 0x9aa2a8);
+            acBox(-0.24, 0.55 * hGrow + 0.1, -0.2);
+            g2.add(cyl(0.01, 0.01, 0.3, 0x555c63, 0.26, 0.55 * hGrow + 0.15, -0.26, 6));
+            g2.add(box(0.3, 0.05, 0.05, 0xd95f43, 0.26, 0.05, front - 0.04, { roughness: 0.8 }));
             g2.add(box(0.1, 0.035, 0.05, 0xd23b2e, -0.06, 0.58 * hGrow + 0.1, 0.1));
             g2.add(box(0.1, 0.035, 0.05, 0x2b6fd4, 0.06, 0.58 * hGrow + 0.1, 0.1));
             break;
           case "fire":
             sign(0.4, 0.09, 0.55 * hGrow + 0.02, 0xb03a2a);
             var lad = box(0.03, 0.5, 0.02, 0xc9a86a, 0.3, 0.3, front - 0.05, { roughness: 0.8 }); lad.rotation.z = 0.35; g2.add(lad);
+            /* 车库门横棱 + 门前水泥坡道 + 屋顶水箱 */
+            for (var fs = 0; fs < 3; fs++) g2.add(box(0.4, 0.015, 0.012, 0x8d99a6, 0.08, 0.1 + fs * 0.1, front + 0.045, { roughness: 0.5, metalness: 0.4 }));
+            g2.add(box(0.52, 0.02, 0.14, 0xb9bcba, 0.08, 0.01, front - 0.01, { roughness: 0.95 }));
+            roofTank(0.26, 0.55 * hGrow + 0.08, -0.24);
             break;
           case "bank":
-            door(0.16, 0x5c4a26); sign(0.46, 0.1, 0.52 * hGrow + 0.02, 0x8a6d2f);
-            g2.add(box(0.44, 0.03, 0.18, 0xd8d2c2, 0, 0.015, front + 0.07));
-            g2.add(box(0.5, 0.03, 0.22, 0xd8d2c2, 0, 0.045, front + 0.04));
+            doorFull(0.16, 0x5c4a26); sign(0.46, 0.1, 0.52 * hGrow + 0.02, 0x8a6d2f);
+            steps(0.52, 0xd8d2c2);
+            g2.add(box(0.72, 0.05, 0.06, 0xe9dcbc, 0, 0.5 * hGrow * 0.88, front + 0.005, { roughness: 0.85 }));
             break;
           case "amusement":
             g2.add(box(0.16, 0.22, 0.16, 0xe8e2d4, -0.3, 0.11, 0.28, { roughness: 0.9 }));
             g2.add(box(0.2, 0.04, 0.2, 0xc75146, -0.3, 0.24, 0.28));
             sign(0.3, 0.08, 0.3, 0xe9a13b);
+            fence(0x8a5fb0, 0.07);
+            g2.add(cyl(0.006, 0.006, 0.12, 0x8d99a6, 0.26, 0.48, 0.24, 6));
+            g2.add(box(0.08, 0.045, 0.012, 0xd2431a, 0.3, 0.52, 0.24, { roughness: 0.8 }));
             break;
           case "sewage":
             var pipe3 = cyl(0.028, 0.028, 0.3, 0x5b6b7a, -0.3, 0.15, 0.26, 8); g2.add(pipe3);
+            /* 大罐护栏（圆环 + 立柱）+ 围栏 + 检修步道 */
+            var ring = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.012, 6, 22), mat(0x8d99a6, { roughness: 0.5, metalness: 0.4 }));
+            ring.rotation.x = Math.PI / 2; ring.position.set(-0.18, 0.31, -0.08); ring.castShadow = true; g2.add(ring);
+            for (var rp = 0; rp < 4; rp++) { var ra = rp / 4 * Math.PI * 2 + 0.4; g2.add(cyl(0.01, 0.01, 0.3, 0x8d99a6, -0.18 + Math.cos(ra) * 0.26, 0.15, -0.08 + Math.sin(ra) * 0.26, 6)); }
+            fence(0x5b6b7a, 0.08);
+            g2.add(box(0.62, 0.015, 0.16, 0x9aa2a8, 0, 0.008, 0.32, { roughness: 0.9 }));
             break;
           case "wind":
             g2.add(box(0.14, 0.18, 0.12, 0xb9bcba, 0.12, 0.09, 0.1, { roughness: 0.6, metalness: 0.3 }));
+            /* 砾石基座 + 塔身检修门 + 围栏 */
+            g2.add(cyl(0.3, 0.33, 0.03, 0xb9a98c, 0, 0.015, 0, 14));
+            g2.add(box(0.1, 0.17, 0.02, 0x707a85, 0, 0.3, 0.056, { roughness: 0.7 }));
+            fence(0x9aa2a8, 0.06);
             break;
         }
       }
@@ -3360,7 +3476,7 @@
     /* ---- 行人路网寻路：街道是地块之间的空隙，路口网格共 (SIZE+1)×(SIZE+1)
        个节点，节点坐标与道路虚线中线、路灯所在街道完全一致。行人严格沿
        街道行走：道路带总宽 0.32（地块间距 1.34 − 地垫 1.02），行人缩小后
-       身高约 0.43、体宽约 0.11，只占路面宽度的三分之一左右，比一辆车
+       身高约 0.38、体宽约 0.13，只占路面宽度的一小条，比一辆车
        （长 0.46–0.62）小、比一层楼的建筑（0.76 起）矮；中心线离地块中心
        0.67，最宽的建筑部件（商业街遮阳棚 0.51、工厂屋顶 0.5）加上行人
        身体半径后仍留有间隙，不会碰到任何建筑；行人只在路口拐弯，每段
@@ -3468,10 +3584,17 @@
           var hair = new THREE.Mesh(new THREE.SphereGeometry(0.079, 20, 14), mat(hairC, { roughness: 1 }));
           hair.scale.set(1, 0.72, 1); hair.position.set(0, 0.79, -0.006); hair.castShadow = true; g.add(hair);
         }
-        /* 人物比例（按要求缩小）：整体缩到 0.5——身高约 0.43、体宽约 0.11，
+        /* 写实细节：脖子、衣领、腰带、双肩包、发髻、长发——不再是光秃秃的色块人 */
+        g.add(cyl(0.032, 0.032, 0.05, skin, 0, 0.685, 0, 8));
+        g.add(box(0.19, 0.035, 0.19, 0xf5f2e8, 0, 0.645, 0, { roughness: 0.9 }));
+        g.add(box(0.22, 0.03, 0.22, 0x2c2c30, 0, 0.35, 0, { roughness: 0.9 }));
+        if (i % 3 === 0) g.add(box(0.15, 0.21, 0.06, PANT_COLORS[(i + 2) % PANT_COLORS.length], 0, 0.52, -0.115, { roughness: 0.95 }));
+        if (i % 4 === 2) { var bun = new THREE.Mesh(new THREE.SphereGeometry(0.036, 10, 8), mat(hairC, { roughness: 1 })); bun.position.set(0, 0.83, -0.045); bun.castShadow = true; g.add(bun); }
+        if (i % 3 === 1 && i % 4 !== 3) g.add(box(0.115, 0.17, 0.04, hairC, 0, 0.67, -0.068, { roughness: 1 }));
+        /* 人物比例（写实小比例）：整体缩到 0.45——身高约 0.38、体宽约 0.13，
            明显小于车辆（长 0.46–0.62、宽约 0.19–0.21）和建筑（1 级住宅
-           总高约 0.76），在 0.32 宽的道路上只占约三分之一宽 */
-        g.scale.setScalar(0.5);
+           总高约 0.76），在 0.32 宽的道路上只占一小条 */
+        g.scale.setScalar(0.45);
         g.visible = false; scene.add(g);
         var startNode = roadNodeId(Math.floor(Math.random() * ROAD_N), Math.floor(Math.random() * ROAD_N));
         var ped = { g: g, node: startNode, route: null, seg: 0,
@@ -3578,6 +3701,8 @@
         g.visible = false;
         scene.add(g);
         cars.push({ g: g, wheels: wheels, seg: null, pos: 0, dir: i % 2 === 0 ? 1 : -1, v: 0,
+                    halfLen: kind === 4 ? 0.31 : (kind === 3 ? 0.26 : 0.23),
+                    halfWid: kind >= 3 ? 0.105 : 0.095,
                     speed: 1.1 + Math.random() * 1.1 });
       }
     }
@@ -3683,6 +3808,16 @@
           var lat = Math.abs(rx * dv0[1] - rz * dv0[0]);
           if (ahead > 0.02 && ahead < 0.30 && lat < 0.13) p.slowF = Math.min(p.slowF, ahead < 0.17 ? 0.15 : 0.55);
         }
+        /* 有车正朝自己开来时加快脚步通过，不在车头前磨蹭 */
+        p.hurryF = 1;
+        for (var ck = 0; ck < cars.length; ck++) {
+          var cc = cars[ck];
+          if (!cc.g.visible || !cc.seg || (cc.v || 0) < 0.08) continue;
+          var crx = p.x - cc.g.position.x, crz = p.z - cc.g.position.z;
+          var cAhead = cc.seg.axis === "x" ? crx * cc.dir : crz * cc.dir;
+          var cLat = Math.abs(cc.seg.axis === "x" ? crz : crx);
+          if (cAhead > 0 && cAhead < 0.95 && cLat < 0.27) { p.hurryF = 1.35; break; }
+        }
       });
       peds.forEach(function (p, i2) {
         if (!p.g.visible) return;
@@ -3690,7 +3825,7 @@
         var tgt = pedTarget(p);
         var mdx = tgt[0] - p.x, mdz = tgt[1] - p.z;
         var mdist = Math.hypot(mdx, mdz);
-        var mstep = p.speed * (p.slowF || 1) * 0.016;
+        var mstep = p.speed * (p.slowF || 1) * (p.hurryF || 1) * 0.016;
         if (mdist <= mstep) {
           /* 到达路口：对齐到路口点，沿路线进入下一段（在此处才拐弯） */
           p.x = tgt[0]; p.z = tgt[1];
@@ -3698,8 +3833,21 @@
           p.seg++;
           if (p.seg >= p.route.length - 1) pedPlanRoute(p);
         } else {
-          p.x += mdx / mdist * mstep;
-          p.z += mdz / mdist * mstep;
+          var nxP = p.x + mdx / mdist * mstep, nzP = p.z + mdz / mdist * mstep;
+          /* 行人也不许走进车身：下一步会踏进任何一辆车的包围盒
+             （车身 + 0.10 边距）就原地等一等，车开走再走——
+             车辆礼让是双向的，两边都不许穿模 */
+          var pedBlocked = false;
+          for (var cb = 0; cb < cars.length; cb++) {
+            var cc2 = cars[cb]; if (!cc2.g.visible || !cc2.seg) continue;
+            var latNow = Math.abs(cc2.seg.axis === "x" ? (p.z - cc2.g.position.z) : (p.x - cc2.g.position.x));
+            var lonNow = Math.abs(cc2.seg.axis === "x" ? (p.x - cc2.g.position.x) : (p.z - cc2.g.position.z));
+            if (latNow < (cc2.halfWid || 0.105) + 0.1 && lonNow < (cc2.halfLen || 0.26) + 0.1) continue;
+            var latNx = Math.abs(cc2.seg.axis === "x" ? (nzP - cc2.g.position.z) : (nxP - cc2.g.position.x));
+            var lonNx = Math.abs(cc2.seg.axis === "x" ? (nxP - cc2.g.position.x) : (nzP - cc2.g.position.z));
+            if (latNx < (cc2.halfWid || 0.105) + 0.1 && lonNx < (cc2.halfLen || 0.26) + 0.1) { pedBlocked = true; break; }
+          }
+          if (!pedBlocked) { p.x = nxP; p.z = nzP; }
         }
         var dv = pedDirVec(p);
         if (dv[0] > 0) p.g.rotation.y = Math.PI / 2;
@@ -3736,30 +3884,58 @@
       cars.forEach(function (car, ci) {
         car.g.visible = ci < veh.count && !!car.seg;
         if (!car.g.visible) { car.v = 0; return; }
-        /* 礼让行人 + 跟车距离（防穿模）：以前车辆和行人共用街道中心线、
-           速度恒定，车会直直穿过行人和前车。现在前方 0.62 内有行人就
-           停下礼让、1.0 内减速；同向同街前车太近也减速或停住等它走 */
+        /* 礼让行人（硬防穿模）：旧算法拿「车中心到行人」的距离判断，
+           车身半长（0.23–0.31）全算进了礼让距离——等它判定该停时，
+           车头早已顶进行人身体里，看着就像撞了人还继续走。现在改按
+           「车头到行人」的真实净距判断：净距 <0.48 立刻刹停、<0.95
+           提前减速；行人贴在车身侧面同样停住；横向判定收紧到车宽
+           半宽 + 行人半径 + 边距，对向车道和人行道上的人不再误触发 */
         var target = car.speed;
         var carX = car.g.position.x, carZ = car.g.position.z;
+        var carHalf = (car.halfLen || 0.26) + 0.06;
+        var carLat = (car.halfWid || 0.105) + 0.11;
         peds.forEach(function (p) {
           if (!p.g.visible) return;
           var aheadP, latP;
           if (car.seg.axis === "x") { aheadP = (p.x - carX) * car.dir; latP = Math.abs(p.z - carZ); }
           else { aheadP = (p.z - carZ) * car.dir; latP = Math.abs(p.x - carX); }
-          if (aheadP > -0.05 && aheadP < 0.62 && latP < 0.30) target = 0;
-          else if (aheadP >= 0.62 && aheadP < 1.0 && latP < 0.30) target = Math.min(target, car.speed * 0.4);
+          var frontGap = aheadP - carHalf;
+          if (latP < carLat) {
+            if (frontGap > -0.10 && frontGap < 0.48) target = 0;
+            else if (aheadP > -carHalf && frontGap <= -0.10) target = 0;
+            else if (frontGap >= 0.48 && frontGap < 0.95) target = Math.min(target, car.speed * 0.35);
+          } else if (latP < carLat + 0.06 && frontGap >= 0.48 && frontGap < 0.95) {
+            target = Math.min(target, car.speed * 0.35);
+          }
         });
         cars.forEach(function (o, oi) {
           if (oi === ci || !o.g.visible || !o.seg) return;
           if (o.seg.axis !== car.seg.axis || Math.abs(o.seg.street - car.seg.street) > 0.01 || o.dir !== car.dir) return;
-          var gap = (o.pos - car.pos) * car.dir;
-          if (gap > 0 && gap < 0.55) target = 0;
-          else if (gap >= 0.55 && gap < 0.95) target = Math.min(target, (o.v || 0) + 0.15);
+          /* 跟车距离按保险杠到保险杠算（旧版按中心距，长车会先顶上） */
+          var gap = (o.pos - car.pos) * car.dir - ((car.halfLen || 0.26) + (o.halfLen || 0.26));
+          if (gap > -0.05 && gap < 0.30) target = 0;
+          else if (gap >= 0.30 && gap < 0.75) target = Math.min(target, (o.v || 0) + 0.15);
         });
         if (car.v == null) car.v = 0;
-        car.v += (target - car.v) * (target < car.v ? 0.3 : 0.08);
+        car.v += (target - car.v) * (target < car.v ? 0.45 : 0.08);
         if (car.v < 0.02 && target === 0) car.v = 0;
-        car.pos += car.dir * car.v * 0.02;
+        var stepC = car.dir * car.v * 0.02;
+        /* 硬钳制兜底：迈出这一步之前再验算一遍落点——若这一步会让
+           车头进入任何行人身前 0.14 的禁区（或车身与行人侧面重叠），
+           这一步直接作废、车速清零。宁可原地停住，也绝不出现车身
+           和行人重叠的那一帧 */
+        if (stepC !== 0) {
+          var nxC = carX + (car.seg.axis === "x" ? stepC : 0);
+          var nzC = carZ + (car.seg.axis !== "x" ? stepC : 0);
+          for (var hp = 0; hp < peds.length; hp++) {
+            var pp = peds[hp]; if (!pp.g.visible) continue;
+            var hAhead, hLat;
+            if (car.seg.axis === "x") { hAhead = (pp.x - nxC) * car.dir; hLat = Math.abs(pp.z - nzC); }
+            else { hAhead = (pp.z - nzC) * car.dir; hLat = Math.abs(pp.x - nxC); }
+            if (hLat < carLat && hAhead - carHalf < 0.14 && hAhead > -carHalf - 0.05) { stepC = 0; car.v = 0; break; }
+          }
+        }
+        car.pos += stepC;
         if (car.pos > car.seg.max) { car.pos = car.seg.max; car.dir = -1; car.v = 0; }
         else if (car.pos < car.seg.min) { car.pos = car.seg.min; car.dir = 1; car.v = 0; }
         placeCar(car);
