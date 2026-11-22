@@ -375,6 +375,9 @@
       }
       .seg-btn.on { background: var(--accent); color: #fff; font-weight: 600; }
       .width-note { font-size: 11px; color: var(--dim); }
+      /* 阶段三开关行（P1-1/P1-2/P1-3，默认关，只记本机） */
+      .s3-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; }
+      .s3-row .s3-note { color: var(--dim); flex: 1 1 260px; line-height: 1.6; }
       /* 界面缩放行：滑杆 + 步进按钮，整体缩放整个界面 */
       .zoom-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; }
       .zoom-row .wlabel { color: var(--dim); }
@@ -667,6 +670,12 @@
       <!-- ---------- 建筑统计 & 一键升级 ---------- -->
       <section id="tut-buildstats" class="card" aria-label="建筑统计与一键升级"></section>
 
+      <!-- ---------- 财政报表（P1-4，纯展示，口径与结算一致） ---------- -->
+      <section id="tut-finance" class="card" aria-label="财政报表"></section>
+
+      <!-- ---------- 城市发展报告 & 建筑图鉴（P1-5 / P1-6，纯展示） ---------- -->
+      <section id="tut-stage3" class="card" aria-label="城市发展报告与建筑图鉴"></section>
+
       <!-- ---------- 阶段目标 & 成就图鉴 ---------- -->
       <section id="tut-goals" class="card" aria-label="阶段目标与成就图鉴"></section>
 
@@ -755,6 +764,22 @@
           <span class="zoom-val" id="volVal">40%</span>
           <span class="width-note">点地块、建造、升级、拆除、推进月份、触发事件都有音效，建造时建筑会落下并迸出粒子光效；背景音乐是轻柔的城市氛围曲，默认关，想听点「音乐：开」，手机和电脑都能播。</span>
         </div>
+        <div class="width-row" id="stage3Row">
+          <span class="wlabel">实验功能 / 功能开关</span>
+          <span class="width-note">新系统默认开启；打开后即生效，关闭时回到原来的玩法。开关只记在本机浏览器里，不会写进存档码。</span>
+        </div>
+        <div class="s3-row">
+          <button type="button" id="btnS3Pop" class="seg-btn" aria-pressed="false">人口结构：开</button>
+          <span class="s3-note">打开后：人口按年轻 / 普通家庭 / 老年 / 高收入分组统计；分组缺口最多让满意度多扣 2 分、人口每月多流失 1.4%。关闭时：不分组，按原有口径结算。</span>
+        </div>
+        <div class="s3-row">
+          <button type="button" id="btnS3Ind" class="seg-btn" aria-pressed="false">产业联动：开</button>
+          <span class="s3-note">打开后：消费力与用工填充影响商业、工业收入与税收（商业 0.72–1.15 倍、工业 0.57–1.05 倍、税收 0.95–1.05 倍）。关闭时：收入按原有口径结算。</span>
+        </div>
+        <div class="s3-row">
+          <button type="button" id="btnS3Tra" class="seg-btn" aria-pressed="false">交通负荷：开</button>
+          <span class="s3-note">打开后：地图按 3×3 分 9 区统计出行与负荷，全城拥堵超 100% 时商业收入最多扣 10%。关闭时：不统计、不扣钱，车辆行人表现不变。</span>
+        </div>
         <div id="tut-save" class="save-row">
           <span class="lbl">进度用存档码保存，也可以手动存 / 读：</span>
           <span id="saveNote" role="status"></span>
@@ -819,7 +844,7 @@
           <p>26. 声音与特效：「市政操作」里有声音控制——点地块、建造、升级、拆除、推进一个月、事件弹出和结果揭晓都有对应音效，普通按钮也有轻点声，钱不够时是低沉的拒绝音；建造和升级时建筑会从半空落下回弹到位并迸出粒子和光圈，拆除扬起灰尘，点中地块有金色光圈扩散、选中后还有一圈呼吸光环。背景音乐是程序生成的轻柔城市氛围曲（和弦垫 + 风铃音），默认关、不打扰，想听点「音乐：开」，可随时关、可调音量，手机和电脑都能播；所有声音都是网页现场合成的，没有音频文件，加载零等待。</p>
           <p>27. 建设随机事件 + 标示≠实际：盖建筑时也有约 20% 概率随机触发事件（工地挖出老物件、建材商变卦、工地猫、新房被抢订、老树保留之争、义诊队上门……共 12 种，不少只在盖对口建筑时出现；教程期间不触发）。所有要你拍板的事件（大事件、天灾人祸、社会矛盾事件、建设随机事件）都一样：方案选前只显示标题和一句话说明，不预告任何后果，选项顺序每次打乱；选完会再弹一个「实际结果」弹窗，逐项对照你的判断和实际——实际可能和预想对不上：花费可能超支（严重时接近标示的 10 倍）、说好赚钱可能倒贴、不花钱也可能冒出隐藏支出，原因由系统随机生成（有合理的，也有离谱的），弹窗和市政日志里都写明。另外两条：①坏事不全坏——灾害、坏方案、建筑问题处理后，可能随机迎来意外之喜（企业捐款、保险赔付、处置被报道后口碑反涨、外地人慕名迁入）；②误打误撞——选了便宜、摆烂、看起来做错的方案，也有概率阴差阳错出好结果（口碑翻正、人口反涨、还倒赚一笔），原因同样写进实际结果弹窗和日志。</p>
           <p>28. 页面显示简化了：页面上只留关键数字（资金、人口、满意度、教育、电力、治安、矛盾值、绿化率、舒适度、月收入/维护、污染率、下月人口预估和影响最大的一项、满意度每项的加减分）。详细的构成、逐项贡献、权重和计算方法都收进了按钮弹窗：矛盾值看「构成详情」、绿化看「绿化详情」、收入/污染/生活便利/治安构成看「城市详情」、人口九项贡献看「人口详情」、满意度逐项原因和治安/教育/矛盾/绿化构成看「查看加减详情」、建筑问题明细看「哪些建筑」，点开才看，页面更清爽。</p>
-          <p>29. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.32，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。</p>
+          <p>29. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.38，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。</p>
           <p>30. 阶段目标 + 成就界面：地图上方有「阶段目标」面板——一条 9 阶段的主线（人口里程碑、满意度评级、城市等级进阶），面板显示当前阶段、进度条、完成奖励和下一个目标，完成一个弹提示、发小额资金/口碑/人口奖励。下方还有一张常驻的「成就」总览卡：成就 / 彩蛋 / 阶段目标三项计数、图鉴收集百分比、最近解锁的两项和最接近达成的三条成就，一眼看清进度。点总览卡或阶段目标面板里的按钮打开「成就界面」：整页图鉴，顶部是收集完成度横幅，下面有页签可以按「全部 / 已达成 / 未达成 / 彩蛋 / 阶段目标」筛选，15 个成就（人口突破、满意度满分、全建筑解锁、资金、绿化、治安、教育、矛盾、经营时长……）按人口里程碑、满意度、建设发展、财政经营、环境绿化、治安安全、教育文化、经营历程八类分组，每条都写明分类、达成条件、奖励、已达成月份或当前进度条，点任意一条看详情页。成就、目标进度都存进存档码，导入老存档自动补空记录，不丢档。</p>
           <p>31. 随机城市事件（定期触发）：和大事件分开的一套城市日常治理题——返乡潮、流出预警、上级福利政策窗口、环保督查、商业热潮、租金风波、老龄化、就业寒冬、夜市经济，共 9 种。开局满 4 个月、人口 20 以上才开始，距上次至少隔 3 个月、约 22% 概率，拖满 6 个月必来一件，频率适中，不和大事件/灾害同月撞车。应对不只是花钱：有的方案直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板；选不同方案结果不同，方案选前同样只显示标题和一句话说明、不预告后果，选完才揭晓，同样走「标示 ≠ 实际」的实际结果引擎，全部记进市政日志。</p>
           <p>32. 结算高亮 + 预估下月：每月结算卡顶部会把重点变化单独亮出来——人口暴涨/骤减（±10 人以上）、满意度大跌/大涨（±8 分以上）、资金大额变动（±400 金币以上）、资金转负警告。「推进一个月」旁有「预估下月」按钮：推进前先按当前建筑、税率、人口静态推算下月的收入/维护/资金、人口增减和主要原因、满意度走向和风险提示；大事件、天灾、随机城市事件无法预知，预估里会写明。</p>
@@ -993,6 +1018,268 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
        ============================================================ */
     var LANG_KEY = "xiao-cheng-shi-jing-ying:lang";
     var I18N = {
+" 个、繁忙 ": " congested, ",
+" 个点。": " points.",
+" 个点，人口减少与污染加重同向。": " points; population fell while pollution rose.",
+" 个点，满意度上升与教育走高同向。": " points; satisfaction rose while education rose.",
+" 个点，满意度下降与教育走低同向。": " points; satisfaction fell while education fell.",
+" 个点，满意度下降与污染加重同向。": " points; satisfaction fell while pollution rose.",
+" 个点，满意度下降与治安走低同向。": " points; satisfaction fell while security fell.",
+" 个点，绿化率": " points; greening rate",
+" 个；负荷最高的区是 Z": " busy; busiest zone is Z",
+" 人，占用率 ": " people; occupancy ",
+" 人，满意度": " people; satisfaction",
+" 位；统计口径：车辆目标按各区出行需求占比分配（见下表「车辆分配」列，只作展示，不驱动渲染）。": " vehicles; statistical basis: the vehicle target is split across zones by trip share (see the “Vehicle allocation” column below; display only, does not drive rendering).",
+" 分。": " points.",
+" 分（基础 ": " points (base ",
+" 分，人口减少与满意度走低同向。": " points; population fell while satisfaction fell.",
+" 分，人口增长与满意度走高同向。": " points; population grew while satisfaction rose.",
+"%，商业乘数 ×": "%, commercial multiplier ×",
+"%，绿化率 ": "%, greening rate ",
+"%；9 个区里拥堵 ": "%; of the 9 zones, ",
+"<p class='note' style='margin:4px 0 0'>上月结算（": "<p class='note' style='margin:4px 0 0'>Last settled month (",
+"<p class='note' style='margin:4px 0 0'>变化趋势（较上月）：总收入 ": "<p class='note' style='margin:4px 0 0'>Trend (vs last month): total income ",
+"<p class='note' style='margin:4px 0 0'>商业 + 工业 = 商业与工业结算总额；公共服务支出是维护费的子项，仅作结构参考，不另计入总支出。</p>": "<p class='note' style='margin:4px 0 0'>Commercial + industrial = settled commercial & industrial total; public-service spending is a sub-item of upkeep, shown for structure only and not counted again in total spending.</p>",
+"<p class='note' style='margin:4px 0 0'>推进一个月后，这里会显示上月结算报表（结算快照）。</p>": "<p class='note' style='margin:4px 0 0'>After advancing a month, last month's settled finance report (settlement snapshot) will appear here.</p>",
+"「车辆分配」是统计口径：把 3D 车辆目标数按各区出行需求占比拆开，只作展示；3D 里实际跑的车辆数以「3D 实际值」为准，两栏口径不同。": "“Vehicle allocation” is a statistical split: the 3D vehicle target divided across zones by trip share, display only; the number of vehicles actually running in 3D follows the “3D actuals” line, a different basis.",
+"交通：3D 实际值：车辆目标 ": "Traffic: 3D actuals: vehicle target ",
+"交通：全城拥堵未过 100%，交通不扣商业收入。": "Traffic: citywide congestion is under 100%, so traffic does not cut commercial income.",
+"交通：拥堵正在压商业收入：交通修正 ×": "Traffic: congestion is cutting commercial income: traffic adjustment ×",
+"产业：产业联动未开启：商业与工业收入按旧口径结算。": "Industry: industry linkage is off: commercial and industrial income use the old basis.",
+"产业：商业基数 ": "Industry: commercial base ",
+"产业：消费力指数 ": "Industry: consumption index ",
+"人口：与最早记录相比，人口": "Population: vs the earliest record, population",
+"人口：人口结构：": "Population: population mix: ",
+"人口：同期污染率上升 ": "Population: pollution rose ",
+"人口：同期满意度上升 ": "Population: satisfaction rose ",
+"人口：同期满意度下降 ": "Population: satisfaction fell ",
+"人口：当前人口 ": "Population: current population ",
+"人口：数据积累中：推进几个月后，这里会写清人口是涨是跌、以及同期哪些指标跟着动了。": "Population: collecting data: after a few more months, this will say whether population rose or fell and which indicators moved with it.",
+"人次/月": " trips/month",
+"出行需求": "Trip demand",
+"商业收入": "Commercial income",
+"工业收入": "Industrial income",
+"建筑问题损失": "Building problem losses",
+"总支出": "Total spending",
+"档位": "Level",
+"满意度：与最早记录相比": "Satisfaction: vs the earliest record",
+"满意度：同期受教育度上升 ": "Satisfaction: education rose ",
+"满意度：同期受教育度下降 ": "Satisfaction: education fell ",
+"满意度：同期污染率上升 ": "Satisfaction: pollution rose ",
+"满意度：同期治安管理率下降 ": "Satisfaction: security fell ",
+"满意度：当前满意度 ": "Satisfaction: current satisfaction ",
+"环境：与最早记录相比，污染率": "Environment: vs the earliest record, pollution",
+"维护费": "Upkeep",
+"负荷率": "Load",
+"车辆分配": "Vehicle allocation",
+"辆": " vehicles",
+"（只扣商业，不扣工业）。": " (commercial only, not industrial).",
+"（工厂含商业街带来的工厂税加成）。": " (factories include the factory-tax bonus from commercial streets).",
+"）。": ").",
+"）的结算快照：口径与「推进一个月」的结算一致（税收 + 商业 + 工业 + 旅游 + 行政统筹 − 维护 − 建筑问题损失）。</p>": ") settlement snapshot: same basis as the “Advance a month” settlement (tax + commercial + industrial + tourism + admin bonus − upkeep − building problem losses).</p>",
+"，工业乘数 ×": ", industrial multiplier ×",
+"，工业基数 ": ", industrial base ",
+"，用工填充率 ": ", staffing fill rate ",
+"，税收乘数 ×": ", tax multiplier ×",
+"；劳动人口 ": "; labor force ",
+"新系统默认开启；打开后即生效，关闭时回到原来的玩法。开关只记在本机浏览器里，不会写进存档码。": "New systems are on by default; they take effect once turned on, and turning them off restores the old rules. Switches are stored only in this browser and never go into the save code.",
+"。</p>": ".</p>",
+"」需人口 ": "” requires population ",
+" + 商业与工业 ": " + commercial & industrial ",
+" = 净 ": " = net ",
+" · 3D 实际值：车辆目标 ": " · 3D actuals: vehicle target ",
+" · 下月预计 ": " · next month forecast ",
+" · 产业联动未开启，收入按旧口径": " · industry linkage off, income uses the old basis",
+" · 城市等级「": " · city tier “",
+" · 容量 ": " · capacity ",
+" · 工业 ×": " · industrial ×",
+" · 消费力 ": " · consumption power ",
+" · 用工填充 ": " · staffing fill ",
+" · 目标 ": " · target ",
+" · 税收 ×": " · tax ×",
+" · 绿化率 ": " · greening rate ",
+" · 行人目标 ": " · pedestrian target ",
+" · 负荷最高的区是区 ": " · busiest zone is Zone ",
+" 个": "",
+" 个月前，人口 ": " months ago; population ",
+" 个月（最多 +2 个月，最多让满意度多扣 2 分、人口多流失 1.4%/月）。": " months (max +2 months; at most −2 satisfaction and −1.4%/month population).",
+" 个月，最多 +2 个月），最多让这一项多扣 2 分。": " months, max +2 months), at most −2 extra on this item.",
+" 个百分点）": " percentage points)",
+" 个百分点，现在受污染住宅 ": " percentage points; polluted homes now ",
+" 个百分点，现在有 ": " percentage points; now ",
+" 人、满意度 ": " people, satisfaction ",
+" 人，5 级 ": " people; Lv.5 ",
+" 人，下月预计 ": " people; next month forecast ",
+" 人，下月预计仍在流失，主要因为：": " people, still losing people next month, mainly because: ",
+" 人，还差 ": " people; still short ",
+" 人；维护费 −4%/座（上限 −20%）": " people; upkeep −4% per building (max −20%)",
+" 人（按各组劳动参与率折算：年轻 100%、普通家庭 75%、老年 10%、高收入 90%）· 按劳动人口算的失业率 ": " people (by group participation: young 100%, family 75%, elderly 10%, high-income 90%) · labor-force unemployment rate ",
+" 位": "",
+" 位（上限 36 位）· 按各区出行需求占比拆开的展示用车辆分配：": " (max 36) · display-only vehicle allocation by each zone's share of travel demand: ",
+" 分（0–100）": " pts (0–100)",
+" 分）。": " pts).",
+" 分，主要功臣是：": " pts, mainly thanks to: ",
+" 分，主要拖累是：": " pts, mainly dragged down by: ",
+" 栋、绿化率 ": " homes; greening rate ",
+" 栋住宅受工厂污染。": " homes still polluted by factories.",
+" 辆": "",
+" 辆、行人目标 ": " vehicles; pedestrian target ",
+" 金币/月": " coins/month",
+" 金币。</p>": " coins.</p>",
+" 金币）": " coins)",
+" 金币，2→3 级 ": " coins; Lv.2→3 ",
+" 金币，3→4 级 ": " coins; Lv.3→4 ",
+" 金币，4→5 级 ": " coins; Lv.4→5 ",
+" 金币，盈亏 ": " coins; balance ",
+" 金币，见财政报表的收入拆分。": " coins — see the finance report for the breakdown.",
+" 金币；升满累计造价 ": " coins; max-level cumulative build cost ",
+"%": "%",
+"% · 商业 ×": "% · commercial ×",
+"% · 居民舒适度 ": "% · comfort ",
+"% 后）": "%)",
+"%（人口 ÷ 岗位，满员为 100%）": "% (population ÷ jobs; 100% when fully staffed)",
+"%（只展示，不参与人口与满意度计算）。</p>": "% (display only; not used in population or satisfaction calculations).</p>",
+"%（按岗位加权的建成区平均负荷）· 商业收入修正 ×": "% (jobs-weighted average load of built-up zones) · commercial income adjustment ×",
+"%。": "%.",
+"%（0–100：教育 45% + 就业 35% + 满意度 20%）": "% (0–100: education 45% + employment 35% + satisfaction 20%)",
+"/座": " per building",
+"23 种建筑一览：介绍、造价、升级费、岗位、服务范围、环境影响、维护成本、升级效果": "All 23 buildings: intro, build cost, upgrade cost, jobs, service range, environmental impact, upkeep, upgrade effects",
+"<h2 class='sec-h font-display'>城市发展报告与建筑图鉴</h2>": "<h2 class='sec-h font-display'>City Development Report &amp; Building Codex</h2>",
+"<h2 class='sec-h font-display'>财政报表</h2>": "<h2 class='sec-h font-display'>Finance Report</h2>",
+"<h3 class='sec-h font-display' style='margin-top:12px'>交通负荷（9 区）</h3>": "<h3 class='sec-h font-display' style='margin-top:12px'>Traffic Load (9 Zones)</h3>",
+"<h3 class='sec-h font-display' style='margin-top:12px'>产业联动</h3>": "<h3 class='sec-h font-display' style='margin-top:12px'>Industry Linkage</h3>",
+"<h3 class='sec-h font-display' style='margin-top:12px'>人口结构</h3>": "<h3 class='sec-h font-display' style='margin-top:12px'>Population Groups</h3>",
+"<p class='note' style='margin:4px 0 0'>": "<p class='note' style='margin:4px 0 0'>",
+"<p class='note' style='margin:4px 0 0'>3D 实际值对照：车辆目标 ": "<p class='note' style='margin:4px 0 0'>3D actuals: vehicle target ",
+"<p class='note' style='margin:4px 0 0'>乘数每月按当月状态算一次，不迭代；用工只影响收入，不碰人口「失业」因子与满意度「失业」项。</p>": "<p class='note' style='margin:4px 0 0'>Multipliers are calculated once a month from that month's state — no iteration. Staffing only affects income, never the population “unemployment” factor or the satisfaction “unemployment” item.</p>",
+"<p class='note' style='margin:4px 0 0'>全城拥堵指数 ": "<p class='note' style='margin:4px 0 0'>Citywide congestion index ",
+"<p class='note' style='margin:4px 0 0'>再推进一个月后，这里会显示与上月的变化趋势。</p>": "<p class='note' style='margin:4px 0 0'>Advance another month and the trend versus last month will show here.</p>",
+"<p class='note' style='margin:4px 0 0'>分组需求缺口 ": "<p class='note' style='margin:4px 0 0'>Group demand gap ",
+"<p class='note' style='margin:4px 0 0'>劳动人口 ": "<p class='note' style='margin:4px 0 0'>Labor force ",
+"<p class='note' style='margin:4px 0 0'>发展报告按月汇总人口、满意度、环境、产业、交通与城市等级进度并解释原因；建筑图鉴集中展示 23 种建筑的全部数据。</p>": "<p class='note' style='margin:4px 0 0'>The development report sums up population, satisfaction, environment, industry, traffic and city-tier progress each month and explains why things changed; the building codex shows all the data for all 23 buildings in one place.</p>",
+"<p class='note' style='margin:4px 0 0'>变化趋势（较再上月）：总收入 ": "<p class='note' style='margin:4px 0 0'>Trend (vs the month before last): total income ",
+"<p class='note' style='margin:4px 0 0'>商业 / 工业两栏是联动乘数后的基数；结算时两者相加再统一乘停电系数、教育加成与科技加成，得到「商业与工业收入（结算）」，与本月结算卡一致。</p>": "<p class='note' style='margin:4px 0 0'>The commercial / industrial rows are the post-multiplier bases; at settlement they are added together and then multiplied by the power factor, education bonus and tech bonus to give “Commercial &amp; industrial income (settled)”, matching this month's settlement card.</p>",
+"<p class='note' style='margin:4px 0 0'>本月预计：按当前建筑、税率与开关状态结算，口径与「推进一个月」的结算一致（税收 + 商业与工业 + 旅游 + 行政统筹 − 维护）。</p>": "<p class='note' style='margin:4px 0 0'>This month's forecast: settled on current buildings, tax rate and switch states, using the same basis as “Advance a Month” (resident tax + commercial &amp; industrial + tourism + admin bonus − upkeep).</p>",
+"<p class='note' style='margin:6px 0 0'>上月实际结算（": "<p class='note' style='margin:6px 0 0'>Last month's actual settlement (",
+"<p class='note' style='margin:6px 0 0'>交通负荷统计未开启：打开「市政操作 → 实验功能」里的「交通负荷」开关后，这里会显示 9 个区的出行负荷与拥堵情况；3D 车辆与行人表现不受开关影响。</p>": "<p class='note' style='margin:6px 0 0'>Traffic load statistics are off: turn on the “Traffic Load” switch in City Operations → Experimental Features to see per-zone travel load and congestion here; 3D vehicles and pedestrians are unaffected.</p>",
+"<p class='note' style='margin:6px 0 0'>产业联动未开启：打开「市政操作 → 实验功能」里的「产业联动」开关后，消费力与用工填充会开始影响商业、工业收入与税收，明细见上方财政报表。</p>": "<p class='note' style='margin:6px 0 0'>Industry linkage is off: turn on the “Industry Linkage” switch in City Operations → Experimental Features and consumption power and staffing will start affecting commercial, industrial and tax income; details are in the finance report above.</p>",
+"<p class='note' style='margin:6px 0 0'>人口结构分组未开启：打开「市政操作 → 实验功能」里的「人口结构」开关后，这里会显示年轻 / 普通家庭 / 老年 / 高收入四组占比与劳动人口。</p>": "<p class='note' style='margin:6px 0 0'>Population groups are off: turn on the “Population Groups” switch in City Operations → Experimental Features to see the young / family / elderly / high-income shares and the labor force here.</p>",
+"、": ", ",
+"。": ".",
+"。分配数只是展示，不驱动 3D 渲染；3D 里车辆只在有建筑的路段跑。</p>": ". These allocations are display only and do not drive the 3D rendering; in 3D, vehicles only run on streets with buildings.</p>",
+"」": "”",
+"交通：交通负荷统计未开启（市政操作 → 实验功能 → 交通负荷），3D 车辆与行人表现不受影响。": "Traffic: traffic load statistics are off (City Operations → Experimental Features → Traffic Load); 3D vehicles and pedestrians are unaffected.",
+"交通：全城拥堵指数 ": "Traffic: citywide congestion index ",
+"产业：月收入 ": "Industry: monthly income ",
+"人口结构分组开启时，分组需求缺口还会折算成等效拖欠月数（本月 +": "With population groups on, the group demand gap is also converted into equivalent overdue months (this month +",
+"人口较基线多了 ": "Population is up vs baseline by ",
+"人口较基线少了 ": "Population is down vs baseline by ",
+"人口：": "Population: ",
+"人次": " trips",
+"全城容量 +": "Citywide capacity +",
+"共 23 种建筑：造价、维护、岗位、容量、服务范围与升级费全部取自建筑表；点任意地块也能在弹窗里看到同一份数据。": "23 buildings in total: build cost, upkeep, jobs, capacity, service range and upgrade cost all come straight from the building table; tap any tile to see the same data in its popup.",
+"其中商业基数": "of which: commercial base",
+"其中工业基数": "of which: industrial base",
+"其中：公共服务支出": "of which: public service spending",
+"其中：其他维护": "of which: other upkeep",
+"出行": "trips",
+"区": "Zone ",
+"升级费：1→2 级 ": "Upgrade cost: Lv.1→2 ",
+"变化原因：": "Why it changed: ",
+"变化原因：较基线各项指标变化不大，无明显变好或变差的单项。": "Why it changed: no indicator moved much vs baseline — nothing clearly better or worse.",
+"商业与工业收入（结算）": "Commercial & industrial income (settled)",
+"商业乘数": "Commercial multiplier",
+"城市发展报告": "City Development Report",
+"城市等级进度：当前「": "City tier progress: currently “",
+"对照基线：": "Baseline: ",
+"对照基线：本机暂无足够的历史快照（推进几个月后自动累计，最多留 24 个月），先列当前状态，变化原因待有基线后再归因。": "Baseline: not enough history on this device yet (it accumulates as you advance months, up to 24 months). Current state is listed below; causes will be attributed once a baseline exists.",
+"居民税": "Resident tax",
+"岗位": "Jobs",
+"工业乘数": "Industrial multiplier",
+"年轻": "Young",
+"建筑图鉴": "Building Codex",
+"总支出（维护费）": "Total spending (upkeep)",
+"总收入": "Total income",
+"打开建筑图鉴": "Open Building Codex",
+"报告月份：": "Report month: ",
+"拥堵": "Congested",
+"按当前指标与历史快照汇总；原因只引用已有指标的变化": "Summarised from current indicators and history snapshots; causes cite only changes in existing indicators",
+"收入约 ": "Income about ",
+"教育覆盖：1 级 ": "Education coverage: Lv.1 ",
+"旅游收入": "Tourism income",
+"旅游收入 60/月 × 等级系数 ×（1+绿化率）": "Tourism income 60/month × level factor × (1+greening rate)",
+"普通家庭": "Family",
+"最高等级定税率上限（30% + 2%×最高等级）；商业/工厂收入 +3%/级（上限 +15%）": "Highest level sets the tax cap (30% + 2% × highest level); commercial/factory income +3%/level (max +15%)",
+"月收入较基线多了 ": "Monthly income is up vs baseline by ",
+"月收入较基线少了 ": "Monthly income is down vs baseline by ",
+"本月盈亏": "This month's balance",
+"查看城市发展报告": "View City Development Report",
+"每座全城容量 +2；净化周边污染": "Citywide capacity +2 per building; cleans up nearby pollution",
+"每座削减全城污染 5%（上限 −20%）": "Cuts citywide pollution by 5% per building (max −20%)",
+"每座削弱全城工厂污染 15%（上限 60%）": "Weakens citywide factory pollution by 15% per building (max 60%)",
+"每座让每座工厂月税 +10（上限 +30）": "+10 monthly tax per factory per building (max +30)",
+"污染半径 2 格；每座商业街让月税 +10（上限 +30）": "Pollution radius 2 tiles; each commercial street adds +10 monthly tax per factory (max +30)",
+"污染率较基线涨了 ": "Pollution rate is up vs baseline by ",
+"污染率较基线降了 ": "Pollution rate is down vs baseline by ",
+"治安 +3/级（上限 +15）；社会矛盾每月 −2/座": "Security +3/level (max +15); social tension −2/month per building",
+"治安覆盖：1 级 ": "Security coverage: Lv.1 ",
+"消费力指数": "Consumption index",
+"满意度较基线涨了 ": "Satisfaction is up vs baseline by ",
+"满意度较基线跌了 ": "Satisfaction is down vs baseline by ",
+"满意度：": "Satisfaction: ",
+"环境：污染率 ": "Environment: pollution rate ",
+"用工填充率": "Staffing fill rate",
+"畅通": "Flowing",
+"税收 +25%/座（上限 +50%）": "Tax revenue +25% per building (max +50%)",
+"税收乘数": "Tax multiplier",
+"等级之和 = 城市总体发展水平；全城收入 +2%/级（上限 +20%）": "Sum of levels = citywide development level; citywide income +2%/level (max +20%)",
+"繁忙": "Busy",
+"组最缺：": " group needs most: ",
+"绿化公园": "Parks & greening",
+"老年": "Elderly",
+"行政统筹": "Admin bonus",
+"负荷": "Load",
+"迁入上限 +2/级/座；流出率 −0.3%/级（上限 −1.5%）": "Move-in cap +2/level/building; outflow rate −0.3%/level (max −1.5%)",
+"通勤效率": "Commute efficiency",
+"高收入": "High income",
+"（": "(",
+"（0–100：教育 45% + 就业 35% + 满意度 20%）": " (0–100: education 45% + employment 35% + satisfaction 20%)",
+"（交通修正 ×": " (traffic adjustment ×",
+"（商业乘数 ×": " (commercial multiplier ×",
+"（工业乘数 ×": " (industrial multiplier ×",
+"（拥堵超 100% 才扣钱，最多扣 10%，只扣商业）· 负荷最高的区是区 ": " (only charged when congestion passes 100%, max −10%, commercial only) · busiest zone is Zone ",
+"（未达标：人口满 60 且建筑满 10 栋才出车，上限 8 辆）": " (not yet unlocked: vehicles appear at population 60 and 10 buildings, max 8)",
+"（税收乘数 ×": " (tax multiplier ×",
+"（范围 0.57–1.05）": " (range 0.57–1.05)",
+"（范围 0.72–1.15）": " (range 0.72–1.15)",
+"（范围 0.95–1.05）": " (range 0.95–1.05)",
+"（警察局减免 ": " (after police discount of ",
+"（较基线 ": " (vs baseline ",
+"（造价 ": " (build cost ",
+"）· 商业收入修正 ×": ") · commercial income adjustment ×",
+"）。</p>": ").</p>",
+"）：税收 ": "): resident tax ",
+"，下一级「": ", next tier “",
+"，交通修正 ×": ", traffic adjustment ×",
+"，已是最高等级": ", already the highest tier",
+"，折算等效拖欠 +": ", converted to equivalent overdue months +",
+"，暂未折算成拖欠月数。": ", not yet converted into overdue months.",
+"，距下一级「": ", next tier “",
+"；人口结构分组缺口另折算 +": "; the population-group gap adds +",
+"%，": "%, ",
+"人口结构：开": "Population Groups: On",
+"人口结构：关": "Population Groups: Off",
+"产业联动：开": "Industry Linkage: On",
+"产业联动：关": "Industry Linkage: Off",
+"交通负荷：开": "Traffic Load: On",
+"交通负荷：关": "Traffic Load: Off",
+"实验功能 / 功能开关": "Experimental Features",
+"新系统默认关闭；打开后才生效，关闭时回到原来的玩法。开关只记在本机浏览器里，不会写进存档码。": "New systems are off by default; they only take effect once turned on, and turning them off restores the old rules. Switches are stored only in this browser and never go into the save code.",
+"打开后：人口按年轻 / 普通家庭 / 老年 / 高收入分组统计；分组缺口最多让满意度多扣 2 分、人口每月多流失 1.4%。关闭时：不分组，按原有口径结算。": "On: population is grouped into young / family / elderly / high-income; the group gap can cost at most −2 satisfaction and −1.4%/month population. Off: no grouping, old rules apply.",
+"打开后：消费力与用工填充影响商业、工业收入与税收（商业 0.72–1.15 倍、工业 0.57–1.05 倍、税收 0.95–1.05 倍）。关闭时：收入按原有口径结算。": "On: consumption power and staffing affect commercial, industrial and tax income (commercial ×0.72–1.15, industrial ×0.57–1.05, tax ×0.95–1.05). Off: income uses the old basis.",
+"打开后：地图按 3×3 分 9 区统计出行与负荷，全城拥堵超 100% 时商业收入最多扣 10%。关闭时：不统计、不扣钱，车辆行人表现不变。": "On: the map is split 3×3 into 9 zones for travel load; when citywide congestion passes 100%, commercial income drops by up to 10%. Off: no statistics, no charge, vehicles and pedestrians unchanged.",
+"财政报表": "Finance Report",
+"城市发展报告与建筑图鉴": "City Development Report & Building Codex",
 " + 商业 ": " + Commercial ",
 " / 20：受教育度越低贡献越大——盖学校、图书馆并升级能降。": " / 20: the lower the education level, the bigger its share — build and upgrade schools and libraries to lower it.",
 " / 25：按全城污染率算——工厂离住宅远一点、盖公园和污水处理厂能降。": " / 25: based on citywide pollution — keep factories away from homes, build parks and sewage treatment plants to lower it.",
@@ -1350,7 +1637,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "26. 声音与特效：「市政操作」里有声音控制——点地块、建造、升级、拆除、推进一个月、事件弹出和结果揭晓都有对应音效，普通按钮也有轻点声，钱不够时是低沉的拒绝音；建造和升级时建筑会从半空落下回弹到位并迸出粒子和光圈，拆除扬起灰尘，点中地块有金色光圈扩散、选中后还有一圈呼吸光环。背景音乐是程序生成的轻柔城市氛围曲（和弦垫 + 风铃音），默认关、不打扰，想听点「音乐：开」，可随时关、可调音量，手机和电脑都能播；所有声音都是网页现场合成的，没有音频文件，加载零等待。": "26. Sound & effects: “City Operations” has sound controls — tapping tiles, building, upgrading, demolishing, advancing a month, event popups and result reveals each have their own sound; ordinary buttons have a soft tap, and insufficient funds play a low refusal note. When building or upgrading, the building drops from mid-air, bounces into place and bursts into particles and a light ring; demolishing kicks up dust; tapping a tile spreads a golden ring, and the selected tile keeps a breathing halo. The background music is a procedurally generated gentle city ambience (chord pads + wind chimes), off by default so it never disturbs — tap “Music: On” to listen, turn it off or adjust volume any time; it plays on phone and computer. Every sound is synthesized live in the page — no audio files, zero loading wait.",
 "27. 建设随机事件 + 标示≠实际：盖建筑时也有约 20% 概率随机触发事件（工地挖出老物件、建材商变卦、工地猫、新房被抢订、老树保留之争、义诊队上门……共 12 种，不少只在盖对口建筑时出现；教程期间不触发）。所有要你拍板的事件（大事件、天灾人祸、社会矛盾事件、建设随机事件）都一样：方案选前只显示标题和一句话说明，不预告任何后果，选项顺序每次打乱；选完会再弹一个「实际结果」弹窗，逐项对照你的判断和实际——实际可能和预想对不上：花费可能超支（严重时接近标示的 10 倍）、说好赚钱可能倒贴、不花钱也可能冒出隐藏支出，原因由系统随机生成（有合理的，也有离谱的），弹窗和市政日志里都写明。另外两条：①坏事不全坏——灾害、坏方案、建筑问题处理后，可能随机迎来意外之喜（企业捐款、保险赔付、处置被报道后口碑反涨、外地人慕名迁入）；②误打误撞——选了便宜、摆烂、看起来做错的方案，也有概率阴差阳错出好结果（口碑翻正、人口反涨、还倒赚一笔），原因同样写进实际结果弹窗和日志。": "27. Construction random events + stated ≠ actual: building something has about a 20% chance of a random event (old relics dug up, supplier changing terms, a site cat, a new home snapped up, a fight over keeping an old tree, a free clinic visiting… 12 types; many only appear for the matching building; never during the tutorial). Every event that asks you to decide (major events, disasters, social-tension events, construction events) works the same way: before choosing, each option shows only its title and a one-line description — no consequences are previewed, and the option order is shuffled every time. After you choose, an “Actual Result” dialog compares your call with the reality line by line. Reality may not match: costs can overrun (up to nearly 10× the estimate in bad cases), a money-making option can end up costing you, and a free option can hide extra spending. The reason is randomly generated — some sensible, some absurd — and written in the dialog and the city log. Two more rules: ① bad news isn't all bad — after a disaster, a bad option or a building-problem fix, a lucky surprise may follow (company donation, insurance payout, approval rising after press coverage, newcomers arriving after hearing about it); ② accidents happen — picking a cheap, lazy or seemingly wrong option can still luck into a good result (approval flips positive, population rises, even a profit), with the reason written in the actual-result dialog and log too.",
 "28. 页面显示简化了：页面上只留关键数字（资金、人口、满意度、教育、电力、治安、矛盾值、绿化率、舒适度、月收入/维护、污染率、下月人口预估和影响最大的一项、满意度每项的加减分）。详细的构成、逐项贡献、权重和计算方法都收进了按钮弹窗：矛盾值看「构成详情」、绿化看「绿化详情」、收入/污染/生活便利/治安构成看「城市详情」、人口九项贡献看「人口详情」、满意度逐项原因和治安/教育/矛盾/绿化构成看「查看加减详情」、建筑问题明细看「哪些建筑」，点开才看，页面更清爽。": "28. Simplified display: only key numbers stay on the page (funds, population, satisfaction, education, power, security, tension, greenery, comfort, monthly income/upkeep, pollution, next month's population forecast and its biggest driver, and each satisfaction item's bonus/deduction). The detailed breakdowns, per-item contributions, weights and formulas all live in button popups: tension → “Breakdown”, greenery → “Greenery Details”, income/pollution/convenience/security breakdowns → “City Details”, the nine population factors → “Population Details”, satisfaction item reasons and security/education/tension/greenery breakdowns → “View Details”, building-problem details → “Which Buildings”. Tap to see them — the page stays clean.",
-"29. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.32，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。": "29. Proportions re-checked: pedestrians use a realistic small scale (height about 0.38, width about 0.13), clearly smaller than vehicles (length 0.46–0.62) and buildings (a Lv.1 home is about 0.76 tall). Roads are wider still — tile spacing is larger, each tile has an extra ring of light-coloured sidewalk around it, the road band is 0.32 wide in total, and carriageway and sidewalk are easy to tell apart; pedestrians take up about a third of the road's width. Vehicles are slightly narrower too, fitting neatly inside the carriageway.",
+"29. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.38，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。": "29. Proportions re-checked: pedestrians use a realistic small scale (height about 0.38, width about 0.13), clearly smaller than vehicles (length 0.46–0.62) and buildings (a Lv.1 home is about 0.76 tall). Roads are wider still — tile spacing is larger, each tile has an extra ring of light-coloured sidewalk around it, the road band is 0.38 wide in total, and carriageway and sidewalk are easy to tell apart; pedestrians take up about a third of the road's width. Vehicles are slightly narrower too, fitting neatly inside the carriageway.",
 "3. 公园、学校、医院、警察局提升满意度；工厂有污染，别一股脑全盖工厂。满意度为什么涨跌、市民还缺什么，看地图上方的「满意度解析」和「市民需求」：解析里每一项都直接标着加了多少、减了多少（绿色 +、红色 −），上方还有加分合计和扣分合计；点「查看加减详情」按钮会打开详情弹窗，逐项列出数值、原因和计算方法，治安管理率里税率、受教育度各加减了多少也写在里面，关掉弹窗就回到解析页。": "3. Parks, schools, hospitals and police stations raise satisfaction; factories pollute — don't build nothing but factories. For why satisfaction rises or falls and what citizens still need, see “Satisfaction Breakdown” and “Citizen Needs” above the map: each item in the breakdown shows its bonus or deduction up front (green +, red −), with bonus and deduction totals at the top. The “View Details” button opens a popup listing every item's value, reason and formula, including how much taxes and education each added to or removed from the security rate; closing it returns to the breakdown.",
 "30. 阶段目标 + 成就界面：地图上方有「阶段目标」面板——一条 9 阶段的主线（人口里程碑、满意度评级、城市等级进阶），面板显示当前阶段、进度条、完成奖励和下一个目标，完成一个弹提示、发小额资金/口碑/人口奖励。下方还有一张常驻的「成就」总览卡：成就 / 彩蛋 / 阶段目标三项计数、图鉴收集百分比、最近解锁的两项和最接近达成的三条成就，一眼看清进度。点总览卡或阶段目标面板里的按钮打开「成就界面」：整页图鉴，顶部是收集完成度横幅，下面有页签可以按「全部 / 已达成 / 未达成 / 彩蛋 / 阶段目标」筛选，15 个成就（人口突破、满意度满分、全建筑解锁、资金、绿化、治安、教育、矛盾、经营时长……）按人口里程碑、满意度、建设发展、财政经营、环境绿化、治安安全、教育文化、经营历程八类分组，每条都写明分类、达成条件、奖励、已达成月份或当前进度条，点任意一条看详情页。成就、目标进度都存进存档码，导入老存档自动补空记录，不丢档。": "30. Stage goals + achievements: above the map is the “Stage Goals” panel — a 9-stage main quest (population milestones, satisfaction ratings, city-level progress). It shows the current stage, progress bar, completion reward and next goal; finishing one pops a notice and pays a small funds/approval/population reward. Below it is a permanent “Achievements” overview card: counts for achievements / easter eggs / stage goals, collection percentage, the two most recent unlocks and the three achievements closest to completion — progress at a glance. Tap the overview card or the button in the stage-goals panel to open “Achievements”: a full-page collection with a completion banner at the top and tabs to filter by “All / Unlocked / Locked / Easter Eggs / Stage Goals”. 15 achievements (population breakthroughs, perfect satisfaction, unlocking all buildings, funds, greenery, security, education, tension, playtime…) are grouped into eight categories (population milestones, satisfaction, construction, finance, environment, security, education & culture, play history); each lists its category, unlock condition, reward, the month it unlocked or its current progress bar — tap any one for its detail page. Achievement and goal progress are saved in the save code; importing an old save auto-fills missing records, so nothing is lost.",
 "31. 随机城市事件（定期触发）：和大事件分开的一套城市日常治理题——返乡潮、流出预警、上级福利政策窗口、环保督查、商业热潮、租金风波、老龄化、就业寒冬、夜市经济，共 9 种。开局满 4 个月、人口 20 以上才开始，距上次至少隔 3 个月、约 22% 概率，拖满 6 个月必来一件，频率适中，不和大事件/灾害同月撞车。应对不只是花钱：有的方案直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板；选不同方案结果不同，方案选前同样只显示标题和一句话说明、不预告后果，选完才揭晓，同样走「标示 ≠ 实际」的实际结果引擎，全部记进市政日志。": "31. Random city events (regular): a separate set of everyday governance questions from major events — homecoming wave, outflow warning, higher-level welfare-policy window, environmental inspection, shopping boom, rent dispute, aging population, hiring freeze, night-market economy — 9 types. They start after 4 months with population 20+, at least 3 months apart, about 22% chance, guaranteed after 6 months with no event; moderate frequency, never in the same month as a major event or disaster. Responses aren’t just about money: some directly adjust the tax rate (effective immediately), some add facilities or pay subsidies to cover weak spots. Different options give different results; before choosing, each option likewise shows only its title and a one-line description with no consequences previewed, revealed only after you choose — all through the same “stated ≠ actual” result engine, and everything is logged.",
@@ -3175,6 +3462,84 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "35. 新增建筑（2026-11-22）：城市新增 7 种建筑，共 23 种。行政楼（700）：等级之和就是城市总体发展水平，全城收入 +2%/级（上限 +20%），每座满意度 +1（上限 +5）。车站（350）：每月迁入上限 +2/级/座，流出率 −0.3%/级（上限 −1.5%）。科技楼（650）：最高等级决定税率上限（30% + 2% × 最高等级，5 级时 40%），商业/工厂收入 +3%/级（上限 +15%）。环保局（300）：每座削减全城污染 5%（上限 −20%）；绿化率 ≥40% 且污染率 <10% 时每座满意度 +2（上限 +6），污染率 ≥30% 时每座满意度 −1。税务局（450）：税收收入 +25%/座（上限 +50%）。法院（380）：治安 +3/级（上限 +15），社会矛盾每月 −2/座，矛盾事件触发几率 −20%/座（上限 −60%）。景点（400）：旅游收入 60/月 × 等级系数 ×（1+绿化率），每座满意度 +1（上限 +3）。行政楼、科技楼的建造与升级价格定得较高。": "35. New buildings (2026-11-22): 7 new building types join the city, 23 in total. Admin Building (700): the sum of levels is the city’s overall development level; citywide income +2% per level (max +20%), +1 satisfaction per building (max +5). Station (350): monthly move-in cap +2 per level per building, outflow rate −0.3% per level (max −1.5%). Tech Building (650): the highest level sets the tax cap (30% + 2% × highest level, 40% at Lv5); commercial/factory income +3% per level (max +15%). Environmental Bureau (300): each building cuts citywide pollution by 5% (max −20%); when greening ≥40% and pollution <10%, +2 satisfaction per building (max +6); when pollution ≥30%, −1 satisfaction per building. Tax Bureau (450): tax revenue +25% per building (max +50%). Court (380): security +3 per level (max +15), social tension −2 per month per building, tension-event chance −20% per building (max −60%). Attraction (400): tourism income 60/month × level factor × (1+greening rate), +1 satisfaction per building (max +3). Admin and tech buildings cost more to build and upgrade.",
 };
     var I18N_REV = {
+" congested, ": " 个、繁忙 ",
+" points.": " 个点。",
+" points; population fell while pollution rose.": " 个点，人口减少与污染加重同向。",
+" points; satisfaction rose while education rose.": " 个点，满意度上升与教育走高同向。",
+" points; satisfaction fell while education fell.": " 个点，满意度下降与教育走低同向。",
+" points; satisfaction fell while pollution rose.": " 个点，满意度下降与污染加重同向。",
+" points; satisfaction fell while security fell.": " 个点，满意度下降与治安走低同向。",
+" points; greening rate": " 个点，绿化率",
+" busy; busiest zone is Z": " 个；负荷最高的区是 Z",
+" people; occupancy ": " 人，占用率 ",
+" people; satisfaction": " 人，满意度",
+" vehicles; statistical basis: the vehicle target is split across zones by trip share (see the “Vehicle allocation” column below; display only, does not drive rendering).": " 位；统计口径：车辆目标按各区出行需求占比分配（见下表「车辆分配」列，只作展示，不驱动渲染）。",
+" points.": " 分。",
+" points (base ": " 分（基础 ",
+" points; population fell while satisfaction fell.": " 分，人口减少与满意度走低同向。",
+" points; population grew while satisfaction rose.": " 分，人口增长与满意度走高同向。",
+"%, commercial multiplier ×": "%，商业乘数 ×",
+"%, greening rate ": "%，绿化率 ",
+"%; of the 9 zones, ": "%；9 个区里拥堵 ",
+"<p class='note' style='margin:4px 0 0'>Last settled month (": "<p class='note' style='margin:4px 0 0'>上月结算（",
+"<p class='note' style='margin:4px 0 0'>Trend (vs last month): total income ": "<p class='note' style='margin:4px 0 0'>变化趋势（较上月）：总收入 ",
+"<p class='note' style='margin:4px 0 0'>Commercial + industrial = settled commercial & industrial total; public-service spending is a sub-item of upkeep, shown for structure only and not counted again in total spending.</p>": "<p class='note' style='margin:4px 0 0'>商业 + 工业 = 商业与工业结算总额；公共服务支出是维护费的子项，仅作结构参考，不另计入总支出。</p>",
+"<p class='note' style='margin:4px 0 0'>After advancing a month, last month's settled finance report (settlement snapshot) will appear here.</p>": "<p class='note' style='margin:4px 0 0'>推进一个月后，这里会显示上月结算报表（结算快照）。</p>",
+"“Vehicle allocation” is a statistical split: the 3D vehicle target divided across zones by trip share, display only; the number of vehicles actually running in 3D follows the “3D actuals” line, a different basis.": "「车辆分配」是统计口径：把 3D 车辆目标数按各区出行需求占比拆开，只作展示；3D 里实际跑的车辆数以「3D 实际值」为准，两栏口径不同。",
+"Traffic: 3D actuals: vehicle target ": "交通：3D 实际值：车辆目标 ",
+"Traffic: citywide congestion is under 100%, so traffic does not cut commercial income.": "交通：全城拥堵未过 100%，交通不扣商业收入。",
+"Traffic: congestion is cutting commercial income: traffic adjustment ×": "交通：拥堵正在压商业收入：交通修正 ×",
+"Industry: industry linkage is off: commercial and industrial income use the old basis.": "产业：产业联动未开启：商业与工业收入按旧口径结算。",
+"Industry: commercial base ": "产业：商业基数 ",
+"Industry: consumption index ": "产业：消费力指数 ",
+"Population: vs the earliest record, population": "人口：与最早记录相比，人口",
+"Population: population mix: ": "人口：人口结构：",
+"Population: pollution rose ": "人口：同期污染率上升 ",
+"Population: satisfaction rose ": "人口：同期满意度上升 ",
+"Population: satisfaction fell ": "人口：同期满意度下降 ",
+"Population: current population ": "人口：当前人口 ",
+"Population: collecting data: after a few more months, this will say whether population rose or fell and which indicators moved with it.": "人口：数据积累中：推进几个月后，这里会写清人口是涨是跌、以及同期哪些指标跟着动了。",
+" trips/month": "人次/月",
+"Trip demand": "出行需求",
+"Commercial income": "商业收入",
+"Industrial income": "工业收入",
+"Building problem losses": "建筑问题损失",
+"Total spending": "总支出",
+"Level": "档位",
+"Satisfaction: vs the earliest record": "满意度：与最早记录相比",
+"Satisfaction: education rose ": "满意度：同期受教育度上升 ",
+"Satisfaction: education fell ": "满意度：同期受教育度下降 ",
+"Satisfaction: pollution rose ": "满意度：同期污染率上升 ",
+"Satisfaction: security fell ": "满意度：同期治安管理率下降 ",
+"Satisfaction: current satisfaction ": "满意度：当前满意度 ",
+"Environment: vs the earliest record, pollution": "环境：与最早记录相比，污染率",
+"Upkeep": "维护费",
+"Load": "负荷率",
+"Vehicle allocation": "车辆分配",
+" vehicles": "辆",
+" (commercial only, not industrial).": "（只扣商业，不扣工业）。",
+" (factories include the factory-tax bonus from commercial streets).": "（工厂含商业街带来的工厂税加成）。",
+").": "）。",
+") settlement snapshot: same basis as the “Advance a month” settlement (tax + commercial + industrial + tourism + admin bonus − upkeep − building problem losses).</p>": "）的结算快照：口径与「推进一个月」的结算一致（税收 + 商业 + 工业 + 旅游 + 行政统筹 − 维护 − 建筑问题损失）。</p>",
+", industrial multiplier ×": "，工业乘数 ×",
+", industrial base ": "，工业基数 ",
+", staffing fill rate ": "，用工填充率 ",
+", tax multiplier ×": "，税收乘数 ×",
+"; labor force ": "；劳动人口 ",
+"New systems are on by default; they take effect once turned on, and turning them off restores the old rules. Switches are stored only in this browser and never go into the save code.": "新系统默认开启；打开后即生效，关闭时回到原来的玩法。开关只记在本机浏览器里，不会写进存档码。",
+"Population Groups: On": "人口结构：开",
+"Population Groups: Off": "人口结构：关",
+"Industry Linkage: On": "产业联动：开",
+"Industry Linkage: Off": "产业联动：关",
+"Traffic Load: On": "交通负荷：开",
+"Traffic Load: Off": "交通负荷：关",
+"Experimental Features": "实验功能 / 功能开关",
+"New systems are off by default; they only take effect once turned on, and turning them off restores the old rules. Switches are stored only in this browser and never go into the save code.": "新系统默认关闭；打开后才生效，关闭时回到原来的玩法。开关只记在本机浏览器里，不会写进存档码。",
+"On: population is grouped into young / family / elderly / high-income; the group gap can cost at most −2 satisfaction and −1.4%/month population. Off: no grouping, old rules apply.": "打开后：人口按年轻 / 普通家庭 / 老年 / 高收入分组统计；分组缺口最多让满意度多扣 2 分、人口每月多流失 1.4%。关闭时：不分组，按原有口径结算。",
+"On: consumption power and staffing affect commercial, industrial and tax income (commercial ×0.72–1.15, industrial ×0.57–1.05, tax ×0.95–1.05). Off: income uses the old basis.": "打开后：消费力与用工填充影响商业、工业收入与税收（商业 0.72–1.15 倍、工业 0.57–1.05 倍、税收 0.95–1.05 倍）。关闭时：收入按原有口径结算。",
+"On: the map is split 3×3 into 9 zones for travel load; when citywide congestion passes 100%, commercial income drops by up to 10%. Off: no statistics, no charge, vehicles and pedestrians unchanged.": "打开后：地图按 3×3 分 9 区统计出行与负荷，全城拥堵超 100% 时商业收入最多扣 10%。关闭时：不统计、不扣钱，车辆行人表现不变。",
+"Finance Report": "财政报表",
+"City Development Report & Building Codex": "城市发展报告与建筑图鉴",
 "!": "污",
 "\" (overdue": "」（已拖 ",
 "\" (population": "」（人口 ",
@@ -3408,7 +3773,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "26. Sound & effects: “City Operations” has sound controls — tapping tiles, building, upgrading, demolishing, advancing a month, event popups and result reveals each have their own sound; ordinary buttons have a soft tap, and insufficient funds play a low refusal note. When building or upgrading, the building drops from mid-air, bounces into place and bursts into particles and a light ring; demolishing kicks up dust; tapping a tile spreads a golden ring, and the selected tile keeps a breathing halo. The background music is a procedurally generated gentle city ambience (chord pads + wind chimes), off by default so it never disturbs — tap “Music: On” to listen, turn it off or adjust volume any time; it plays on phone and computer. Every sound is synthesized live in the page — no audio files, zero loading wait.": "26. 声音与特效：「市政操作」里有声音控制——点地块、建造、升级、拆除、推进一个月、事件弹出和结果揭晓都有对应音效，普通按钮也有轻点声，钱不够时是低沉的拒绝音；建造和升级时建筑会从半空落下回弹到位并迸出粒子和光圈，拆除扬起灰尘，点中地块有金色光圈扩散、选中后还有一圈呼吸光环。背景音乐是程序生成的轻柔城市氛围曲（和弦垫 + 风铃音），默认关、不打扰，想听点「音乐：开」，可随时关、可调音量，手机和电脑都能播；所有声音都是网页现场合成的，没有音频文件，加载零等待。",
 "27. Construction random events + stated ≠ actual: building something has about a 20% chance of a random event (old relics dug up, supplier changing terms, a site cat, a new home snapped up, a fight over keeping an old tree, a free clinic visiting… 12 types; many only appear for the matching building; never during the tutorial). Every event that asks you to decide (major events, disasters, social-tension events, construction events) works the same way: before choosing, each option shows only its title and a one-line description — no consequences are previewed, and the option order is shuffled every time. After you choose, an “Actual Result” dialog compares your call with the reality line by line. Reality may not match: costs can overrun (up to nearly 10× the estimate in bad cases), a money-making option can end up costing you, and a free option can hide extra spending. The reason is randomly generated — some sensible, some absurd — and written in the dialog and the city log. Two more rules: ① bad news isn't all bad — after a disaster, a bad option or a building-problem fix, a lucky surprise may follow (company donation, insurance payout, approval rising after press coverage, newcomers arriving after hearing about it); ② accidents happen — picking a cheap, lazy or seemingly wrong option can still luck into a good result (approval flips positive, population rises, even a profit), with the reason written in the actual-result dialog and log too.": "27. 建设随机事件 + 标示≠实际：盖建筑时也有约 20% 概率随机触发事件（工地挖出老物件、建材商变卦、工地猫、新房被抢订、老树保留之争、义诊队上门……共 12 种，不少只在盖对口建筑时出现；教程期间不触发）。所有要你拍板的事件（大事件、天灾人祸、社会矛盾事件、建设随机事件）都一样：方案选前只显示标题和一句话说明，不预告任何后果，选项顺序每次打乱；选完会再弹一个「实际结果」弹窗，逐项对照你的判断和实际——实际可能和预想对不上：花费可能超支（严重时接近标示的 10 倍）、说好赚钱可能倒贴、不花钱也可能冒出隐藏支出，原因由系统随机生成（有合理的，也有离谱的），弹窗和市政日志里都写明。另外两条：①坏事不全坏——灾害、坏方案、建筑问题处理后，可能随机迎来意外之喜（企业捐款、保险赔付、处置被报道后口碑反涨、外地人慕名迁入）；②误打误撞——选了便宜、摆烂、看起来做错的方案，也有概率阴差阳错出好结果（口碑翻正、人口反涨、还倒赚一笔），原因同样写进实际结果弹窗和日志。",
 "28. Simplified display: only key numbers stay on the page (funds, population, satisfaction, education, power, security, tension, greenery, comfort, monthly income/upkeep, pollution, next month's population forecast and its biggest driver, and each satisfaction item's bonus/deduction). The detailed breakdowns, per-item contributions, weights and formulas all live in button popups: tension → “Breakdown”, greenery → “Greenery Details”, income/pollution/convenience/security breakdowns → “City Details”, the nine population factors → “Population Details”, satisfaction item reasons and security/education/tension/greenery breakdowns → “View Details”, building-problem details → “Which Buildings”. Tap to see them — the page stays clean.": "28. 页面显示简化了：页面上只留关键数字（资金、人口、满意度、教育、电力、治安、矛盾值、绿化率、舒适度、月收入/维护、污染率、下月人口预估和影响最大的一项、满意度每项的加减分）。详细的构成、逐项贡献、权重和计算方法都收进了按钮弹窗：矛盾值看「构成详情」、绿化看「绿化详情」、收入/污染/生活便利/治安构成看「城市详情」、人口九项贡献看「人口详情」、满意度逐项原因和治安/教育/矛盾/绿化构成看「查看加减详情」、建筑问题明细看「哪些建筑」，点开才看，页面更清爽。",
-"29. Proportions re-checked: pedestrians use a realistic small scale (height about 0.38, width about 0.13), clearly smaller than vehicles (length 0.46–0.62) and buildings (a Lv.1 home is about 0.76 tall). Roads are wider still — tile spacing is larger, each tile has an extra ring of light-coloured sidewalk around it, the road band is 0.32 wide in total, and carriageway and sidewalk are easy to tell apart; pedestrians take up about a third of the road's width. Vehicles are slightly narrower too, fitting neatly inside the carriageway.": "29. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.32，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。",
+"29. Proportions re-checked: pedestrians use a realistic small scale (height about 0.38, width about 0.13), clearly smaller than vehicles (length 0.46–0.62) and buildings (a Lv.1 home is about 0.76 tall). Roads are wider still — tile spacing is larger, each tile has an extra ring of light-coloured sidewalk around it, the road band is 0.38 wide in total, and carriageway and sidewalk are easy to tell apart; pedestrians take up about a third of the road's width. Vehicles are slightly narrower too, fitting neatly inside the carriageway.": "29. 比例重新核对了：行人按写实小比例（身高约 0.38、体宽约 0.13），明显比车辆（长 0.46–0.62）和建筑（1 级住宅总高约 0.76）小很多；道路继续拓宽——地块间距加大，每块地外圈多了一圈浅色人行道，道路带总宽 0.38，车行道和人行道都看得清，行人在路上只占约三分之一宽。车辆也略微收窄，正好在车行道里跑。",
 "3. Parks, schools, hospitals and police stations raise satisfaction; factories pollute — don't build nothing but factories. For why satisfaction rises or falls and what citizens still need, see “Satisfaction Breakdown” and “Citizen Needs” above the map: each item in the breakdown shows its bonus or deduction up front (green +, red −), with bonus and deduction totals at the top. The “View Details” button opens a popup listing every item's value, reason and formula, including how much taxes and education each added to or removed from the security rate; closing it returns to the breakdown.": "3. 公园、学校、医院、警察局提升满意度；工厂有污染，别一股脑全盖工厂。满意度为什么涨跌、市民还缺什么，看地图上方的「满意度解析」和「市民需求」：解析里每一项都直接标着加了多少、减了多少（绿色 +、红色 −），上方还有加分合计和扣分合计；点「查看加减详情」按钮会打开详情弹窗，逐项列出数值、原因和计算方法，治安管理率里税率、受教育度各加减了多少也写在里面，关掉弹窗就回到解析页。",
 "30. Stage goals + achievements: above the map is the “Stage Goals” panel — a 9-stage main quest (population milestones, satisfaction ratings, city-level progress). It shows the current stage, progress bar, completion reward and next goal; finishing one pops a notice and pays a small funds/approval/population reward. Below it is a permanent “Achievements” overview card: counts for achievements / easter eggs / stage goals, collection percentage, the two most recent unlocks and the three achievements closest to completion — progress at a glance. Tap the overview card or the button in the stage-goals panel to open “Achievements”: a full-page collection with a completion banner at the top and tabs to filter by “All / Unlocked / Locked / Easter Eggs / Stage Goals”. 15 achievements (population breakthroughs, perfect satisfaction, unlocking all buildings, funds, greenery, security, education, tension, playtime…) are grouped into eight categories (population milestones, satisfaction, construction, finance, environment, security, education & culture, play history); each lists its category, unlock condition, reward, the month it unlocked or its current progress bar — tap any one for its detail page. Achievement and goal progress are saved in the save code; importing an old save auto-fills missing records, so nothing is lost.": "30. 阶段目标 + 成就界面：地图上方有「阶段目标」面板——一条 9 阶段的主线（人口里程碑、满意度评级、城市等级进阶），面板显示当前阶段、进度条、完成奖励和下一个目标，完成一个弹提示、发小额资金/口碑/人口奖励。下方还有一张常驻的「成就」总览卡：成就 / 彩蛋 / 阶段目标三项计数、图鉴收集百分比、最近解锁的两项和最接近达成的三条成就，一眼看清进度。点总览卡或阶段目标面板里的按钮打开「成就界面」：整页图鉴，顶部是收集完成度横幅，下面有页签可以按「全部 / 已达成 / 未达成 / 彩蛋 / 阶段目标」筛选，15 个成就（人口突破、满意度满分、全建筑解锁、资金、绿化、治安、教育、矛盾、经营时长……）按人口里程碑、满意度、建设发展、财政经营、环境绿化、治安安全、教育文化、经营历程八类分组，每条都写明分类、达成条件、奖励、已达成月份或当前进度条，点任意一条看详情页。成就、目标进度都存进存档码，导入老存档自动补空记录，不丢档。",
 "31. Random city events (regular): a separate set of everyday governance questions from major events — homecoming wave, outflow warning, higher-level welfare-policy window, environmental inspection, shopping boom, rent dispute, aging population, hiring freeze, night-market economy — 9 types. They start after 4 months with population 20+, at least 3 months apart, about 22% chance, guaranteed after 6 months with no event; moderate frequency, never in the same month as a major event or disaster. Responses aren’t just about money: some directly adjust the tax rate (effective immediately), some add facilities or pay subsidies to cover weak spots. Different options give different results; before choosing, each option likewise shows only its title and a one-line description with no consequences previewed, revealed only after you choose — all through the same “stated ≠ actual” result engine, and everything is logged.": "31. 随机城市事件（定期触发）：和大事件分开的一套城市日常治理题——返乡潮、流出预警、上级福利政策窗口、环保督查、商业热潮、租金风波、老龄化、就业寒冬、夜市经济，共 9 种。开局满 4 个月、人口 20 以上才开始，距上次至少隔 3 个月、约 22% 概率，拖满 6 个月必来一件，频率适中，不和大事件/灾害同月撞车。应对不只是花钱：有的方案直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板；选不同方案结果不同，方案选前同样只显示标题和一句话说明、不预告后果，选完才揭晓，同样走「标示 ≠ 实际」的实际结果引擎，全部记进市政日志。",
@@ -5523,6 +5888,44 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     var saveNote = "";
     /* 满意度解析 / 建筑统计默认收起（点标题旁按钮展开/收起），只是界面状态，不进存档 */
     var statsOpen = false, buildStatsOpen = false;
+    /* ---------------- 阶段三开关（开发计划 §3.4） ----------------
+       P1-1 人口结构 / P1-2 产业联动 / P1-3 交通负荷各带独立开关，
+       默认开启；关闭时游戏回到阶段三上线前的旧行为、旧存档不受影响。
+       开关状态只存本机 localStorage，不写入经营存档，存档码导出时不含开关。 */
+    var STAGE3_KEY = "xiao-cheng-shi-jing-ying-jing-tai-ban:stage3";
+    var STAGE3 = { pop: true, industry: true, traffic: true };
+    function stage3Load() {
+      try {
+        var raw = window.localStorage.getItem(STAGE3_KEY);
+        if (!raw) return;
+        var d = JSON.parse(raw);
+        if (d && typeof d === "object") {
+          STAGE3.pop = !!d.pop; STAGE3.industry = !!d.industry; STAGE3.traffic = !!d.traffic;
+        }
+      } catch (e) {}
+    }
+    function stage3Save() {
+      try { window.localStorage.setItem(STAGE3_KEY, JSON.stringify(STAGE3)); } catch (e) {}
+    }
+    function stage3Set(key, on) {
+      STAGE3[key] = !!on; stage3Save(); syncStage3Buttons(); refresh();
+    }
+    function syncStage3Buttons() {
+      var map = { pop: ["btnS3Pop", "人口结构"], industry: ["btnS3Ind", "产业联动"], traffic: ["btnS3Tra", "交通负荷"] };
+      Object.keys(map).forEach(function (k) {
+        var b = document.getElementById(map[k][0]);
+        if (!b) return;
+        var on = !!STAGE3[k];
+        b.textContent = tr(map[k][1] + "：" + (on ? "开" : "关"));
+        b.classList.toggle("on", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    }
+    stage3Load();
+    /* 阶段三 P1-4/P1-5 历史快照（仅本机内存，不进存档）：财政报表趋势与
+       城市发展报告的对照基线用；最多各留 24 个月。 */
+    var financeHistory = [];
+    var citySnapshots = [];
 
     function idx(x, y) { return y * SIZE + x; }
     function xy(i) { return [i % SIZE, Math.floor(i / SIZE)]; }
@@ -5626,8 +6029,110 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       for (var j = 0; j < N; j++) if (S.grid[j] && RES_TYPES[S.grid[j].type] && cheb(i2, j) <= 2) n++;
       return n;
     }
+    /* ---------------- 阶段三 P1-1 / P1-3 派生计算（不进存档） ---------------- */
+    var SERVICE_TYPES = { school: 1, hospital: 1, police: 1, fire: 1, library: 1, env: 1, court: 1, admin: 1 }; /* P1-4 公共服务支出口径：8 类含行政楼（测试版口径） */
+    function clampRange(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    /* P1-1 人口结构：4 组占比（年轻/普通家庭/老年/高收入，和恒为 100%）+ 劳动人口派生量。
+       岗位数按 def.jobs × levelFactor 逐栋累加（小方案 P1-1 输入表口径，不含建筑问题折损）。 */
+    var GROUP_PART = { young: 1.00, family: 0.75, elderly: 0.10, highIncome: 0.90 };
+    var GROUP_WEIGHTS = {
+      young:      { jobs: 1.3, school: 0.7, hospital: 0.6, conven: 1.2, green: 0.8, culture: 1.2 },
+      family:     { jobs: 1.0, school: 1.5, hospital: 1.3, conven: 1.3, green: 1.0, culture: 0.8 },
+      elderly:    { jobs: 0.3, school: 0.5, hospital: 1.6, conven: 0.9, green: 1.3, culture: 1.0 },
+      highIncome: { jobs: 0.6, school: 1.0, hospital: 0.8, conven: 1.1, green: 1.3, culture: 1.5 }
+    };
+    var GROUP_NEED_KEYS = ["jobs", "school", "hospital", "conven", "green", "culture"];
+    function groupNeedLabel(k) {
+      return k === "jobs" ? tr("岗位") : k === "school" ? tr("学校") : k === "hospital" ? tr("医院")
+        : k === "conven" ? tr("生活便利") : k === "green" ? tr("绿化公园") : tr("文化生活");
+    }
+    function rawJobsOf(types) {
+      var s = 0;
+      for (var i = 0; i < N; i++) {
+        var b = S.grid[i];
+        if (!b || !DEFS[b.type].jobs) continue;
+        if (types && !types[b.type]) continue;
+        s += Math.round(DEFS[b.type].jobs * mult(b.level));
+      }
+      return s;
+    }
+    function computePopGroups(c) {
+      var totalJobs = rawJobsOf(null);
+      var whiteJobs = rawJobsOf({ office: 1, bank: 1, tech: 1, admin: 1 });
+      var elderly = clampRange(0.10 + 0.001 * S.month, 0.10, 0.28);
+      var highIncome = clampRange(0.05 + 0.30 * (c.education / 100) * (totalJobs > 0 ? whiteJobs / totalJobs : 0), 0.05, 0.35);
+      var young = clampRange(0.30 + 0.10 * (c.education / 100) - 0.0005 * S.month, 0.15, 0.42);
+      var family = Math.max(0.10, 1 - young - elderly - highIncome);
+      var sum = young + family + elderly + highIncome;
+      young /= sum; family /= sum; elderly /= sum; highIncome /= sum;
+      var shares = { young: young, family: family, elderly: elderly, highIncome: highIncome };
+      var laborRate = young * GROUP_PART.young + family * GROUP_PART.family + elderly * GROUP_PART.elderly + highIncome * GROUP_PART.highIncome;
+      var laborForce = Math.round(S.pop * laborRate);
+      var laborUnemployment = laborForce > 0 ? Math.max(0, Math.round(((laborForce - totalJobs) / laborForce) * 1000) / 1000) : 0; /* 测试版口径：保留 3 位小数 */
+      var schoolCover = S.pop === 0 ? 1 : Math.min(1, c.schoolService / S.pop);
+      var hospCover = S.pop === 0 ? 1 : Math.min(1, c.counts.hospital * 150 / S.pop);
+      var short = { jobs: c.unemploymentRate, school: 1 - schoolCover, hospital: 1 - hospCover, conven: 1 - c.convAvg, green: 1 - c.greenRate / 100, culture: 1 - c.education / 100 };
+      var gap = 0, topNeeds = {};
+      Object.keys(shares).forEach(function (g) {
+        var w = GROUP_WEIGHTS[g], wSum = 0, wShort = 0;
+        GROUP_NEED_KEYS.forEach(function (k) { wSum += w[k]; wShort += w[k] * short[k]; });
+        gap += shares[g] * (wShort / wSum);
+        topNeeds[g] = GROUP_NEED_KEYS.slice().sort(function (a, b) { return w[b] * short[b] - w[a] * short[a] || w[b] - w[a]; }).slice(0, 2); /* F：分数降序，分数相同时权重降序（测试版口径） */
+      });
+      gap = Math.round(Math.max(0, Math.min(100, 100 * gap)) * 10) / 10; /* G：需求缺口保留 1 位小数（测试版口径） */
+      return {
+        shares: shares,
+        counts: { young: Math.round(S.pop * young), family: Math.round(S.pop * family), elderly: Math.round(S.pop * elderly), highIncome: Math.round(S.pop * highIncome) },
+        laborForce: laborForce, laborUnemployment: laborUnemployment,
+        totalJobsRaw: totalJobs, whiteJobs: whiteJobs,
+        groupDemandGap: gap, groupTopNeeds: topNeeds,
+        extraMonths: Math.round(Math.min(2, gap / 25) * 100) / 100 /* G：等效拖欠按取整后的缺口算，保留 2 位小数（测试版口径） */
+      };
+    }
+    /* P1-3 交通负荷：12×12 地图划 9 区（3×3，每区 4×4 地块），只做数值层统计，
+       不动 3D 车辆/行人的任何行为。
+       单区道路容量（两版共用公式）：120 + floor(当前城市人口/4)，人口取计算时
+       当前城市人口；120 是小方案已确认的基数，人口项让容量随城市长大而放宽，
+       避免成熟高密度城市全城常驻深度拥堵、商业收入常驻 −10%。
+       取整口径（测试版）：负荷率展示封顶 200%（保留 1 位小数），加权用未封顶
+       的原始负荷；通勤效率保留 1 位小数；车辆分配保留 1 位小数；全城拥堵指数
+       保留 1 位小数；交通乘数保留 4 位小数。 */
+    function computeTrafficZones(c) {
+      var zones = [];
+      for (var z = 0; z < 9; z++) zones.push({ id: z + 1, jobs: 0, capacity: 0, shop: 0, factory: 0, trips: 0, loadPct: 0, rawLoadPct: 0, tier: 0, efficiency: 100, carShare: 0 });
+      for (var i = 0; i < N; i++) {
+        var b = S.grid[i]; if (!b) continue;
+        var p = xy(i), z = Math.floor(p[1] / 4) * 3 + Math.floor(p[0] / 4);
+        var d = DEFS[b.type], m = mult(b.level);
+        if (d.jobs) zones[z].jobs += Math.round(d.jobs * m);
+        if (d.cap) zones[z].capacity += Math.round(d.cap * m);
+        if (b.type === "park") zones[z].capacity += 2; /* 公园每座全城容量 +2，计入公园所在区 */
+        if (b.type === "shop") zones[z].shop++;
+        if (b.type === "factory") zones[z].factory++;
+      }
+      var zoneCap = 120 + Math.floor(S.pop / 4); /* 单区道路容量：120 + floor(人口/4) */
+      var totJobs = 0, wSum = 0, totTrips = 0;
+      var rawLoads = [];
+      zones.forEach(function (zn) {
+        zn.trips = Math.round((zn.jobs * 1.0 + zn.capacity * 0.30 + zn.shop * 6 + zn.factory * 4) * 10) / 10;
+        var rawLoad = zn.trips / zoneCap * 100;
+        rawLoads.push(rawLoad);
+        zn.rawLoadPct = rawLoad; /* 未封顶的原始负荷：加权与“负荷最高的区”都用它 */
+        zn.loadPct = Math.round(Math.min(200, rawLoad) * 10) / 10; /* 展示封顶 200%，保留 1 位小数 */
+        zn.tier = rawLoad < 60 ? 0 : rawLoad <= 100 ? 1 : 2;
+        zn.efficiency = Math.round(clampRange(100 - Math.max(0, rawLoad - 60) * 0.5, 0, 100) * 10) / 10;
+        totJobs += zn.jobs; wSum += rawLoad * zn.jobs; totTrips += zn.trips;
+      });
+      var congestion = totJobs > 0 ? Math.round(wSum / totJobs * 10) / 10 : 0;
+      var trafficMult = Math.round(Math.max(0.90, 1 - 0.10 * Math.max(0, (congestion - 100) / 100)) * 10000) / 10000;
+      var veh = vehicleInfo(c);
+      zones.forEach(function (zn) { zn.carShare = totTrips > 0 ? Math.round(veh.count * zn.trips / totTrips * 10) / 10 : 0; });
+      return { zones: zones, zoneCapacity: zoneCap, cityCongestion: congestion, trafficCommercialMult: trafficMult,
+               vehicleCount: veh.count, vehicleUnlocked: veh.unlocked,
+               pedTarget: S.pop <= 0 ? 0 : Math.min(36, Math.max(3, Math.round(S.pop / 8))) }; /* G：空城行人目标为 0 */
+    }
     function compute() {
-      var c = { counts: {}, lvSum: {}, capacity: 0, jobs: 0, gen: 0, use: 0, upkeepRaw: 0 };
+      var c = { counts: {}, lvSum: {}, capacity: 0, jobs: 0, gen: 0, use: 0, upkeepRaw: 0, serviceUpkeep: 0 };
       ORDER.forEach(function (t) { c.counts[t] = 0; c.lvSum[t] = 0; });
       var schoolService = 0, libraryService = 0, policeService = 0, fireSecService = 0;
       c.problemList = []; c.problemSat = 0; c.problemIncomeLoss = 0; c.healthySewage = 0;
@@ -5654,6 +6159,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         if (d.gen) c.gen += Math.round(d.gen * m * (prob ? 0.5 : 1));
         c.use += d.power || 0; /* 耗电不随等级变（测试版规则） */
         c.upkeepRaw += Math.round(d.upkeep * b.level); /* 维护 = 基础 × 等级 */
+        if (SERVICE_TYPES[b.type]) c.serviceUpkeep += Math.round(d.upkeep * b.level); /* P1-4：公共服务维护（学校/医院/警察/消防/图书馆/环保局/法院/行政楼，税前原值） */
         if (b.type === "school") schoolService += Math.round(150 * m * (prob ? 0.5 : 1));
         if (b.type === "library") libraryService += Math.round(80 * m * (prob ? 0.5 : 1));
         if (b.type === "police") policeService += Math.round(150 * m);
@@ -5813,21 +6319,27 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       c.conflict = Math.max(0, Math.min(100, c.conflictBase + c.courtConflictNet)); /* 法院每月调节：健康法院 −2/座，积压案件的法院 +2/座 */
       c.conflictWord = c.conflict >= 70 ? tr("尖锐") : c.conflict >= 50 ? tr("偏高") : c.conflict >= 30 ? tr("可控") : tr("平稳");
 
-      /* monthly income（与测试版 tickMonth 一致：按座数结算，吃电力与教育加成） */
-      c.incomeTax = Math.round(S.pop * 20 * (S.taxRate / 100) * (1 + c.taxBonusPct / 100)); /* 税务局：税收 +25%/座（上限 +50%） */
-      c.incomeBiz = Math.round(
-        (c.counts.shop * 30 + c.counts.office * 45 + c.counts.bank * 45 + c.counts.amusement * 35 +
-         c.counts.factory * (55 + c.factoryTaxBonus)) * c.powerFactor * (1 + c.eduBonusPct / 100) * (1 + c.techIncomePct / 100)
-      ); /* 科技楼：商业/工厂收入 +3%/级（上限 +15%） */
-      if (c.problemIncomeLoss > 0) c.incomeBiz = Math.max(0, c.incomeBiz - c.problemIncomeLoss); /* 建筑问题：银行风波/工厂故障/游乐园无人光临等造成的收入停摆 */
-      /* 景点旅游收入：每座 60/月 × 等级系数 ×（1+绿化率），出问题期间失效 */
-      c.incomeTourism = 0;
-      for (var ati = 0; ati < N; ati++) { var ab = S.grid[ati]; if (ab && ab.type === "attraction" && !probOf(ati)) c.incomeTourism += Math.round(60 * mult(ab.level) * (1 + c.greenRate / 100)); }
-      c.incomeAdminBonus = Math.round((c.incomeTax + c.incomeBiz + c.incomeTourism) * c.adminIncomePct / 100); /* 行政楼：全城收入 +2%/级（上限 +20%） */
-      c.income = c.incomeTax + c.incomeBiz + c.incomeTourism + c.incomeAdminBonus;
-      c.net = c.income - c.upkeep;
+      /* ---------------- 阶段三 P1-1 / P1-3（派生统计，不进存档） ----------------
+         注意顺序：分组与交通先于满意度算出（满意度“需求积压”项要读
+         groupExtraMonths；P1-2 消费力指数要读满意度），收入最后算。 */
       c.totalBuildings = 0;
       ORDER.forEach(function (t) { c.totalBuildings += c.counts[t]; });
+      if (STAGE3.pop) {
+        var pg = computePopGroups(c);
+        c.popGroups = pg.shares; c.popGroupCounts = pg.counts;
+        c.laborForce = pg.laborForce; c.laborUnemployment = pg.laborUnemployment;
+        c.totalJobsRaw = pg.totalJobsRaw; c.whiteJobs = pg.whiteJobs;
+        c.groupDemandGap = pg.groupDemandGap; c.groupTopNeeds = pg.groupTopNeeds;
+        c.groupExtraMonths = pg.extraMonths;
+      } else {
+        c.popGroups = null; c.popGroupCounts = null;
+        c.laborForce = 0; c.laborUnemployment = 0;
+        c.totalJobsRaw = rawJobsOf(null); c.whiteJobs = rawJobsOf({ office: 1, bank: 1, tech: 1, admin: 1 });
+        c.groupDemandGap = 0; c.groupTopNeeds = null; c.groupExtraMonths = 0;
+      }
+      if (STAGE3.traffic) c.traffic = computeTrafficZones(c);
+      else c.traffic = null;
+      c.trafficCommercialMult = (c.traffic && c.traffic.trafficCommercialMult) || 1;
 
       /* 满意度：satisfaction() 算的是「目标分」；实际分涨慢掉快——
          目标比实际低时立刻掉（在这里就地生效，重复计算结果一致），
@@ -5838,6 +6350,45 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       else if (satT.total < S.satEff) { eff = satT.total; S.satEff = eff; }
       else eff = S.satEff;
       c.sat = { total: eff, target: satT.total, raw: satT.raw, squeezed: satT.squeezed, items: satT.items, base: satT.base };
+
+      /* monthly income（与测试版 tickMonth 一致：按座数结算，吃电力与教育加成）
+         P1-2 产业联动（默认关）：商业基数 × 商业乘数（×交通修正）、工业基数 × 工业乘数，
+         再统一乘停电系数、教育加成、科技加成；税收乘数乘在居民税上；各加成的算法与顺序不变。
+         开关关时三乘数均为 1，逐位回到旧口径。 */
+      var commercialBase = c.counts.shop * 30 + c.counts.office * 45 + c.counts.bank * 45 + c.counts.amusement * 35;
+      var industrialBase = c.counts.factory * (55 + c.factoryTaxBonus);
+      var commercialMult = 1, industrialMult = 1, taxMult = 1;
+      c.commercialBase = commercialBase; c.industrialBase = industrialBase;
+      c.consumptionIndex = null; c.fillRate = null;
+      if (STAGE3.industry) {
+        var totJobs2 = c.totalJobsRaw || 0;
+        var fill = totJobs2 === 0 ? 1 : Math.min(1, S.pop / totJobs2);
+        var consum = Math.round(0.45 * c.education + 0.35 * (100 - c.unemploymentRate * 100) + 0.20 * c.sat.total);
+        commercialMult = Math.round(clampRange((0.85 + 0.0030 * consum) * (0.85 + 0.15 * fill), 0.72, 1.15) * 10000) / 10000; /* G：乘数保留 4 位小数（测试版口径） */
+        industrialMult = Math.round(clampRange((0.60 + 0.40 * fill) * (0.95 + 0.0010 * consum), 0.57, 1.05) * 10000) / 10000;
+        c.consumptionIndex = consum; c.fillRate = fill;
+      }
+      var commercialIncome = commercialBase * commercialMult * c.trafficCommercialMult;
+      var industrialIncome = industrialBase * industrialMult;
+      c.commercialMult = commercialMult; c.industrialMult = industrialMult;
+      c.commercialIncome = commercialIncome; c.industrialIncome = industrialIncome;
+      c.incomeBiz = Math.round(
+        (commercialIncome + industrialIncome) * c.powerFactor * (1 + c.eduBonusPct / 100) * (1 + c.techIncomePct / 100)
+      ); /* 科技楼：商业/工厂收入 +3%/级（上限 +15%） */
+      if (c.problemIncomeLoss > 0) c.incomeBiz = Math.max(0, c.incomeBiz - c.problemIncomeLoss); /* 建筑问题：银行风波/工厂故障/游乐园无人光临等造成的收入停摆 */
+      /* 景点旅游收入：每座 60/月 × 等级系数 ×（1+绿化率），出问题期间失效 */
+      c.incomeTourism = 0;
+      for (var ati = 0; ati < N; ati++) { var ab = S.grid[ati]; if (ab && ab.type === "attraction" && !probOf(ati)) c.incomeTourism += Math.round(60 * mult(ab.level) * (1 + c.greenRate / 100)); }
+      var taxBase = S.pop * 20 * (S.taxRate / 100) * (1 + c.taxBonusPct / 100); /* 税务局：税收 +25%/座（上限 +50%） */
+      if (STAGE3.industry) {
+        var perCap = (commercialIncome + c.incomeTourism) / Math.max(1, S.pop);
+        taxMult = Math.round((0.95 + 0.05 * clampRange(perCap / 10, 0, 2)) * 10000) / 10000; /* G：乘数保留 4 位小数（测试版口径） */
+      }
+      c.taxMult = taxMult;
+      c.incomeTax = Math.round(taxBase * taxMult);
+      c.incomeAdminBonus = Math.round((c.incomeTax + c.incomeBiz + c.incomeTourism) * c.adminIncomePct / 100); /* 行政楼：全城收入 +2%/级（上限 +20%） */
+      c.income = c.incomeTax + c.incomeBiz + c.incomeTourism + c.incomeAdminBonus;
+      c.net = c.income - c.upkeep;
       c.popTrend = popFlow(c);
       return c;
     }
@@ -5931,7 +6482,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (pop >= 30 && c.conflict >= 40) rate += fac(tr("社会矛盾"), -Math.min(0.06, (c.conflict - 40) * 0.0018 + (c.conflict >= 65 ? 0.012 : 0)), tr("社会矛盾值 ") + c.conflict + "（" + c.conflictWord + tr("）：住房、污染、教育、治安积下的不满在赶人走") + (c.conflict >= 65 ? tr("，再不缓解可能闹出抗议和治安事件") : ""), 1.2);
       var worstStreak2 = 0, streakKeys2 = S.needStreaks || {};
       Object.keys(streakKeys2).forEach(function (k) { if (streakKeys2[k] > worstStreak2) worstStreak2 = streakKeys2[k]; });
-      if (worstStreak2 >= 2) rate += fac(tr("需求积压"), -Math.min(0.05, 0.007 * (worstStreak2 - 1) + 0.002 * Object.keys(streakKeys2).filter(function (k) { return streakKeys2[k] >= 3; }).length), tr("有市民需求已经连续 ") + worstStreak2 + tr(" 个月没被满足——市民的耐心耗完了，拖越久走的人越多，先把拖最久的那条解决掉"), 1.1);
+      /* P1-1：分组需求缺口折算成等效拖欠月数（最多 +2 个月），只加在最长拖欠上；
+         公式自带上限：最多多扣 0.7%×2 = 1.4%/月，且不突破原有 −5% 封顶。 */
+      var extraMo2 = (c.groupExtraMonths || 0);
+      var worstEff2 = worstStreak2 + extraMo2;
+      if (worstEff2 >= 2) rate += fac(tr("需求积压"), -Math.min(0.05, 0.007 * (worstEff2 - 1) + 0.002 * Object.keys(streakKeys2).filter(function (k) { return streakKeys2[k] >= 3; }).length), tr("有市民需求已经连续 ") + worstStreak2 + tr(" 个月没被满足——市民的耐心耗完了，拖越久走的人越多，先把拖最久的那条解决掉") + (extraMo2 > 0 ? tr("；人口结构分组缺口另折算 +") + fmtNum(extraMo2) + tr(" 个月") : ""), 1.1);
       if (pop >= 20 && c.greenRate >= 45) rate += fac(tr("绿化宜居"), 0.003, tr("绿化率 ") + c.greenRate + tr("%，公园多、空气好、住着舒适，略微吸引人迁入"), 0.9);
       rate = Math.max(-0.20, Math.min(0.045, rate));
       /* 车站留人：流出率 −0.3%/级（上限 −1.5%），只在净流出时生效 */
@@ -6033,7 +6588,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       }
       var worstStreak = 0, streakKeys = S.needStreaks || {};
       Object.keys(streakKeys).forEach(function (k) { if (streakKeys[k] > worstStreak) worstStreak = streakKeys[k]; });
-      if (worstStreak >= 3) add(tr("需求积压"), tr("有市民需求已经连续 ") + worstStreak + tr(" 个月没被满足——拖得越久，市民越失望、搬走的人越多（市民需求里标着每条拖了几个月）"), -Math.min(8, worstStreak - 1));
+      /* P1-1：分组需求缺口折算成等效拖欠月数（最多 +2 个月），走现有“需求积压”通道；
+         增量锁死：最多让这一项多扣 2 分（开关关时 extraMonths = 0，回到旧行为）。 */
+      var extraMo = (c.groupExtraMonths || 0);
+      var worstEff = worstStreak + extraMo;
+      if (worstEff >= 3) {
+        var baseV = worstStreak >= 3 ? -Math.min(8, worstStreak - 1) : 0;
+        var grpV = -Math.min(8, worstEff - 1);
+        var appliedV = baseV + Math.max(-2, grpV - baseV);
+        add(tr("需求积压"), tr("有市民需求已经连续 ") + worstStreak + tr(" 个月没被满足——拖得越久，市民越失望、搬走的人越多（市民需求里标着每条拖了几个月）") + (extraMo > 0 ? tr("；人口结构分组缺口另折算 +") + fmtNum(extraMo) + tr(" 个月") : ""), appliedV);
+      }
       if (S.reputation !== 0) add(tr("大事抉择"), tr("历次大事件你的处理方式攒下的市民口碑（累计 ") + (S.reputation > 0 ? "+" : "") + S.reputation + tr("，上限 ±25；好口碑的加分打八折，坏口碑全额扣）"), S.reputation > 0 ? S.reputation * 0.8 : S.reputation);
       var raw = 52;
       items.forEach(function (it) { raw += it.v; });
@@ -7186,6 +7750,28 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         eventTitle2: pendingKind === "big" && pendingEvent ? pendingEvent.title : null,
         cityTitle: pendingKind === "city" && pendingEvent ? pendingEvent.title : null
       };
+      /* 阶段三 P1-4/P1-5：记一笔本月财政与城市快照（仅本机内存，不进存档），
+         供财政报表趋势与城市发展报告归因用；最多各留 24 个月。
+         财政报表是结算快照：totalIncome 用本次结算的总额（测试版 MonthReport.total
+         口径），不得拿推进后的状态重算。
+         静态版结算里建筑问题损失已从商业/工业收入中扣除（H 机制，见 compute()），
+         报表按测试版行式单列：总额用扣损前的商业/工业拆分重建——商业取整、
+         工业取余数，相加 exactly 等于扣损前商业/工业总额 bizGross；总支出 =
+         维护费 + 建筑问题损失；本月盈亏 = 总收入 − 总支出。无问题时总额与
+         结算 c.income、盈亏与结算 c.net 逐位一致；有问题且有行政楼加成时，
+         报表盈亏与结算净额之间只差行政加成对损失额的那一份（≤ 损失×20%），
+         待 H 裁定后再统一，见 GAME_DESIGN §20。 */
+      var bizGross = Math.round((c.commercialIncome + c.industrialIncome) * c.powerFactor * (1 + c.eduBonusPct / 100) * (1 + c.techIncomePct / 100));
+      var commercialSettled = Math.round(c.commercialBase * c.commercialMult * c.trafficCommercialMult * c.powerFactor * (1 + c.eduBonusPct / 100) * (1 + c.techIncomePct / 100));
+      var industrialSettled = bizGross - commercialSettled;
+      var adminBonusGross = Math.round((c.incomeTax + bizGross + c.incomeTourism) * c.adminIncomePct / 100);
+      var totalIncomeGross = c.incomeTax + bizGross + c.incomeTourism + adminBonusGross;
+      financeHistory.push({ month: settledMonth, income: c.income, incomeTax: c.incomeTax, incomeBiz: c.incomeBiz, commercialIncome: c.commercialIncome, industrialIncome: c.industrialIncome, incomeTourism: c.incomeTourism, incomeAdminBonus: c.incomeAdminBonus, upkeep: c.upkeep, serviceUpkeep: c.serviceUpkeep, net: c.net, pop: S.pop, sat: cEnd.sat.total,
+        upkeepRaw: c.upkeepRaw, problemLoss: c.problemIncomeLoss, bizGross: bizGross, commercialSettled: commercialSettled, industrialSettled: industrialSettled, adminBonusGross: adminBonusGross, totalIncome: totalIncomeGross,
+        commercialMult: c.commercialMult, industrialMult: c.industrialMult, taxMult: c.taxMult, trafficCommercialMult: c.trafficCommercialMult });
+      citySnapshots.push({ month: settledMonth, pop: S.pop, sat: cEnd.sat.total, pollution: cEnd.pollutionRate, greenRate: cEnd.greenRate, education: cEnd.education, security: cEnd.security, income: c.income, congestion: (cEnd.traffic ? cEnd.traffic.cityCongestion : null), tier: tierAfter });
+      if (financeHistory.length > 24) financeHistory.shift();
+      if (citySnapshots.length > 24) citySnapshots.shift();
       best.pop = Math.max(best.pop, S.pop);
       best.months = Math.max(best.months, S.month);
       if (S.gameOver || pendingEvent) stopAuto();
@@ -7309,8 +7895,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
        3D scene (Three.js) — degrades gracefully to the flat map.
        ============================================================ */
     var three = { ok: false };
-    var TILE = 1.34, GAP = TILE; /* world step between tile centers: 地块垫 1.02 宽，
-       地块之间留出 0.32 宽的道路带（两侧人行道 + 中间车行道），道路明显比行人宽 */
+    var TILE = 1.40, GAP = TILE; /* world step between tile centers: 地块垫 1.02 宽，
+       地块之间留出 0.38 宽的道路带（两侧人行道 0.09×2 + 中间车行道 0.20），道路明显比行人宽 */
     function wpos(i) { var p = xy(i); return [(p[0] - (SIZE - 1) / 2) * GAP, (p[1] - (SIZE - 1) / 2) * GAP]; }
 
     var scene, camera, renderer, raycaster, groundPlane;
@@ -7413,12 +7999,42 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         function floorBands(h2, n2, col2) { /* 高层每层一道腰线，不再是一根光柱 */
           for (var b2 = 1; b2 < n2; b2++) g2.add(box(W + 0.03, 0.03, W + 0.03, col2, 0, h2 * b2 / n2, 0, { roughness: 0.8 }));
         }
+        /* ---- 本轮建模提升新增通用件（只改视觉）：女儿墙 / 天线 /
+           卫星碟 / 太阳能板 / 旗杆。所有外伸件都收在离地块中心 0.50
+           以内，绝不伸进街道和行人/车辆走线 ---- */
+        function parapet(y2, w2, d2, col2) { /* 平顶女儿墙：顶层四边一圈薄矮墙 */
+          var pc = col2 || 0x8a8578;
+          g2.add(box(w2, 0.05, 0.03, pc, 0, y2, d2 / 2 - 0.015, { roughness: 0.9 }));
+          g2.add(box(w2, 0.05, 0.03, pc, 0, y2, -d2 / 2 + 0.015, { roughness: 0.9 }));
+          g2.add(box(0.03, 0.05, d2, pc, w2 / 2 - 0.015, y2, 0, { roughness: 0.9 }));
+          g2.add(box(0.03, 0.05, d2, pc, -w2 / 2 + 0.015, y2, 0, { roughness: 0.9 }));
+        }
+        function antenna(x2, y2, z2, h2) { /* 屋顶天线：细杆 + 红色顶珠，高楼更明显 */
+          g2.add(cyl(0.011, 0.013, h2, 0x555c63, x2, y2 + h2 / 2, z2, 6));
+          var tip = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 6), mat(0xff5252, { roughness: 0.4 }));
+          tip.position.set(x2, y2 + h2 + 0.01, z2); g2.add(tip);
+        }
+        function dish(x2, y2, z2) { /* 屋顶卫星碟：半球罩 + 斜支杆 */
+          var dd = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), mat(0xe8e2d4, { roughness: 0.4 }));
+          dd.rotation.x = -0.5; dd.position.set(x2, y2, z2); dd.castShadow = true; g2.add(dd);
+          g2.add(cyl(0.012, 0.012, 0.09, 0x8d99a6, x2, y2 - 0.04, z2, 6));
+        }
+        function solar(x2, y2, z2) { /* 屋顶太阳能板：深蓝斜板 + 浅色边框 */
+          var sp = box(0.22, 0.015, 0.16, 0x1e3a5f, x2, y2, z2, { roughness: 0.25, metalness: 0.4 }); sp.rotation.x = -0.28; g2.add(sp);
+          g2.add(box(0.22, 0.012, 0.02, 0xb9bcba, x2, y2 + 0.02, z2 + 0.07, { roughness: 0.5, metalness: 0.4 }));
+        }
+        function flagPole(x2, z2, h2, col2) { /* 旗杆 + 小三角旗 */
+          g2.add(cyl(0.011, 0.014, h2, 0x8d99a6, x2, h2 / 2, z2, 6));
+          g2.add(box(0.09, 0.05, 0.012, col2 || 0xd23b2e, x2 + 0.05, h2 - 0.04, z2, { roughness: 0.7 }));
+        }
         switch (type2) {
           case "house":
             doorFull(0.13); balcony(0.3, 0.4); steps(0.36); hedge(); fence(0x9a8a72, 0.07);
             g2.add(box(0.09, 0.16, 0.09, 0x8a4a3a, 0.22, 0.62 * hGrow + 0.14, -0.14, { roughness: 0.95 }));
             g2.add(box(0.11, 0.03, 0.11, 0x6e3524, 0.22, 0.62 * hGrow + 0.235, -0.14, { roughness: 0.95 }));
             g2.add(box(0.2, 0.04, 0.05, 0x8a4a3a, -0.22, 0.115, front + 0.015, { roughness: 0.95 }));
+            if (lv2 >= 3) g2.add(box(0.16, 0.1, 0.02, 0xffe9a8, -0.22, 0.62 * hGrow + 0.2, 0.28, { roughness: 0.6 })); /* 老虎窗 */
+            if (lv2 >= 5) g2.add(box(0.22, 0.2, 0.2, 0x9a8a72, -0.3, 0.1, -0.28, { roughness: 0.95 })); /* 侧厢房 */
             break;
           case "luxury":
             doorFull(0.16, 0x3c4652); balcony(0.52, 0.52); balcony(0.88, 0.52);
@@ -7426,6 +8042,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(cyl(0.09, 0.09, 0.14, 0xb9bcba, -0.22, 1.0 * hGrow + 0.15, -0.18, 10));
             acBox(0.2, 1.0 * hGrow + 0.12, 0.16);
             roofTank(-0.28, 0.95 * hGrow + 0.16, 0.25);
+            parapet(0.95 * hGrow + 0.1, W + 0.08, W + 0.08, 0x9a8a72);
+            if (lv2 >= 4) antenna(0.28, 0.95 * hGrow + 0.08, -0.28, 0.3);
             /* 入口雨棚收进地块内（原版伸到 0.61，正好压在行人走线上方） */
             g2.add(box(0.34, 0.03, 0.12, 0x8a6420, 0, 0.26, front + 0.0));
             break;
@@ -7439,6 +8057,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(W + 0.06, 0.05, W + 0.06, 0x1e4f74, 0, 0.5 * hGrow + 0.025, 0, { roughness: 0.8 }));
             acBox(-0.2, 0.5 * hGrow + 0.08, -0.15);
             var aframe = box(0.16, 0.2, 0.02, 0xe9a13b, 0.33, 0.1, front - 0.05, { roughness: 0.8 }); aframe.rotation.x = -0.18; g2.add(aframe);
+            if (lv2 >= 3) g2.add(box(0.3, 0.12, 0.06, 0xe9a13b, 0, 0.5 * hGrow + 0.14, front + 0.01, { roughness: 0.7 })); /* 屋顶招牌 */
+            if (lv2 >= 5) solar(0.2, 0.5 * hGrow + 0.1, -0.2);
             break;
           case "office":
             doorFull(0.18, 0x2f3a44); steps(0.46, 0x8d99a6);
@@ -7448,6 +8068,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             acBox(-0.18, 1.25 * hGrow + 0.1, -0.1); acBox(0.14, 1.25 * hGrow + 0.1, 0.14);
             roofTank(-0.26, 1.25 * hGrow + 0.15, 0.22);
             g2.add(cyl(0.012, 0.012, 0.34, 0x555c63, 0.3, 1.25 * hGrow + 0.22, -0.28, 6));
+            parapet(1.25 * hGrow + 0.09, W * 0.96, W * 0.96, 0x33596a);
+            if (lv2 >= 3) dish(-0.28, 1.25 * hGrow + 0.12, -0.2);
+            if (lv2 >= 4) antenna(0.3, 1.25 * hGrow + 0.07, 0.28, 0.34);
             break;
           case "factory":
             g2.add(box(0.2, 0.16, 0.2, 0x9a7d55, 0.34, 0.08, 0.3, { roughness: 1 }));
@@ -7460,6 +8083,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.02, 0.16, 0.3, 0x424f5b, 0.465, 0.32, 0, { roughness: 0.7, metalness: 0.3 }));
             g2.add(cyl(0.05, 0.06, 0.42, 0x707a85, -0.3, 0.55 * hGrow + 0.18, -0.22, 10));
             g2.add(box(0.11, 0.11, 0.015, 0xf2b01e, 0.24, 0.2, front + 0.038, { roughness: 0.6 }));
+            if (lv2 >= 3) g2.add(cyl(0.07, 0.08, 0.6, 0x8d99a6, 0.3, 0.55 * hGrow + 0.28, -0.28, 10)); /* 副烟囱 */
+            if (lv2 >= 5) g2.add(box(0.2, 0.1, 0.2, 0x707a85, -0.05, 0.55 * hGrow + 0.1, 0.1, { roughness: 0.7 })); /* 屋顶通风机 */
             break;
           case "park":
             g2.add(box(0.7, 0.012, 0.09, 0xcac2b2, 0, 0.065, 0, { roughness: 1 }));
@@ -7487,6 +8112,12 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.17, 0.03, 0.1, 0xc75146, -0.3, 0.08, -0.3, { roughness: 1 }));
             g2.add(box(0.2, 0.045, 0.13, 0x8a4a3a, 0.3, 0.045, 0.3, { roughness: 1 }));
             g2.add(box(0.17, 0.03, 0.1, 0xe9a13b, 0.3, 0.08, 0.3, { roughness: 1 }));
+            if (lv2 >= 2) g2.add(box(0.17, 0.03, 0.1, 0xe9a13b, 0.05, 0.08, -0.32, { roughness: 1 })); /* 花坛 */
+            if (lv2 >= 4) { /* 凉亭：四柱 + 四角尖顶 */
+              [[-0.08, -0.08], [0.08, -0.08], [-0.08, 0.08], [0.08, 0.08]].forEach(function (pp) { g2.add(box(0.025, 0.2, 0.025, 0x7a5c3e, 0.28 + pp[0], 0.1, -0.28 + pp[1], { roughness: 0.95 })); });
+              var gz = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.12, 4), mat(0x8a4a3a, { roughness: 0.9 }));
+              gz.position.set(0.28, 0.26, -0.28); gz.rotation.y = Math.PI / 4; gz.castShadow = true; g2.add(gz);
+            }
             break;
           case "power":
             g2.add(box(0.24, 0.18, 0.18, 0x6e6258, 0.3, 0.09, 0.28, { roughness: 0.8 }));
@@ -7496,6 +8127,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             for (var ins = -1; ins <= 1; ins++) g2.add(cyl(0.018, 0.018, 0.07, 0xd8d2c2, -0.28 + ins * 0.07, 0.235, 0.3, 8));
             fence(0x707a85, 0.1);
             sign(0.2, 0.12, 0.32, 0xf2b01e);
+            if (lv2 >= 3) g2.add(box(0.2, 0.16, 0.15, 0x51665a, 0.05, 0.08, -0.3, { roughness: 0.6, metalness: 0.3 })); /* 副变压器 */
+            if (lv2 >= 5) g2.add(cyl(0.08, 0.1, 0.8, 0x8a97a3, 0.3, 0.6 * hGrow + 0.35, -0.15, 12)); /* 第三烟囱 */
             break;
           case "school":
             doorFull(0.15, 0x6e3b26); sign(0.44, 0.1, 0.52 * hGrow + 0.06, 0xc75146);
@@ -7504,6 +8137,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.05, 0.3, 0.05, 0xe8e2d4, -0.17, 0.15, front - 0.02, { roughness: 0.9 }));
             g2.add(box(0.05, 0.3, 0.05, 0xe8e2d4, 0.17, 0.15, front - 0.02, { roughness: 0.9 }));
             var clk = cyl(0.05, 0.05, 0.02, 0xf5f2e8, 0, 0.38, front + 0.008, 16); clk.rotation.x = Math.PI / 2; g2.add(clk);
+            if (lv2 >= 3) { /* 篮球架：立柱 + 篮板 */
+              g2.add(cyl(0.015, 0.015, 0.3, 0x8d99a6, 0.3, 0.15, 0.3, 6));
+              g2.add(box(0.12, 0.1, 0.015, 0xe8e2d4, 0.3, 0.32, 0.3, { roughness: 0.8 }));
+            }
+            if (lv2 >= 5) flagPole(-0.32, 0.32, 0.5, 0xd23b2e);
             break;
           case "library":
             doorFull(0.15, 0x4a3560); steps(0.44);
@@ -7512,6 +8150,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.72, 0.05, 0.05, 0xe8e2f2, 0, 0.6 * hGrow * 0.82, front + 0.008, { roughness: 0.85 }));
             var dome = new THREE.Mesh(new THREE.SphereGeometry(0.14, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), mat(0x9fc6d8, { roughness: 0.25, metalness: 0.3 }));
             dome.position.set(0, 0.6 * hGrow + 0.09, 0); dome.castShadow = true; g2.add(dome);
+            parapet(0.6 * hGrow + 0.1, W + 0.1, W + 0.1, 0x6d4a8a);
+            if (lv2 >= 3) g2.add(box(0.12, 0.14, 0.1, 0x6d4a8a, 0.32, 0.07, front + 0.02, { roughness: 0.8 })); /* 还书箱 */
+            if (lv2 >= 5) { var dome2 = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), mat(0x9fc6d8, { roughness: 0.25, metalness: 0.3 })); dome2.position.set(-0.25, 0.6 * hGrow + 0.09, -0.2); dome2.castShadow = true; g2.add(dome2); }
             break;
           case "hospital":
             /* 雨棚改成贴墙悬挑：原来的两根棚柱正好立在门前街道的行人走线
@@ -7529,6 +8170,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             amb.add(box(0.03, 0.09, 0.02, 0xd23b2e, -0.04, 0.13, 0.079));
             [[-0.1, -0.07], [0.1, -0.07], [-0.1, 0.07], [0.1, 0.07]].forEach(function (wp2) { var wh = cyl(0.032, 0.032, 0.02, 0x2c2f33, wp2[0], 0.032, wp2[1], 10); wh.rotation.x = Math.PI / 2; amb.add(wh); });
             g2.add(amb);
+            parapet(0.85 * hGrow + 0.09, W + 0.06, W + 0.06, 0x939c94);
+            if (lv2 >= 3) g2.add(box(0.2, 0.03, 0.06, 0x7a5c3e, -0.3, 0.1, front + 0.02, { roughness: 1 })); /* 门前长椅 */
+            if (lv2 >= 4) solar(0.25, 0.85 * hGrow + 0.1, -0.25);
             break;
           case "police":
             sign(0.42, 0.1, 0.55 * hGrow + 0.04, 0x2b4acb); doorFull(0.14, 0x232c40); steps(0.4, 0x9aa2a8);
@@ -7537,6 +8181,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.3, 0.05, 0.05, 0xd95f43, 0.26, 0.05, front - 0.04, { roughness: 0.8 }));
             g2.add(box(0.1, 0.035, 0.05, 0xd23b2e, -0.06, 0.58 * hGrow + 0.1, 0.1));
             g2.add(box(0.1, 0.035, 0.05, 0x2b6fd4, 0.06, 0.58 * hGrow + 0.1, 0.1));
+            parapet(0.55 * hGrow + 0.08, W + 0.08, W + 0.08, 0x2b4acb);
+            if (lv2 >= 3) flagPole(-0.3, 0.3, 0.42, 0x2b4acb);
+            if (lv2 >= 5) g2.add(box(0.3, 0.05, 0.05, 0xf2b01e, 0.2, 0.06, front - 0.02, { roughness: 0.8 })); /* 门前隔离栏 */
             break;
           case "fire":
             sign(0.4, 0.09, 0.55 * hGrow + 0.02, 0xb03a2a);
@@ -7545,11 +8192,15 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             for (var fs = 0; fs < 3; fs++) g2.add(box(0.4, 0.015, 0.012, 0x8d99a6, 0.08, 0.1 + fs * 0.1, front + 0.045, { roughness: 0.5, metalness: 0.4 }));
             g2.add(box(0.52, 0.02, 0.14, 0xb9bcba, 0.08, 0.01, front - 0.01, { roughness: 0.95 }));
             roofTank(0.26, 0.55 * hGrow + 0.08, -0.24);
+            if (lv2 >= 3) g2.add(box(0.12, 0.12, 0.04, 0xd23b2e, -0.28, 0.12, front + 0.01, { roughness: 0.7 })); /* 消防水带箱 */
+            if (lv2 >= 5) g2.add(box(0.26, 0.03, 0.26, 0x8a4a3a, -0.3, 0.55 * hGrow + 0.5, -0.25, { roughness: 0.9 })); /* 瞭望台 */
             break;
           case "bank":
             doorFull(0.16, 0x5c4a26); sign(0.46, 0.1, 0.52 * hGrow + 0.02, 0x8a6d2f);
             steps(0.52, 0xd8d2c2);
             g2.add(box(0.72, 0.05, 0.06, 0xe9dcbc, 0, 0.5 * hGrow * 0.88, front + 0.005, { roughness: 0.85 }));
+            if (lv2 >= 3) g2.add(box(0.72, 0.03, 0.03, 0xd4af37, 0, 0.5 * hGrow * 0.95, front + 0.008, { roughness: 0.3, metalness: 0.6 })); /* 金色腰线 */
+            if (lv2 >= 5) flagPole(0.32, -0.3, 0.5, 0x8a6d2f);
             break;
           case "amusement":
             g2.add(box(0.16, 0.22, 0.16, 0xe8e2d4, -0.3, 0.11, 0.28, { roughness: 0.9 }));
@@ -7558,6 +8209,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             fence(0x8a5fb0, 0.07);
             g2.add(cyl(0.006, 0.006, 0.12, 0x8d99a6, 0.26, 0.48, 0.24, 6));
             g2.add(box(0.08, 0.045, 0.012, 0xd2431a, 0.3, 0.52, 0.24, { roughness: 0.8 }));
+            if (lv2 >= 3) { var tent2 = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.2, 8), mat(0x2a9d8f)); tent2.position.set(-0.28, 0.28, 0.28); tent2.castShadow = true; g2.add(tent2); g2.add(box(0.18, 0.18, 0.18, 0xf7ead9, -0.28, 0.09, 0.28)); }
+            if (lv2 >= 5) g2.add(box(0.14, 0.18, 0.14, 0x38618c, -0.3, 0.09, -0.28, { roughness: 0.9 })); /* 第二售票亭 */
             break;
           case "sewage":
             var pipe3 = cyl(0.028, 0.028, 0.3, 0x5b6b7a, -0.3, 0.15, 0.26, 8); g2.add(pipe3);
@@ -7567,6 +8220,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             for (var rp = 0; rp < 4; rp++) { var ra = rp / 4 * Math.PI * 2 + 0.4; g2.add(cyl(0.01, 0.01, 0.3, 0x8d99a6, -0.18 + Math.cos(ra) * 0.26, 0.15, -0.08 + Math.sin(ra) * 0.26, 6)); }
             fence(0x5b6b7a, 0.08);
             g2.add(box(0.62, 0.015, 0.16, 0x9aa2a8, 0, 0.008, 0.32, { roughness: 0.9 }));
+            if (lv2 >= 4) g2.add(box(0.5, 0.03, 0.08, 0x5b6b7a, 0, 0.34, 0.1, { roughness: 0.7 })); /* 跨罐管桥 */
+            if (lv2 >= 5) g2.add(box(0.1, 0.08, 0.015, 0xffe9a8, 0.24, 0.14, -0.1, { roughness: 0.6 })); /* 控制室亮窗 */
             break;
           case "admin":
             sign(0.34, 0.1, 0.46, 0xd4af37);
@@ -7574,6 +8229,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.05, 0.42, 0.05, 0xe8e2d4, -0.2, 0.21, front + 0.005, { roughness: 0.7 }));
             g2.add(box(0.05, 0.42, 0.05, 0xe8e2d4, 0.2, 0.21, front + 0.005, { roughness: 0.7 }));
             g2.add(box(0.14, 0.14, 0.02, 0xd4af37, 0, 0.42, front + 0.012, { roughness: 0.3, metalness: 0.6 }));
+            parapet(0.55 * hGrow + 0.07, W * 0.9, W * 0.85, 0x8a6d2f);
+            if (lv2 >= 3) flagPole(0.32, 0.32, 0.55, 0xd4af37);
+            if (lv2 >= 5) { g2.add(box(0.12, 0.28, 0.5, 0x9a8a72, -0.42, 0.14, 0, { roughness: 0.9 })); g2.add(box(0.12, 0.28, 0.5, 0x9a8a72, 0.42, 0.14, 0, { roughness: 0.9 })); }
             break;
           case "station":
             g2.add(box(0.7, 0.03, 0.12, 0x9fb4c4, 0, 0.3, 0.42, { roughness: 0.6 }));
@@ -7581,6 +8239,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.02, 0.28, 0.02, 0x607d8b, 0.3, 0.16, 0.44, { roughness: 0.5, metalness: 0.4 }));
             g2.add(box(0.8, 0.03, 0.1, 0x9e9e9e, 0, 0.015, 0.44, { roughness: 0.8 }));
             sign(0.3, 0.08, 0.3, 0x9fb4c4);
+            if (lv2 >= 3) g2.add(box(0.8, 0.025, 0.08, 0x9e9e9e, 0, 0.012, -0.44, { roughness: 0.8 })); /* 后站台 */
+            if (lv2 >= 5) g2.add(box(0.3, 0.12, 0.02, 0x2c3844, 0, 0.35 * hGrow + 0.1, 0.27, { roughness: 0.5 })); /* 发车显示屏 */
             break;
           case "tech":
             var ant2 = cyl(0.012, 0.012, 0.35, 0x607d8b, 0.15, 0.97, 0, 8); g2.add(ant2);
@@ -7588,6 +8248,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             tip2.position.set(0.15, 1.15, 0); g2.add(tip2);
             g2.add(box(0.52, 0.02, 0.02, 0x90caf9, 0, 0.3, front + 0.005, { roughness: 0.1, metalness: 0.4 }));
             g2.add(box(0.52, 0.02, 0.02, 0x90caf9, 0, 0.48, front + 0.005, { roughness: 0.1, metalness: 0.4 }));
+            parapet(0.85 * hGrow + 0.07, W * 0.75, W * 0.75, 0x607d8b);
+            if (lv2 >= 3) dish(0.28, 0.85 * hGrow + 0.1, -0.2);
+            if (lv2 >= 4) g2.add(box(0.52, 0.02, 0.02, 0x90caf9, 0, 0.66, front + 0.005, { roughness: 0.1, metalness: 0.4 }));
+            if (lv2 >= 5) antenna(-0.28, 0.85 * hGrow + 0.06, 0.2, 0.28);
             break;
           case "env":
             var tw2 = cyl(0.03, 0.03, 0.35, 0x607d8b, 0.28, 0.6, -0.2, 8); g2.add(tw2);
@@ -7595,9 +8259,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             dish2.position.set(0.28, 0.79, -0.2); g2.add(dish2);
             g2.add(box(0.18, 0.09, 0.07, 0x43a047, -0.3, 0.055, front + 0.02, { roughness: 1 }));
             g2.add(box(0.18, 0.09, 0.07, 0x2f7d3a, 0.3, 0.055, front + 0.02, { roughness: 1 }));
+            parapet(0.42 * hGrow + 0.07, W * 0.85, W * 0.85, 0x43a047);
+            if (lv2 >= 3) solar(-0.2, 0.42 * hGrow + 0.08, 0.1);
+            if (lv2 >= 4) dish(-0.28, 0.42 * hGrow + 0.1, -0.2);
+            if (lv2 >= 5) antenna(0, 0.42 * hGrow + 0.06, 0.28, 0.22);
             break;
           case "tax":
             sign(0.3, 0.1, 0.42, 0xffd54f);
+            parapet(0.52 * hGrow + 0.07, W * 0.9, W * 0.85, 0x8a6d2f);
+            if (lv2 >= 3) g2.add(cyl(0.06, 0.06, 0.05, 0xffd54f, 0.25, 0.52 * hGrow + 0.1, -0.2, 16)); /* 屋顶金币垛 */
+            if (lv2 >= 5) g2.add(box(0.72, 0.03, 0.03, 0xd4af37, 0, 0.52 * hGrow * 0.9, front + 0.008, { roughness: 0.3, metalness: 0.6 })); /* 金色腰线 */
             var coin1 = cyl(0.05, 0.05, 0.02, 0xffd54f, -0.15, 0.2, front + 0.012, 16); coin1.rotation.x = Math.PI / 2; g2.add(coin1);
             var coin2 = cyl(0.05, 0.05, 0.02, 0xffd54f, 0.15, 0.2, front + 0.012, 16); coin2.rotation.x = Math.PI / 2; g2.add(coin2);
             doorFull(0.16, 0x5c4a26);
@@ -7607,6 +8278,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(box(0.05, 0.36, 0.05, 0xe8e2d4, 0.22, 0.18, front + 0.005, { roughness: 0.7 }));
             doorFull(0.16, 0x5c4a26); steps(0.52, 0xd8d2c2);
             g2.add(box(0.2, 0.015, 0.015, 0xd4af37, 0, 0.55, 0, { roughness: 0.3, metalness: 0.6 }));
+            parapet(0.45 * hGrow + 0.07, W * 0.95, W * 0.9, 0x8a6d2f);
+            if (lv2 >= 3) { var ped = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.12, 4), mat(0xe8e2d4, { roughness: 0.85 })); ped.position.set(0, 0.45 * hGrow + 0.1, 0); ped.rotation.y = Math.PI / 4; ped.scale.set(1, 1, 0.5); ped.castShadow = true; g2.add(ped); }
+            if (lv2 >= 5) flagPole(-0.32, 0.3, 0.5, 0xd4af37);
             break;
           case "attraction":
             for (var fi2 = 0; fi2 < 5; fi2++) {
@@ -7616,6 +8290,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             }
             g2.add(box(0.05, 0.05, 0.05, 0xffd54f, -0.12, 0.6, front + 0.012, { roughness: 0.4 }));
             g2.add(box(0.05, 0.05, 0.05, 0xffd54f, 0.12, 0.6, front + 0.012, { roughness: 0.4 }));
+            if (lv2 >= 3) g2.add(box(0.6, 0.04, 0.5, 0xb9bcba, 0, 0.02, 0.05, { roughness: 0.9 })); /* 观景台基座 */
+            if (lv2 >= 5) { g2.add(box(0.24, 0.4, 0.24, 0x8a6d4a, 0.3, 0.2, 0.3, { roughness: 0.9 })); g2.add(box(0.28, 0.04, 0.28, 0xd4af37, 0.3, 0.42, 0.3, { roughness: 0.7 })); }
             break;
           case "wind":
             g2.add(box(0.14, 0.18, 0.12, 0xb9bcba, 0.12, 0.09, 0.1, { roughness: 0.6, metalness: 0.3 }));
@@ -7623,6 +8299,13 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(cyl(0.3, 0.33, 0.03, 0xb9a98c, 0, 0.015, 0, 14));
             g2.add(box(0.1, 0.17, 0.02, 0x707a85, 0, 0.3, 0.056, { roughness: 0.7 }));
             fence(0x9aa2a8, 0.06);
+            if (lv2 >= 3) { g2.add(cyl(0.008, 0.008, 0.12, 0x8d99a6, 0.1, 1.32, -0.05, 6)); var anm = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), mat(0x8d99a6, { roughness: 0.5 })); anm.position.set(0.1, 1.39, -0.05); g2.add(anm); }
+            if (lv2 >= 5) { /* 迷你副风机（静态，不进 turbines 转动列表） */
+              g2.add(cyl(0.025, 0.035, 0.55, 0xc9d2d8, 0.3, 0.275, 0.3, 8));
+              var mh = new THREE.Group(); mh.position.set(0.3, 0.58, 0.36);
+              for (var mb = 0; mb < 3; mb++) { var mbl = box(0.03, 0.26, 0.012, 0xf2f5f7, 0, 0.13, 0); var mh2 = new THREE.Group(); mh2.rotation.z = mb * Math.PI * 2 / 3; mh2.add(mbl); mh.add(mh2); }
+              g2.add(mh);
+            }
             break;
         }
       }
@@ -7632,7 +8315,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           g.add(box(W, bh, W, d.color, 0, bh / 2, 0));
           var roof = new THREE.Mesh(new THREE.ConeGeometry(0.72, 0.34, 4), mat(d.roof));
           roof.position.y = bh + 0.17; roof.rotation.y = Math.PI / 4; roof.castShadow = true; g.add(roof);
-          g.add(windows(W, bh, W, 0xffe9a8, 1, 2));
+          g.add(windows(W, bh, W, 0xffe9a8, level >= 4 ? 2 : 1, 2));
           break;
         }
         case "luxury": {
@@ -7648,7 +8331,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           g.add(box(W, sh, W, d.color, 0, sh / 2, 0));
           g.add(box(W + 0.16, 0.07, W + 0.16, 0xe4572e, 0, sh * 0.62, 0));
           g.add(box(0.4, 0.14, 0.1, 0xffd23f, 0, sh + 0.1, 0.3));
-          g.add(windows(W, sh, W, 0xbfeaff, 1, 3));
+          g.add(windows(W, sh, W, 0xbfeaff, level >= 3 ? 2 : 1, 3));
           break;
         }
         case "factory": {
@@ -7658,6 +8341,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           saw.rotation.z = Math.PI / 2; saw.rotation.y = Math.PI / 2; saw.position.y = fh + 0.12; saw.castShadow = true; g.add(saw);
           var ch = cyl(0.09, 0.11, 0.85, 0x707a85, 0.28, fh + 0.4, -0.2);
           ch.userData.smoke = true; g.add(ch);
+          g.add(windows(W + 0.06, fh, W, 0xffe9a8, 1, 3)); /* 厂房立面窗 */
           g.userData.chimney = new THREE.Vector3(0.28, fh + 0.85, -0.2);
           break;
         }
@@ -7706,7 +8390,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           sroof.position.y = eh + 0.15; sroof.rotation.y = Math.PI / 4; sroof.castShadow = true; g.add(sroof);
           g.add(cyl(0.02, 0.02, 0.5, 0xcccccc, 0.3, eh + 0.4, 0.3, 6));
           g.add(box(0.2, 0.12, 0.02, 0xd23b2e, 0.4, eh + 0.55, 0.3));
-          g.add(windows(W, eh, W, 0xfff3b0, 1, 3));
+          g.add(windows(W, eh, W, 0xfff3b0, level >= 3 ? 2 : 1, 3));
           break;
         }
         case "library": {
@@ -7714,7 +8398,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           g.add(box(W, lbh, W, d.color, 0, lbh / 2, 0));
           g.add(box(W + 0.1, 0.09, W + 0.1, d.roof, 0, lbh + 0.045, 0));
           [-0.3, -0.1, 0.1, 0.3].forEach(function (cx) { g.add(box(0.07, lbh * 0.8, 0.07, 0xe8e2f2, cx, lbh * 0.4, W / 2 + 0.01)); });
-          g.add(windows(W, lbh, W, 0xffe9a8, 2, 2));
+          g.add(windows(W, lbh, W, 0xffe9a8, level >= 4 ? 3 : 2, 2));
           break;
         }
         case "hospital": {
@@ -7731,7 +8415,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           g.add(box(W, poh, W, d.color, 0, poh / 2, 0));
           g.add(box(W + 0.08, 0.07, W + 0.08, d.roof, 0, poh + 0.035, 0));
           g.add(box(0.34, 0.13, 0.03, 0x2b4acb, 0, poh * 0.66, W / 2 + 0.02));
-          g.add(windows(W, poh, W, 0xd8e4ff, 1, 3));
+          g.add(windows(W, poh, W, 0xd8e4ff, level >= 3 ? 2 : 1, 3));
           break;
         }
         case "fire": {
@@ -7786,7 +8470,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           var ah = 0.55 * hGrow;
           g.add(box(W * 0.85, ah, W * 0.8, d.color, 0, ah / 2, 0));
           g.add(box(W * 0.9, 0.06, W * 0.85, d.roof, 0, ah + 0.03, 0));
-          g.add(windows(W * 0.85, ah, W * 0.8, 0xffe9a8, 2, 3));
+          g.add(windows(W * 0.85, ah, W * 0.8, 0xffe9a8, level >= 4 ? 3 : 2, 3));
           break;
         }
         case "station": {
@@ -7808,21 +8492,21 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           var eh = 0.42 * hGrow;
           g.add(box(W * 0.8, eh, W * 0.8, d.color, 0, eh / 2, 0));
           g.add(box(W * 0.85, 0.06, W * 0.85, d.roof, 0, eh + 0.03, 0));
-          g.add(windows(W * 0.8, eh, W * 0.8, 0xbfeaff, 1, 3));
+          g.add(windows(W * 0.8, eh, W * 0.8, 0xbfeaff, level >= 3 ? 2 : 1, 3));
           break;
         }
         case "tax": {
           var xh = 0.52 * hGrow;
           g.add(box(W * 0.85, xh, W * 0.8, d.color, 0, xh / 2, 0));
           g.add(box(W * 0.9, 0.06, W * 0.85, d.roof, 0, xh + 0.03, 0));
-          g.add(windows(W * 0.85, xh, W * 0.8, 0xffe9a8, 2, 3));
+          g.add(windows(W * 0.85, xh, W * 0.8, 0xffe9a8, level >= 4 ? 3 : 2, 3));
           break;
         }
         case "court": {
           var ch2 = 0.45 * hGrow;
           g.add(box(W * 0.9, ch2, W * 0.85, d.color, 0, ch2 / 2, 0));
           g.add(box(W * 0.95, 0.06, W * 0.9, d.roof, 0, ch2 + 0.03, 0));
-          g.add(windows(W * 0.9, ch2, W * 0.85, 0xd8f2ff, 1, 3));
+          g.add(windows(W * 0.9, ch2, W * 0.85, 0xd8f2ff, level >= 3 ? 2 : 1, 3));
           break;
         }
         case "attraction": {
@@ -8000,16 +8684,20 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         var padGeo = new THREE.BoxGeometry(1.02, 0.05, 1.02);
         var padMat = mat(dark ? 0x3d4a3a : 0x9db38d, { roughness: 1 });
         /* 人行道：每块地垫外圈一圈浅色步道（1.16 宽），和中间的深色车行道
-           分开——道路带总宽 0.32，人行道、车道都看得清，行人只占一小条 */
-        var walkGeo = new THREE.BoxGeometry(1.16, 0.03, 1.16);
+           分开——道路带总宽 0.38，人行道、车道都看得清，行人只占一小条 */
+        var walkGeo = new THREE.BoxGeometry(1.20, 0.03, 1.20);
         var walkMat = mat(dark ? 0x4a4f45 : 0xb9b3a4, { roughness: 1 });
         var hlMat = mat(0xf2c230, { roughness: 0.6 });
         var polMat = mat(0xd9c84a, { roughness: 1 });
         three.pads = {};
+        three.walks = {};
         for (var i = 0; i < N; i++) {
           var p = wpos(i);
           var walk = new THREE.Mesh(walkGeo, walkMat);
           walk.position.set(p[0], 0.012, p[1]); walk.receiveShadow = true; scene.add(walk);
+          /* 人行道板也是点选目标的一部分（与测试版一致）：地垫只盖住地块
+             中央 1.02，路缘一圈 1.16 靠它来点，否则点路缘会落空 */
+          walk.userData.tile = i; three.walks[i] = walk;
           var pad = new THREE.Mesh(padGeo, padMat.clone());
           pad.position.set(p[0], 0.025, p[1]); pad.receiveShadow = true;
           pad.userData.tile = i; scene.add(pad); three.pads[i] = pad;
@@ -8149,15 +8837,23 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       var r = canvas.getBoundingClientRect();
       var mouse = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
       raycaster.setFromCamera(mouse, camera);
-      /* 先直接射线命中各地块的地面垫：垫子比数学地面高一层，
-         只对数学地面求交时点在建筑/垫子边缘容易落空 */
-      var padList = [];
-      for (var pi = 0; pi < N; pi++) if (three.pads && three.pads[pi]) padList.push(three.pads[pi]);
-      var padHits = padList.length ? raycaster.intersectObjects(padList) : [];
-      if (padHits.length && padHits[0].object.userData.tile != null) {
-        selectTile(padHits[0].object.userData.tile);
-        return;
+      /* 点选判定（与测试版一致）：可点目标 = 地垫 + 人行道板 + 建筑模型
+         本身，递归求交、最近的表面优先。以前只认地垫，点到高楼身上射线
+         会穿过楼体、落到后面/下面的地块上，点到地块边缘的马路空隙则
+         完全没反应、还留着上一个地块的面板。 */
+      var targets = [];
+      for (var pi = 0; pi < N; pi++) {
+        if (three.pads && three.pads[pi]) targets.push(three.pads[pi]);
+        if (three.walks && three.walks[pi]) targets.push(three.walks[pi]);
+        if (tileGroups[pi]) targets.push(tileGroups[pi]);
       }
+      var surfHits = targets.length ? raycaster.intersectObjects(targets, true) : [];
+      for (var hi = 0; hi < surfHits.length; hi++) {
+        var ht = surfHits[hi].object.userData.tile;
+        if (ht != null) { selectTile(ht); return; }
+      }
+      /* 没命中任何表面（点在马路空隙或裸露地面上）：用射线与数学地面的
+         交点兜底，整块 1×1 地块（含路缘）都能点。 */
       var hits = raycaster.intersectObject(groundPlane);
       if (!hits.length) return;
       var p = hits[0].point;
@@ -8170,7 +8866,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     var PED_COLORS = [0xe4572e, 0x2b7fd4, 0xf2c230, 0x7bc950, 0xc95fd0, 0xf28bb4, 0x39b5a8, 0xe8e3d8];
     /* ---- 行人路网寻路：街道是地块之间的空隙，路口网格共 (SIZE+1)×(SIZE+1)
        个节点，节点坐标与道路虚线中线、路灯所在街道完全一致。行人严格沿
-       街道行走：道路带总宽 0.32（地块间距 1.34 − 地垫 1.02），行人缩小后
+       街道行走：道路带总宽 0.38（地块间距 1.40 − 地垫 1.02），行人缩小后
        身高约 0.38、体宽约 0.13，只占路面宽度的一小条，比一辆车
        （长 0.46–0.62）小、比一层楼的建筑（0.76 起）矮；中心线离地块中心
        0.67，最宽的建筑部件（商业街遮阳棚 0.51、工厂屋顶 0.5）加上行人
@@ -8251,19 +8947,27 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         var skin = SKIN_TONES[i % SKIN_TONES.length];
         var hairC = HAIR_COLORS[(i * 3 + 1) % HAIR_COLORS.length];
         var pantC = PANT_COLORS[(i * 2 + 1) % PANT_COLORS.length];
+        /* 本轮行人款式：3 种成人款式循环——0 标准 / 1 高瘦 / 2 敦实，
+           身高、体型、配色各不同；儿童款仍按成人 74% 缩放（0.4588/0.62） */
+        var pStyle = i % 3;
+        var legW = pStyle === 1 ? 0.05 : pStyle === 2 ? 0.075 : 0.06;
+        var torsoRT = pStyle === 1 ? 0.075 : pStyle === 2 ? 0.105 : 0.085;
+        var torsoRB = pStyle === 1 ? 0.095 : pStyle === 2 ? 0.12 : 0.105;
+        var armX = pStyle === 1 ? 0.115 : pStyle === 2 ? 0.14 : 0.125;
+        var baseScale = pStyle === 1 ? 0.48 : pStyle === 2 ? 0.42 : 0.45;
         /* 腿：髋部枢轴组，摆动时绕髋转；裤腿 + 鞋 */
         function makeLeg(side) {
           var hip = new THREE.Group(); hip.position.set(0.05 * side, 0.36, 0);
-          var leg = box(0.06, 0.34, 0.07, pantC, 0, -0.17, 0, { roughness: 0.95 }); hip.add(leg);
-          hip.add(box(0.065, 0.045, 0.11, 0x2c2c30, 0, -0.34, 0.018, { roughness: 0.8 }));
+          var leg = box(legW, 0.34, 0.07, pantC, 0, -0.17, 0, { roughness: 0.95 }); hip.add(leg);
+          hip.add(box(legW + 0.005, 0.045, 0.11, 0x2c2c30, 0, -0.34, 0.018, { roughness: 0.8 }));
           g.add(hip); return hip;
         }
         var legL = makeLeg(-1), legR = makeLeg(1);
         /* 上身：衬衫躯干（略收腰的圆柱）+ 领口 */
-        var torso = cyl(0.085, 0.105, 0.3, col, 0, 0.51, 0, 18); g.add(torso);
+        var torso = cyl(torsoRT, torsoRB, 0.3, col, 0, 0.51, 0, 18); g.add(torso);
         /* 胳膊：肩部枢轴组，走路时前后摆；袖子 + 手 */
         function makeArm(side) {
-          var sh = new THREE.Group(); sh.position.set(0.125 * side, 0.63, 0);
+          var sh = new THREE.Group(); sh.position.set(armX * side, 0.63, 0);
           sh.add(box(0.05, 0.26, 0.055, col, 0, -0.12, 0, { roughness: 0.95 }));
           sh.add(box(0.045, 0.06, 0.05, skin, 0, -0.28, 0, { roughness: 0.9 }));
           g.add(sh); return sh;
@@ -8286,20 +8990,25 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         if (i % 3 === 0) g.add(box(0.15, 0.21, 0.06, PANT_COLORS[(i + 2) % PANT_COLORS.length], 0, 0.52, -0.115, { roughness: 0.95 }));
         if (i % 4 === 2) { var bun = new THREE.Mesh(new THREE.SphereGeometry(0.036, 10, 8), mat(hairC, { roughness: 1 })); bun.position.set(0, 0.83, -0.045); bun.castShadow = true; g.add(bun); }
         if (i % 3 === 1 && i % 4 !== 3) g.add(box(0.115, 0.17, 0.04, hairC, 0, 0.67, -0.068, { roughness: 1 }));
+        if (pStyle === 1) g.add(box(0.14, 0.04, 0.14, PANT_COLORS[(i + 1) % PANT_COLORS.length], 0, 0.66, 0, { roughness: 0.95 })); /* 高瘦款：围巾 */
+        if (pStyle === 2) g.add(box(0.2, 0.05, 0.2, 0x2c2c30, 0, 0.55, 0, { roughness: 0.9 })); /* 敦实款：夹克腰带 */
         /* 人物比例（写实小比例）：整体缩到 0.45——身高约 0.38、体宽约 0.13，
            明显小于车辆（长 0.46–0.62、宽约 0.19–0.21）和建筑（1 级住宅
-           总高约 0.76），在 0.32 宽的道路上只占一小条。
+           总高约 0.76），在 0.38 宽的道路上只占一小条。
            儿童款（与测试版统一）：测试版成人缩放 0.62、儿童 0.4588，
-           即儿童为成人的 74%；静态版成人 0.45，按同一比例换算儿童
-           为 0.45×(0.4588/0.62)≈0.333，身高约 0.28。每 5 人出 1 名儿童。 */
+           即儿童为成人的 74%；静态版成人按款式 0.42–0.48，儿童按同一
+           比例换算为成人×(0.4588/0.62)，身高约 0.26–0.30。每 5 人出 1 名儿童。 */
         var isChild = i % 5 === 4;
-        g.scale.setScalar(isChild ? 0.45 * (0.4588 / 0.62) : 0.45);
+        g.scale.setScalar(isChild ? baseScale * (0.4588 / 0.62) : baseScale);
         g.visible = false; scene.add(g);
         var startNode = roadNodeId(Math.floor(Math.random() * ROAD_N), Math.floor(Math.random() * ROAD_N));
         var ped = { g: g, node: startNode, route: null, seg: 0, child: isChild,
                     lane: 0.07 + (i % 3) * 0.015,
                     x: 0, z: 0,
                     speed: 0.22 + Math.random() * 0.25, phase: Math.random() * 6,
+                    /* 摆动区分：高瘦款小步慢摆、敦实款大步快摆、儿童款步频更快 */
+                    freq: isChild ? 8.4 : (pStyle === 1 ? 6.2 : pStyle === 2 ? 7.8 : 7),
+                    amp: pStyle === 1 ? 0.42 : pStyle === 2 ? 0.58 : 0.5,
                     armL: armL, armR: armR, legL: legL, legR: legR };
         pedPlanRoute(ped);
         var sp = roadNodeXY(startNode);
@@ -8553,10 +9262,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         else if (dv[0] < 0) p.g.rotation.y = -Math.PI / 2;
         else if (dv[1] > 0) p.g.rotation.y = 0;
         else if (dv[1] < 0) p.g.rotation.y = Math.PI;
-        var bob = Math.abs(Math.sin(time * 7 + p.phase)) * 0.03;
+        var pf = p.freq || 7, pa = p.amp || 0.5;
+        var bob = Math.abs(Math.sin(time * pf + p.phase)) * 0.03;
         p.g.position.set(p.x, -0.02 + bob, p.z);
-        /* 走路动作：胳膊和腿绕肩/髋枢轴前后摆，左右交替 */
-        var sw = Math.sin(time * 7 + p.phase) * 0.5;
+        /* 走路动作：胳膊和腿绕肩/髋枢轴前后摆，左右交替（幅度/频率按款式区分） */
+        var sw = Math.sin(time * pf + p.phase) * pa;
         if (p.armL) { p.armL.rotation.x = sw; p.armR.rotation.x = -sw; p.legL.rotation.x = -sw * 0.75; p.legR.rotation.x = sw * 0.75; }
       });
       /* 分离兜底：任何两人贴得过近（多在路口交汇时），沿连线轻轻推开，
@@ -8719,6 +9429,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             var p = wpos(i);
             g.position.set(p[0], 0.05, p[1]);
             g.userData.key = key;
+            /* 建筑本身也是点选目标（与测试版一致）：把地块编号打到模型
+               每一个部件上，最近命中面的判定才能直接读到它；否则点到
+               高楼身上射线会穿过楼体、落到后面/下面的地块上 */
+            g.traverse(function (o) { o.userData.tile = i; });
             scene.add(g); tileGroups[i] = g;
             if (fxPopTiles[i]) { g.userData.spawnAt = performance.now(); delete fxPopTiles[i]; }
             if (g.userData.chimney) {
@@ -9336,6 +10050,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         }).join("") + "</ul>"
           + tr("<p class='note' style='margin:4px 0 0'>拖满 3 个月起会扣满意度、赶人走——先解决拖最久的那条。</p>");
       }
+      if (STAGE3.pop && c.popGroups) html += popGroupBlockHtml(c);
       html += "</div>";
       el.innerHTML = html;
       /* 文案用 textContent 填，避免任何转义问题 */
@@ -9396,7 +10111,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         case tr("建筑问题"): return tr("每处问题按类型扣分（银行金融风波 −4、医院人满为患 −5、警察人手不足 −3、公园无人打理 −3 等），拖得越久越重：每多拖 1 个月 ×1.15，最多 ×1.6，合计 ") + c.problemSat + tr(" 分。出问题的建筑还会缩水：学校/图书馆教育覆盖减半、警察局人手不足让治安率 −10（覆盖不减半）、发电减半、岗位只剩六成、公园净化只剩三成，部分类型停摆收入（本月共少收 ") + c.problemIncomeLoss + tr(" 金币）。点开建筑花钱处理立即恢复。");
         case tr("社会矛盾"): return tr("社会矛盾值 = 住房紧张 ") + c.conflictParts.housing + tr("（住房占用率超过 55% 后开始涨，最高 30）+ 环境污染 ") + c.conflictParts.pollution + tr("（污染率 ") + c.pollutionRate + tr("% × 0.25）+ 教育率低 ") + c.conflictParts.edu + tr("（(100 − 受教育度 ") + c.education + tr("%) × 0.20）+ 治安管理率低 ") + c.conflictParts.security + tr("（(100 − 治安率 ") + c.security + "%) × 0.25）= " + c.conflict + tr("。满意度扣分 =（矛盾值 − 30）× 0.25，上限 −18 分；矛盾值 65 以上每月还可能触发抗议 / 治安事件。") + (c.counts.court > 0 ? tr("法院每月再调节：健康法院 −2/座，积压案件的法院 +2/座。") : "");
         case tr("社会稳定"): return tr("社会矛盾值低于 15 时固定 +2 分：住房、环境、教育、治安四项都没积压不满，城市稳定。");
-        case tr("需求积压"): return tr("市民需求连续未满足的月数会逐月累计（市民需求列表里标着每条拖了几个月）：最久的一条拖满 3 个月起扣分，拖得越久扣得越多，上限 −8 分；人口也会按拖欠程度持续流失。把需求逐条解决，计数清零。");
+        case tr("需求积压"): return tr("市民需求连续未满足的月数会逐月累计（市民需求列表里标着每条拖了几个月）：最久的一条拖满 3 个月起扣分，拖得越久扣得越多，上限 −8 分；人口也会按拖欠程度持续流失。把需求逐条解决，计数清零。") + (c.groupExtraMonths > 0 ? tr("人口结构分组开启时，分组需求缺口还会折算成等效拖欠月数（本月 +") + String(c.groupExtraMonths) + tr(" 个月，最多 +2 个月），最多让这一项多扣 2 分。") : "");
         default: return tr("按当前城市数据计算，四舍五入取整后计入总分。");
       }
     }
@@ -9606,6 +10321,253 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       selected = -1;
       confirmDemolish = false;
       refresh();
+    }
+    /* ---------------- 阶段三展示层 P1-4 / P1-5 / P1-6（纯展示，不改结算） ---------------- */
+    function finRow(label, val, cls, total) {
+      return "<li" + (total ? " class='total-row'" : "") + "><span class='sl'>" + label + "</span><span class='sv " + (cls || "") + "'>" + val + "</span></li>";
+    }
+    /* P1-4 财政报表：结算快照口径（测试版 financeReportRows）。
+       只展示最近一次结算的快照（financeHistory 末条）：总收入用结算报告的
+       总额 totalIncome，不得拿推进后的状态重算；商业/工业是结算拆分（商业
+       取整、工业取余数，相加 exactly 等于扣损前商业/工业总额）；总支出 =
+       维护费 + 建筑问题损失；本月盈亏 = 总收入 − 总支出。公共服务支出是
+       维护费的子项，仅作结构参考，不另计入总支出。趋势只在月份连续时算。 */
+    function renderFinance(c) {
+      var el = document.getElementById("tut-finance");
+      if (!el) return;
+      var html = tr("<h2 class='sec-h font-display'>财政报表</h2>");
+      var snap = financeHistory.length ? financeHistory[financeHistory.length - 1] : null;
+      if (!snap) {
+        html += tr("<p class='note' style='margin:4px 0 0'>推进一个月后，这里会显示上月结算报表（结算快照）。</p>");
+        el.innerHTML = html;
+        return;
+      }
+      var totalSpend = snap.upkeep + snap.problemLoss;
+      var netR = snap.totalIncome - totalSpend;
+      html += tr("<p class='note' style='margin:4px 0 0'>上月结算（") + formatMonth(snap.month) + tr("）的结算快照：口径与「推进一个月」的结算一致（税收 + 商业 + 工业 + 旅游 + 行政统筹 − 维护 − 建筑问题损失）。</p>")
+        + "<ul class='sat-sum-list'>"
+        + finRow(tr("总收入"), snap.totalIncome + tr(" 金币"), "", false)
+        + finRow(tr("居民税"), snap.incomeTax + tr(" 金币") + (snap.taxMult !== 1 ? tr("（税收乘数 ×") + String(snap.taxMult) + ")" : ""), "", false)
+        + finRow(tr("商业收入"), snap.commercialSettled + tr(" 金币") + (snap.commercialMult !== 1 || snap.trafficCommercialMult !== 1 ? tr("（商业乘数 ×") + String(snap.commercialMult) + (snap.trafficCommercialMult !== 1 ? tr("，交通修正 ×") + String(snap.trafficCommercialMult) : "") + ")" : ""), "", false)
+        + finRow(tr("工业收入"), snap.industrialSettled + tr(" 金币") + (snap.industrialMult !== 1 ? tr("（工业乘数 ×") + String(snap.industrialMult) + ")" : ""), "", false)
+        + finRow(tr("旅游收入"), snap.incomeTourism + tr(" 金币"), "", false)
+        + (snap.adminBonusGross !== 0 ? finRow(tr("行政统筹"), snap.adminBonusGross + tr(" 金币"), "", false) : "")
+        + finRow(tr("总支出"), totalSpend + tr(" 金币"), "", false)
+        + finRow(tr("维护费"), snap.upkeep + tr(" 金币"), "", false)
+        + finRow(tr("其中：公共服务支出"), snap.serviceUpkeep + tr(" 金币"), "", false)
+        + finRow(tr("其中：其他维护"), Math.max(0, snap.upkeepRaw - snap.serviceUpkeep) + tr(" 金币"), "", false)
+        + (snap.problemLoss > 0 ? finRow(tr("建筑问题损失"), snap.problemLoss + tr(" 金币"), "", false) : "")
+        + finRow(tr("本月盈亏"), (netR >= 0 ? "+" : "") + netR + tr(" 金币"), netR >= 0 ? "pos-t" : "neg-t", true)
+        + "</ul>"
+        + tr("<p class='note' style='margin:4px 0 0'>商业 + 工业 = 商业与工业结算总额；公共服务支出是维护费的子项，仅作结构参考，不另计入总支出。</p>");
+      var prev = financeHistory.length >= 2 ? financeHistory[financeHistory.length - 2] : null;
+      if (prev && prev.month === snap.month - 1) {
+        var prevSpend = prev.upkeep + prev.problemLoss;
+        var prevNet = prev.totalIncome - prevSpend;
+        var dInc = snap.totalIncome - prev.totalIncome, dNet = netR - prevNet;
+        html += tr("<p class='note' style='margin:4px 0 0'>变化趋势（较上月）：总收入 ") + (dInc >= 0 ? "+" : "") + dInc + tr(" 金币，盈亏 ") + (dNet >= 0 ? "+" : "") + dNet + tr(" 金币。</p>");
+      } else {
+        html += tr("<p class='note' style='margin:4px 0 0'>再推进一个月后，这里会显示与上月的变化趋势。</p>");
+      }
+      el.innerHTML = html;
+    }
+    function popGroupBlockHtml(c) {
+      var g = c.popGroups;
+      var names = { young: tr("年轻"), family: tr("普通家庭"), elderly: tr("老年"), highIncome: tr("高收入") };
+      var rows = ["young", "family", "elderly", "highIncome"].map(function (k) {
+        return finRow(names[k], Math.round(g[k] * 100) + "% · " + c.popGroupCounts[k] + tr(" 人"), "", false);
+      }).join("");
+      var top = ["young", "family", "elderly", "highIncome"].map(function (k) {
+        return names[k] + tr("组最缺：") + c.groupTopNeeds[k].map(function (nk) { return groupNeedLabel(nk); }).join(tr("、"));
+      }).join(tr("；"));
+      return tr("<h3 class='sec-h font-display' style='margin-top:12px'>人口结构</h3>")
+        + "<ul class='sat-sum-list'>" + rows + "</ul>"
+        + tr("<p class='note' style='margin:4px 0 0'>劳动人口 ") + c.laborForce + tr(" 人（按各组劳动参与率折算：年轻 100%、普通家庭 75%、老年 10%、高收入 90%）· 按劳动人口算的失业率 ") + Math.round(c.laborUnemployment * 100) + tr("%（只展示，不参与人口与满意度计算）。</p>")
+        + tr("<p class='note' style='margin:4px 0 0'>分组需求缺口 ") + String(c.groupDemandGap) + tr(" 分（0–100）") + (c.groupExtraMonths > 0 ? tr("，折算等效拖欠 +") + String(c.groupExtraMonths) + tr(" 个月（最多 +2 个月，最多让满意度多扣 2 分、人口多流失 1.4%/月）。") : tr("，暂未折算成拖欠月数。")) + "</p>"
+        + tr("<p class='note' style='margin:4px 0 0'>") + top + tr("。</p>");
+    }
+    function industryBlockHtml(c) {
+      return tr("<h3 class='sec-h font-display' style='margin-top:12px'>产业联动</h3>")
+        + "<ul class='sat-sum-list'>"
+        + finRow(tr("消费力指数"), c.consumptionIndex + tr("（0–100：教育 45% + 就业 35% + 满意度 20%）"), "", false)
+        + finRow(tr("用工填充率"), Math.round(c.fillRate * 100) + tr("%（人口 ÷ 岗位，满员为 100%）"), "", false)
+        + finRow(tr("商业乘数"), "×" + String(c.commercialMult) + tr("（范围 0.72–1.15）"), "", false)
+        + finRow(tr("工业乘数"), "×" + String(c.industrialMult) + tr("（范围 0.57–1.05）"), "", false)
+        + finRow(tr("税收乘数"), "×" + String(c.taxMult) + tr("（范围 0.95–1.05）"), "", false)
+        + "</ul>"
+        + tr("<p class='note' style='margin:4px 0 0'>乘数每月按当月状态算一次，不迭代；用工只影响收入，不碰人口「失业」因子与满意度「失业」项。</p>");
+    }
+    function trafficBlockHtml(c) {
+      var t = c.traffic;
+      var tierName = function (tier) { return tier === 0 ? tr("畅通") : tier === 1 ? tr("繁忙") : tr("拥堵"); };
+      var rows = t.zones.map(function (zn) {
+        return finRow(tr("区") + zn.id + " · " + tr("出行") + " " + String(zn.trips) + " " + tr("人次"), tr("负荷") + " " + String(zn.loadPct) + "% · " + tierName(zn.tier) + " · " + tr("通勤效率") + " " + String(zn.efficiency), zn.tier === 2 ? "neg-t" : "", false);
+      }).join("");
+      var worst = t.zones.slice().sort(function (a, b) { return b.rawLoadPct - a.rawLoadPct; })[0]; /* G：负荷最高的区取未封顶原始负荷的最大区 */
+      return tr("<h3 class='sec-h font-display' style='margin-top:12px'>交通负荷（9 区）</h3>")
+        + "<ul class='sat-sum-list'>" + rows + "</ul>"
+        + tr("<p class='note' style='margin:4px 0 0'>全城拥堵指数 ") + String(t.cityCongestion) + tr("%（按岗位加权的建成区平均负荷）· 商业收入修正 ×") + String(t.trafficCommercialMult) + tr("（拥堵超 100% 才扣钱，最多扣 10%，只扣商业）· 负荷最高的区是区 ") + worst.id + tr("（") + String(worst.loadPct) + tr("%，") + tierName(worst.tier) + tr("）。</p>")
+        + tr("<p class='note' style='margin:4px 0 0'>3D 实际值对照：车辆目标 ") + t.vehicleCount + tr(" 辆") + (t.vehicleUnlocked ? "" : tr("（未达标：人口满 60 且建筑满 10 栋才出车，上限 8 辆）")) + tr(" · 行人目标 ") + t.pedTarget + tr(" 位（上限 36 位）· 按各区出行需求占比拆开的展示用车辆分配：") + t.zones.map(function (zn) { return tr("区") + zn.id + " " + String(zn.carShare) + tr(" 辆"); }).join(tr("、")) + tr("。分配数只是展示，不驱动 3D 渲染；3D 里车辆只在有建筑的路段跑。</p>");
+    }
+    function renderStage3(c) {
+      var el = document.getElementById("tut-stage3");
+      if (!el) return;
+      var html = tr("<h2 class='sec-h font-display'>城市发展报告与建筑图鉴</h2>")
+        + tr("<p class='note' style='margin:4px 0 0'>发展报告按月汇总人口、满意度、环境、产业、交通与城市等级进度并解释原因；建筑图鉴集中展示 23 种建筑的全部数据。</p>")
+        + "<div class='bs-actions' style='border-top:0;margin-top:8px;padding-top:0'>"
+        + "<button type='button' class='btn-bulk-one' id='btnDevReport'>" + tr("查看城市发展报告") + "</button>"
+        + "<button type='button' class='btn-bulk-max' id='btnCodex'>" + tr("打开建筑图鉴") + "</button></div>"
+        + (STAGE3.pop && c.popGroups ? popGroupBlockHtml(c) : tr("<p class='note' style='margin:6px 0 0'>人口结构分组未开启：打开「市政操作 → 实验功能」里的「人口结构」开关后，这里会显示年轻 / 普通家庭 / 老年 / 高收入四组占比与劳动人口。</p>"))
+        + (STAGE3.industry ? industryBlockHtml(c) : tr("<p class='note' style='margin:6px 0 0'>产业联动未开启：打开「市政操作 → 实验功能」里的「产业联动」开关后，消费力与用工填充会开始影响商业、工业收入与税收，明细见上方财政报表。</p>"))
+        + (STAGE3.traffic && c.traffic ? trafficBlockHtml(c) : tr("<p class='note' style='margin:6px 0 0'>交通负荷统计未开启：打开「市政操作 → 实验功能」里的「交通负荷」开关后，这里会显示 9 个区的出行负荷与拥堵情况；3D 车辆与行人表现不受开关影响。</p>"));
+      el.innerHTML = html;
+      var b1 = document.getElementById("btnDevReport");
+      if (b1) b1.addEventListener("click", function () { openDevReport(compute()); });
+      var b2 = document.getElementById("btnCodex");
+      if (b2) b2.addEventListener("click", function () { openCodex(); });
+    }
+    /* J：城市发展报告（测试版 buildDevelopmentReport 口径，GAME_DESIGN §19 L254）。
+       六节：人口、满意度、环境、产业、交通、城市等级进度；当前值与最早一次
+       快照（基线）对比。归因只引用同期变化超阈值的指标（人口 |Δ|≥5、满意度
+       |Δ|≥3、污染 |Δ|≥3、教育 |Δ|≥5、治安 |Δ|≥3），不得编造；不引用当月
+       最高分项，不写“下月预计”。交通节另附 9 区表。 */
+    function devDelta(cur, base) { return Math.round((cur - base) * 10) / 10; }
+    function openDevReport(c) {
+      var lines = [];
+      var ti = tierIndexFor(S.pop), nextTier = TIERS[ti + 1];
+      lines.push(tr("报告月份：") + formatMonth(S.month) + tr(" · 城市等级「") + TIERS[ti].title + tr("」（人口 ") + S.pop + tr(" 人）") + (nextTier ? tr("，距下一级「") + nextTier.title + tr("」还差 ") + (nextTier.minPop - S.pop) + tr(" 人") : tr("，已是最高等级")));
+      var base = citySnapshots.length >= 2 ? citySnapshots[0] : null;
+      var dPop = 0, dSat = 0, dPol = 0, dEdu = 0, dSec = 0;
+      if (base) {
+        dPop = S.pop - base.pop; dSat = c.sat.total - base.sat; dPol = devDelta(c.pollutionRate, base.pollution);
+        dEdu = c.education - base.education; dSec = c.security - base.security;
+        lines.push(tr("对照基线：") + formatMonth(base.month) + tr("（") + (S.month - base.month) + tr(" 个月前，人口 ") + base.pop + tr(" 人、满意度 ") + base.sat + tr(" 分）。"));
+      } else {
+        lines.push(tr("对照基线：本机暂无足够的历史快照（推进几个月后自动累计，最多留 24 个月），先列当前状态，变化原因待有基线后再归因。"));
+      }
+      /* 人口 */
+      var occ = c.capacity > 0 ? Math.round(S.pop / c.capacity * 100) : 0;
+      lines.push(tr("人口：当前人口 ") + S.pop + tr(" 人，住房容量 ") + c.capacity + tr(" 人，占用率 ") + occ + tr("%。"));
+      if (base) {
+        lines.push(tr("人口：与最早记录相比，人口") + (dPop >= 0 ? "+" : "") + dPop + tr(" 人，满意度") + (dSat >= 0 ? "+" : "") + dSat + tr(" 分。"));
+        if (dPop <= -5 && dPol >= 3) lines.push(tr("人口：同期污染率上升 ") + dPol + tr(" 个点，人口减少与污染加重同向。"));
+        if (dPop <= -5 && dSat <= -3) lines.push(tr("人口：同期满意度下降 ") + (-dSat) + tr(" 分，人口减少与满意度走低同向。"));
+        if (dPop >= 5 && dSat >= 3) lines.push(tr("人口：同期满意度上升 ") + dSat + tr(" 分，人口增长与满意度走高同向。"));
+        if (STAGE3.pop && c.popGroups) {
+          var gNames = { young: tr("年轻"), family: tr("普通家庭"), elderly: tr("老年"), highIncome: tr("高收入") };
+          lines.push(tr("人口：人口结构：") + ["young", "family", "elderly", "highIncome"].map(function (k) { return gNames[k] + " " + Math.round(c.popGroups[k] * 100) + "%"; }).join(tr("、")) + tr("；劳动人口 ") + c.laborForce + tr(" 人。"));
+        }
+      } else {
+        lines.push(tr("人口：数据积累中：推进几个月后，这里会写清人口是涨是跌、以及同期哪些指标跟着动了。"));
+      }
+      /* 满意度 */
+      lines.push(tr("满意度：当前满意度 ") + c.sat.total + tr(" 分（基础 ") + c.sat.base + tr(" 分）。"));
+      if (base) {
+        lines.push(tr("满意度：与最早记录相比") + (dSat >= 0 ? " +" : " ") + dSat + tr(" 分。"));
+        if (dSat <= -3 && dPol >= 3) lines.push(tr("满意度：同期污染率上升 ") + dPol + tr(" 个点，满意度下降与污染加重同向。"));
+        if (dSat <= -3 && dEdu <= -5) lines.push(tr("满意度：同期受教育度下降 ") + (-dEdu) + tr(" 个点，满意度下降与教育走低同向。"));
+        if (dSat <= -3 && dSec <= -3) lines.push(tr("满意度：同期治安管理率下降 ") + (-dSec) + tr(" 个点，满意度下降与治安走低同向。"));
+        if (dSat >= 3 && dEdu >= 5) lines.push(tr("满意度：同期受教育度上升 ") + dEdu + tr(" 个点，满意度上升与教育走高同向。"));
+      }
+      /* 环境 */
+      lines.push(tr("环境：污染率 ") + c.pollutionRate + tr("%，绿化率 ") + c.greenRate + tr("%。"));
+      if (base) lines.push(tr("环境：与最早记录相比，污染率") + (dPol >= 0 ? " +" : " ") + dPol + tr(" 个点，绿化率") + ((c.greenRate - base.greenRate) >= 0 ? " +" : " ") + (c.greenRate - base.greenRate) + tr(" 个点。"));
+      /* 产业 */
+      if (STAGE3.industry) {
+        lines.push(tr("产业：消费力指数 ") + c.consumptionIndex + tr("，用工填充率 ") + Math.round(c.fillRate * 100) + tr("%，商业乘数 ×") + String(c.commercialMult) + tr("，工业乘数 ×") + String(c.industrialMult) + tr("，税收乘数 ×") + String(c.taxMult) + tr("。"));
+      } else {
+        lines.push(tr("产业：产业联动未开启：商业与工业收入按旧口径结算。"));
+      }
+      lines.push(tr("产业：商业基数 ") + c.commercialBase + tr("，工业基数 ") + c.industrialBase + tr("（工厂含商业街带来的工厂税加成）。"));
+      /* 交通 */
+      if (STAGE3.traffic && c.traffic) {
+        var t = c.traffic;
+        var tierName = function (tier) { return tier === 0 ? tr("畅通") : tier === 1 ? tr("繁忙") : tr("拥堵"); };
+        var nCon = t.zones.filter(function (zn) { return zn.tier === 2; }).length;
+        var nBusy = t.zones.filter(function (zn) { return zn.tier === 1; }).length;
+        var worst = t.zones.slice().sort(function (a, b) { return b.rawLoadPct - a.rawLoadPct; })[0]; /* G：负荷最高的区取未封顶原始负荷的最大区 */
+        lines.push(tr("交通：全城拥堵指数 ") + String(t.cityCongestion) + tr("%；9 个区里拥堵 ") + nCon + tr(" 个、繁忙 ") + nBusy + tr(" 个；负荷最高的区是 Z") + worst.id + tr("（") + String(worst.loadPct) + tr("%，") + tierName(worst.tier) + tr("）。"));
+        if (t.trafficCommercialMult < 1) lines.push(tr("交通：拥堵正在压商业收入：交通修正 ×") + String(t.trafficCommercialMult) + tr("（只扣商业，不扣工业）。"));
+        else lines.push(tr("交通：全城拥堵未过 100%，交通不扣商业收入。"));
+        lines.push(tr("交通：3D 实际值：车辆目标 ") + t.vehicleCount + tr(" 辆、行人目标 ") + t.pedTarget + tr(" 位；统计口径：车辆目标按各区出行需求占比分配（见下表「车辆分配」列，只作展示，不驱动渲染）。"));
+      } else {
+        lines.push(tr("交通：交通负荷统计未开启（市政操作 → 实验功能 → 交通负荷），3D 车辆与行人表现不受影响。"));
+      }
+      /* 城市等级进度 */
+      lines.push(tr("城市等级进度：当前「") + TIERS[ti].title + tr("」") + (nextTier ? tr("，下一级「") + nextTier.title + tr("」需人口 ") + nextTier.minPop + tr(" 人，还差 ") + (nextTier.minPop - S.pop) + tr(" 人") : tr("，已是最高等级")));
+      openInfo(tr("城市发展报告"), tr("按当前指标与历史快照汇总；原因只引用已有指标的变化"), lines);
+      if (STAGE3.traffic && c.traffic) appendZoneTable(c.traffic);
+    }
+    /* 发展报告附表：9 区（区/出行需求/负荷率/档位/通勤效率/车辆分配）。
+       openInfo 只写纯文本行，表格用 DOM 追加在报告正文之后。 */
+    function appendZoneTable(t) {
+      var body = document.getElementById("infoBody");
+      if (!body) return;
+      var tierName = function (tier) { return tier === 0 ? tr("畅通") : tier === 1 ? tr("繁忙") : tr("拥堵"); };
+      var table = document.createElement("table");
+      table.setAttribute("style", "width:100%;border-collapse:collapse;font-size:13px;margin-top:8px");
+      var head = document.createElement("thead");
+      var hr = document.createElement("tr");
+      [tr("区"), tr("出行需求"), tr("负荷率"), tr("档位"), tr("通勤效率"), tr("车辆分配")].forEach(function (h) {
+        var th = document.createElement("th");
+        th.setAttribute("style", "text-align:left;padding:4px 6px 4px 0;border-bottom:1px solid var(--border)");
+        th.textContent = h; hr.appendChild(th);
+      });
+      head.appendChild(hr); table.appendChild(head);
+      var tb = document.createElement("tbody");
+      t.zones.forEach(function (zn) {
+        var row = document.createElement("tr");
+        ["Z" + zn.id, String(zn.trips) + tr("人次/月"), String(zn.loadPct) + "%", tierName(zn.tier), String(zn.efficiency) + "%", String(zn.carShare) + tr("辆")].forEach(function (v) {
+          var td = document.createElement("td");
+          td.setAttribute("style", "padding:4px 6px 4px 0;border-top:1px solid var(--border)");
+          td.textContent = v; row.appendChild(td);
+        });
+        tb.appendChild(row);
+      });
+      table.appendChild(tb);
+      body.appendChild(table);
+      var note = document.createElement("p");
+      note.className = "info-line";
+      note.textContent = tr("「车辆分配」是统计口径：把 3D 车辆目标数按各区出行需求占比拆开，只作展示；3D 里实际跑的车辆数以「3D 实际值」为准，两栏口径不同。");
+      body.appendChild(note);
+    }
+    function serviceRangeText(t) {
+      if (t === "school") return tr("教育覆盖：1 级 ") + Math.round(150 * mult(1)) + tr(" 人，5 级 ") + Math.round(150 * mult(5)) + tr(" 人");
+      if (t === "library") return tr("教育覆盖：1 级 ") + Math.round(80 * mult(1)) + tr(" 人，5 级 ") + Math.round(80 * mult(5)) + tr(" 人");
+      if (t === "police") return tr("治安覆盖：1 级 ") + Math.round(150 * mult(1)) + tr(" 人，5 级 ") + Math.round(150 * mult(5)) + tr(" 人；维护费 −4%/座（上限 −20%）");
+      if (t === "fire") return tr("治安覆盖：1 级 ") + Math.round(75 * mult(1)) + tr(" 人，5 级 ") + Math.round(75 * mult(5)) + tr(" 人");
+      if (t === "shop") return tr("每座让每座工厂月税 +10（上限 +30）");
+      if (t === "factory") return tr("污染半径 2 格；每座商业街让月税 +10（上限 +30）");
+      if (t === "park") return tr("每座全城容量 +2；净化周边污染");
+      if (t === "admin") return tr("等级之和 = 城市总体发展水平；全城收入 +2%/级（上限 +20%）");
+      if (t === "station") return tr("迁入上限 +2/级/座；流出率 −0.3%/级（上限 −1.5%）");
+      if (t === "tech") return tr("最高等级定税率上限（30% + 2%×最高等级）；商业/工厂收入 +3%/级（上限 +15%）");
+      if (t === "env") return tr("每座削减全城污染 5%（上限 −20%）");
+      if (t === "tax") return tr("税收 +25%/座（上限 +50%）");
+      if (t === "court") return tr("治安 +3/级（上限 +15）；社会矛盾每月 −2/座");
+      if (t === "attraction") return tr("旅游收入 60/月 × 等级系数 ×（1+绿化率）");
+      if (t === "sewage") return tr("每座削弱全城工厂污染 15%（上限 60%）");
+      return "";
+    }
+    function openCodex() {
+      var lines = [tr("共 23 种建筑：造价、维护、岗位、容量、服务范围与升级费全部取自建筑表；点任意地块也能在弹窗里看到同一份数据。")];
+      ORDER.forEach(function (t) {
+        var d = DEFS[t];
+        var parts = [d.name + tr("（造价 ") + d.cost + tr(" 金币）")];
+        parts.push(tr("维护 ") + d.upkeep + tr(" 金币/月"));
+        if (d.cap) parts.push(tr("住 ") + d.cap + tr(" 人"));
+        if (d.jobs) parts.push(tr("岗位 ") + d.jobs + tr(" 个"));
+        if (d.power) parts.push(tr("耗电 ") + d.power);
+        if (d.gen) parts.push(tr("发电 ") + d.gen);
+        if (d.income) parts.push(tr("收入约 ") + d.income + tr(" 金币/月"));
+        if (d.capBonus) parts.push(tr("全城容量 +") + d.capBonus + tr("/座"));
+        parts.push(tr("升级费：1→2 级 ") + upCost(d, 1) + tr(" 金币，2→3 级 ") + upCost(d, 2) + tr(" 金币，3→4 级 ") + upCost(d, 3) + tr(" 金币，4→5 级 ") + upCost(d, 4) + tr(" 金币；升满累计造价 ") + cumBuildCost(d, 5) + tr(" 金币"));
+        var sr = serviceRangeText(t);
+        if (sr) parts.push(sr);
+        parts.push(d.desc);
+        lines.push(parts.join(" · "));
+      });
+      openInfo(tr("建筑图鉴"), tr("23 种建筑一览：介绍、造价、升级费、岗位、服务范围、环境影响、维护成本、升级效果"), lines);
     }
     function renderTileDialog(c) {
       var ov = document.getElementById("tileOverlay");
@@ -10243,6 +11205,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       renderReport();
       renderStatsSection(c);
       renderBuildStats(c);
+      renderFinance(c);
+      renderStage3(c);
+      syncStage3Buttons();
       renderTileDialog(c);
       renderFlat(c);
       renderLog();
@@ -10428,6 +11393,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     document.getElementById("btnLangPickEn").addEventListener("click", function () { chooseLang("en"); });
     document.getElementById("btnLangZh").addEventListener("click", function () { setLang("zh"); });
     document.getElementById("btnLangEn").addEventListener("click", function () { setLang("en"); });
+    /* 阶段三开关（市政操作 → 实验功能）：只记本机 localStorage，不进存档 */
+    document.getElementById("btnS3Pop").addEventListener("click", function () { stage3Set("pop", !STAGE3.pop); });
+    document.getElementById("btnS3Ind").addEventListener("click", function () { stage3Set("industry", !STAGE3.industry); });
+    document.getElementById("btnS3Tra").addEventListener("click", function () { stage3Set("traffic", !STAGE3.traffic); });
     /* ---------- 界面偏好持久化（功能 A：只记界面缩放与地图高度，
        与游戏存档完全无关，不保存任何游戏进度） ----------
        键名沿用统一口径：...:scale 存缩放 %，...:mapHeight 存地图高度 px。
