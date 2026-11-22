@@ -5631,6 +5631,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       ORDER.forEach(function (t) { c.counts[t] = 0; c.lvSum[t] = 0; });
       var schoolService = 0, libraryService = 0, policeService = 0, fireSecService = 0;
       c.problemList = []; c.problemSat = 0; c.problemIncomeLoss = 0; c.healthySewage = 0;
+      c.adminHealthy = 0; c.envHealthy = 0; c.attractionHealthy = 0;
       var parkGreenArea = 0;
       for (var i = 0; i < N; i++) {
         var b = S.grid[i]; if (!b) continue;
@@ -5644,6 +5645,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           c.problemIncomeLoss += Math.round((pd2.income || 0) * sev);
         }
         if (b.type === "sewage" && !prob) c.healthySewage++;
+        if (b.type === "admin" && !prob) c.adminHealthy++;
+        if (b.type === "env" && !prob) c.envHealthy++;
+        if (b.type === "attraction" && !prob) c.attractionHealthy++;
         if (b.type === "park") parkGreenArea += Math.round((10 + 5 * (b.level - 1)) * (prob ? 0.3 : 1)); /* 无人打理的公园绿化只剩三成 */
         if (d.cap) c.capacity += Math.round(d.cap * m);
         if (d.jobs) c.jobs += Math.round(d.jobs * m * (prob ? 0.6 : 1));
@@ -6004,12 +6008,12 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (pop >= 30 || c.counts.factory > 0) add(tr("消防安全"), c.counts.fire + tr(" 座消防站守护安全（上限 +4）"), Math.min(4, c.counts.fire * 2));
       if (pop >= 30) add(tr("文化生活"), c.counts.library + tr(" 座图书馆丰富文化生活（上限 +3）"), Math.min(3, c.counts.library * 1.5));
       if (pop >= 30) add(tr("教育水平"), tr("受教育度 ") + c.education + tr("%：学校覆盖 ") + c.schoolService + tr(" 人 + 图书馆覆盖 ") + c.libraryService + tr(" 人 = 共覆盖 ") + c.eduCovered + tr(" 人，受教育约 ") + c.eduPeople + tr(" 人（人口 ") + pop + tr(" 人）——升级学校/图书馆覆盖更多，受教育人数和这一项都会涨（满教育也只 +3.5）"), c.education * 0.035);
-      if (c.counts.admin > 0) add(tr("行政管理"), c.counts.admin + tr(" 座行政楼统筹全城发展（上限 +5）"), Math.min(5, c.counts.admin));
-      if (c.counts.env > 0) {
-        if (c.greenRate >= 40 && c.pollutionRate < 10) add(tr("环境治理"), c.counts.env + tr(" 座环保局守护环境，绿化达标、污染低，满意度有加成（上限 +6）"), Math.min(6, c.counts.env * 2));
-        else if (c.pollutionRate >= 30) add(tr("环境治理"), c.counts.env + tr(" 座环保局：污染太高，环境治理跟不上"), -c.counts.env);
+      if (c.adminHealthy > 0) add(tr("行政管理"), c.adminHealthy + tr(" 座行政楼统筹全城发展（上限 +5）"), Math.min(5, c.adminHealthy));
+      if (c.envHealthy > 0) {
+        if (c.greenRate >= 40 && c.pollutionRate < 10) add(tr("环境治理"), c.envHealthy + tr(" 座环保局守护环境，绿化达标、污染低，满意度有加成（上限 +6）"), Math.min(6, c.envHealthy * 2));
+        else if (c.pollutionRate >= 30) add(tr("环境治理"), c.envHealthy + tr(" 座环保局：污染太高，环境治理跟不上"), -c.envHealthy);
       }
-      if (c.counts.attraction > 0) add(tr("旅游景点"), c.counts.attraction + tr(" 座景点吸引游客，城市更有名气（上限 +3）"), Math.min(3, c.counts.attraction));
+      if (c.attractionHealthy > 0) add(tr("旅游景点"), c.attractionHealthy + tr(" 座景点吸引游客，城市更有名气（上限 +3）"), Math.min(3, c.attractionHealthy));
       if (c.counts.factory > 0 && c.resCount > 0) {
         if (c.pollutedHomes > 0)
           add(tr("工厂污染"), c.pollutedHomes + "/" + c.resCount + tr(" 栋住宅还受着污染（半径 2 格，越近越重，扣分加重，上限 -28）") + (c.totalOffset > 0 ? tr("；公园已帮全城住宅抵消 ") + fmtNum(c.totalOffset) + tr(" 点污染") : ""), -Math.min(28, c.totalRemain / c.resCount * 8.5));
@@ -9377,9 +9381,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         case tr("消防安全"): return tr("消防站 ") + c.counts.fire + tr(" 座 × 2 分，上限 +4 分。");
         case tr("文化生活"): return tr("图书馆 ") + c.counts.library + tr(" 座 × 1.5 分，上限 +3 分。图书馆还按等级提供教育覆盖（1 级 80 人、每升一级 +64 人，当前共 ") + c.libraryService + tr(" 人），计入下面的受教育度。");
         case tr("教育水平"): return tr("受教育度 =（学校覆盖 ") + c.schoolService + tr(" 人 + 图书馆覆盖 ") + c.libraryService + tr(" 人）÷ 人口 ") + S.pop + tr(" 人 = ") + c.education + tr("%（封顶 100%），受教育人数约 ") + c.eduPeople + tr(" 人；受教育度 × 0.035 分，拉满也只 +3.5 分。学校 1 级覆盖 150 人、每升一级 +120 人，图书馆 1 级 80 人、每升一级 +64 人——升级后覆盖人数、受教育人数和受教育度都会涨，商业/办公/工厂的收入加成（当前 +") + c.eduBonusPct + tr("%）也跟着变。");
-        case tr("行政管理"): return c.counts.admin + tr(" 座行政楼 × 1 分，上限 +5 分；行政楼等级之和 = 城市总体发展水平，每级全城收入 +2%（上限 +20%）。");
+        case tr("行政管理"): return c.adminHealthy + tr(" 座行政楼 × 1 分，上限 +5 分；行政楼等级之和 = 城市总体发展水平，每级全城收入 +2%（上限 +20%）。");
         case tr("环境治理"): return c.greenRate >= 40 && c.pollutionRate < 10 ? tr("绿化率 ≥40% 且污染率 <10% 时，每座环保局 +2 分，上限 +6 分；每座环保局还削减全城污染 5%（上限 −20%）。") : tr("污染率 ≥30% 时，每座环保局 −1 分；每座环保局仍削减全城污染 5%（上限 −20%）。");
-        case tr("旅游景点"): return c.counts.attraction + tr(" 座景点 × 1 分，上限 +3 分；每座景点每月还有旅游收入 60 × 等级系数 ×（1+绿化率）。");
+        case tr("旅游景点"): return c.attractionHealthy + tr(" 座景点 × 1 分，上限 +3 分；每座景点每月还有旅游收入 60 × 等级系数 ×（1+绿化率）。");
         case tr("工厂污染"): return tr("全城住宅剩余污染平均值 × 8.5 分扣分，上限 −28 分；被公园抵消掉的污染不计入。");
         case tr("工厂选址好"): return tr("有工厂、且没有住宅受污染、也没有住宅靠公园净化时，固定 +1 分。");
         case tr("公园净化"): return tr("被公园完全净化的住宅 ") + c.cleaned + tr(" 栋 × 1.5 分，上限 +4 分。");
