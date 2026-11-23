@@ -8902,7 +8902,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     }
     /* 给行人规划下一段行程：随机挑一个至少隔 4 个路口的目的地路口，
        用 BFS 规划沿路网的最短路线 */
-    function pedPlanRoute(p) {
+    function pedPlanRoute(p, now) {
       var from = p.node, dest = from;
       for (var tries = 0; tries < 12; tries++) {
         var cand = roadNodeId(Math.floor(Math.random() * ROAD_N), Math.floor(Math.random() * ROAD_N));
@@ -8911,8 +8911,42 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         dest = cand;
       }
       if (dest === from) dest = (from === roadNodeId(0, 0)) ? roadNodeId(ROAD_N - 1, ROAD_N - 1) : roadNodeId(0, 0);
-      p.route = planRoadRoute(from, dest);
+      var route = planRoadRoute(from, dest);
+      /* 掉头避让：行人因车掉头后 30 秒内不再走回那条街。若新路线第
+         一段就是被避开的那条街，强制第一步改走一条横街，再从那里
+         重新规划到目的地——随机挑目的地时直接否决整条路线会经常
+         12 次都撞上同一条街、最后只能用回被避开的街；改走第一步
+         则总能避开（每个路口都有横街），也不会把行人困在原地。 */
+      if (p.avoidAxis && now != null && now < (p.avoidUntil || 0) && route.length >= 2) {
+        var fs = firstSegStreet(route);
+        if (fs && fs.axis === p.avoidAxis && Math.abs(fs.street - p.avoidStreet) < 0.01) {
+          var a = roadNodeXY(from);
+          var bestRoute2 = null, bestLen2 = -1;
+          var nbs = [[a[0] + 1, a[1]], [a[0] - 1, a[1]], [a[0], a[1] + 1], [a[0], a[1] - 1]];
+          for (var k = 0; k < 4; k++) {
+            var nx = nbs[k][0], nz = nbs[k][1];
+            if (nx < 0 || nz < 0 || nx >= ROAD_N || nz >= ROAD_N) continue;
+            var segAxis, segStreet;
+            if (nz === a[1]) { segAxis = "x"; segStreet = streetCoord(a[1]); }
+            else { segAxis = "z"; segStreet = streetCoord(a[0]); }
+            if (segAxis === p.avoidAxis && Math.abs(segStreet - p.avoidStreet) < 0.01) continue;
+            var r2 = planRoadRoute(roadNodeId(nx, nz), dest);
+            if (r2.length > bestLen2) { bestLen2 = r2.length; bestRoute2 = r2; }
+          }
+          if (bestRoute2) route = [from].concat(bestRoute2);
+        }
+      }
+      p.route = route;
       p.seg = 0;
+      p.keepLane = null;
+    }
+    /* 路线第一段所在的街道（轴线 + 街道坐标），供掉头避让判断用 */
+    function firstSegStreet(route) {
+      if (!route || route.length < 2) return null;
+      var a = roadNodeXY(route[0]), b = roadNodeXY(route[1]);
+      if (b[0] !== a[0]) return { axis: "x", street: streetCoord(a[1]) };
+      if (b[1] !== a[1]) return { axis: "z", street: streetCoord(a[0]) };
+      return null;
     }
     /* 当前路段的前进方向（单位向量，沿街道轴线） */
     function pedDirVec(p) {
@@ -8930,11 +8964,14 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (d[1] !== 0) return [-lane * d[1], 0];
       return [0, 0];
     }
-    /* 当前路段的目标点：下一个路口（靠右分道线上） */
+    /* 当前路段的目标点：下一个路口（靠右分道线上）。掉头后 keepLane
+       有值时按掉头那一刻行人所在的同一侧走（见 ped 移动循环里的
+       掉头逻辑），不按方向重算右侧——否则掉头要斜穿整条街，第一步
+       就可能踩进那辆停住的车的包围盒，掉头也走不动。 */
     function pedTarget(p) {
       var b = roadNodeXY(p.route[p.seg + 1]);
       var d = pedDirVec(p);
-      var off = pedLaneOffset(d, p.lane);
+      var off = p.keepLane || pedLaneOffset(d, p.lane);
       return [streetCoord(b[0]) + off[0], streetCoord(b[1]) + off[1]];
     }
     var SKIN_TONES = [0xf0c8a0, 0xe0aa7e, 0xc98a5e, 0xf5d3ae];
@@ -9006,6 +9043,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
                     lane: 0.07 + (i % 3) * 0.015,
                     x: 0, z: 0,
                     speed: 0.22 + Math.random() * 0.25, phase: Math.random() * 6,
+                    /* 掉头防死锁（行人遇车死锁修复）：blockedT 为行人连续被车
+                       挡住的时间（秒）；avoidAxis/avoidStreet/avoidUntil 为
+                       掉头后 30 秒内不再走的那条街；keepLane 为掉头后原路
+                       返回时保持的同一侧横向偏移（见 pedTarget）。 */
+                    blockedT: 0, avoidAxis: null, avoidStreet: null, avoidUntil: 0, keepLane: null,
                     /* 摆动区分：高瘦款小步慢摆、敦实款大步快摆、儿童款步频更快 */
                     freq: isChild ? 8.4 : (pStyle === 1 ? 6.2 : pStyle === 2 ? 7.8 : 7),
                     amp: pStyle === 1 ? 0.42 : pStyle === 2 ? 0.58 : 0.5,
@@ -9229,7 +9271,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       });
       peds.forEach(function (p, i2) {
         if (!p.g.visible) return;
-        if (!p.route || p.seg >= p.route.length - 1) pedPlanRoute(p);
+        if (!p.route || p.seg >= p.route.length - 1) pedPlanRoute(p, time);
         var tgt = pedTarget(p);
         var mdx = tgt[0] - p.x, mdz = tgt[1] - p.z;
         var mdist = Math.hypot(mdx, mdz);
@@ -9239,13 +9281,13 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           p.x = tgt[0]; p.z = tgt[1];
           p.node = p.route[p.seg + 1];
           p.seg++;
-          if (p.seg >= p.route.length - 1) pedPlanRoute(p);
+          if (p.seg >= p.route.length - 1) pedPlanRoute(p, time);
         } else {
           var nxP = p.x + mdx / mdist * mstep, nzP = p.z + mdz / mdist * mstep;
           /* 行人也不许走进车身：下一步会踏进任何一辆车的包围盒
              （车身 + 0.10 边距）就原地等一等，车开走再走——
              车辆礼让是双向的，两边都不许穿模 */
-          var pedBlocked = false;
+          var pedBlocked = false, blockingCar = null;
           for (var cb = 0; cb < cars.length; cb++) {
             var cc2 = cars[cb]; if (!cc2.g.visible || !cc2.seg) continue;
             var latNow = Math.abs(cc2.seg.axis === "x" ? (p.z - cc2.g.position.z) : (p.x - cc2.g.position.x));
@@ -9253,9 +9295,27 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             if (latNow < (cc2.halfWid || 0.105) + 0.1 && lonNow < (cc2.halfLen || 0.26) + 0.1) continue;
             var latNx = Math.abs(cc2.seg.axis === "x" ? (nzP - cc2.g.position.z) : (nxP - cc2.g.position.x));
             var lonNx = Math.abs(cc2.seg.axis === "x" ? (nxP - cc2.g.position.x) : (nzP - cc2.g.position.z));
-            if (latNx < (cc2.halfWid || 0.105) + 0.1 && lonNx < (cc2.halfLen || 0.26) + 0.1) { pedBlocked = true; break; }
+            if (latNx < (cc2.halfWid || 0.105) + 0.1 && lonNx < (cc2.halfLen || 0.26) + 0.1) { pedBlocked = true; blockingCar = cc2; break; }
           }
-          if (!pedBlocked) { p.x = nxP; p.z = nzP; }
+          if (!pedBlocked) { p.x = nxP; p.z = nzP; p.blockedT = 0; }
+          else {
+            /* 掉头防死锁：行人被同一辆车连续挡住超过 2 秒，说明车也
+               在为行人停着、两边互锁谁都动不了——行人原路掉头让开。
+               掉头保持原地位置与同一侧（keepLane 记下当前横向偏移），
+               到路口再按避让规则重新规划，30 秒内不再走回那条街。 */
+            p.blockedT = (p.blockedT || 0) + 0.016;
+            if (p.blockedT > 2 && p.route && p.seg < p.route.length - 1) {
+              var fromNode = p.route[p.seg], toNode = p.route[p.seg + 1];
+              var na = roadNodeXY(fromNode), nb = roadNodeXY(toNode);
+              if (na[1] === nb[1]) p.keepLane = [0, p.z - streetCoord(na[1])];
+              else p.keepLane = [p.x - streetCoord(na[0]), 0];
+              p.route = [toNode, fromNode]; p.seg = 0;
+              if (blockingCar && blockingCar.seg) {
+                p.avoidAxis = blockingCar.seg.axis; p.avoidStreet = blockingCar.seg.street; p.avoidUntil = time + 30;
+              }
+              p.blockedT = 0;
+            }
+          }
         }
         var dv = pedDirVec(p);
         if (dv[0] > 0) p.g.rotation.y = Math.PI / 2;
