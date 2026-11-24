@@ -237,10 +237,11 @@
       }
       #btnFreeView:disabled { opacity: .45; }
       #freeViewPanel {
-        position: absolute; left: 8px; right: 8px; bottom: 48px; z-index: 5;
+        margin-top: 8px;
         background: var(--surface); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(35,64,42,.10);
-        padding: 10px 12px; font-size: 12px; max-height: 72%; overflow: auto;
+        padding: 10px 12px; font-size: 12px;
       }
+      .fv-status { margin: 0 0 6px; color: var(--dim); }
       .fv-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
       .fv-paused { color: var(--dim); font-weight: 400; font-size: 12px; }
       .fv-exit { margin-left: auto; }
@@ -711,24 +712,25 @@
       <section aria-label="城市地图" style="margin-top:12px">
         <div id="tut-map">
           <div id="stageWrap">
-            <canvas id="stage" aria-label="3D 城市地图：拖动旋转视角，滚轮或双指缩放，点地块进行建设"></canvas>
+            <canvas id="stage" aria-label="3D 城市地图：拖动平移视角，双指旋转转动，捏合或滚轮缩放，点地块进行建设"></canvas>
             <div id="stageFallback" hidden>3D 视图没能加载，可以用下面的「地块列表」照常建设经营。</div>
-            <span class="chip-tl" id="stageChip">3D 城市 · 拖动旋转 · 点地块建设</span>
+            <span class="chip-tl" id="stageChip">3D 城市 · 拖动平移 · 双指转动 · 点地块建设</span>
             <span class="chip-time" id="timeChip">白天</span>
             <button type="button" id="btnResetCam" aria-label="重置3D视角">⟲ 重置视角</button>
             <button type="button" id="btnFreeView" aria-label="进入自由观景">自由观景</button>
-            <div id="freeViewPanel" hidden>
-              <div class="fv-head"><span>自由观景</span><span class="fv-paused">经营已暂停</span><button type="button" id="btnFreeViewExit" class="seg-btn fv-exit">退出观景</button></div>
-              <p class="fv-hint">拖动地图平移，双指或滚轮缩放；点地块不建设</p>
-              <div class="fv-row"><span class="fv-label">时间</span><input type="range" id="fvTime" min="0" max="24" step="0.5" value="8" aria-label="观景时间" /><span class="fv-val" id="fvTimeVal">08:00</span></div>
-              <div class="fv-row"><span class="fv-label">季节</span><button type="button" id="fvSeason-spring" class="seg-btn">春</button><button type="button" id="fvSeason-summer" class="seg-btn">夏</button><button type="button" id="fvSeason-autumn" class="seg-btn">秋</button><button type="button" id="fvSeason-winter" class="seg-btn">冬</button></div>
-              <div class="fv-row"><span class="fv-label">天气</span><button type="button" id="fvWeather-sunny" class="seg-btn">晴</button><button type="button" id="fvWeather-cloudy" class="seg-btn">多云</button><button type="button" id="fvWeather-rain" class="seg-btn">小雨</button><button type="button" id="fvWeather-storm" class="seg-btn">暴雨</button><button type="button" id="fvWeather-fog" class="seg-btn">大雾</button><button type="button" id="fvWeather-snow" class="seg-btn">降雪</button></div>
-              <div class="fv-row"><span class="fv-label">方位角</span><input type="range" id="fvAz" min="0" max="360" step="1" value="45" aria-label="镜头方位角" /><span class="fv-val" id="fvAzVal">45°</span></div>
-              <div class="fv-row"><span class="fv-label">仰角</span><input type="range" id="fvEl" min="10" max="75" step="1" value="36" aria-label="镜头仰角" /><span class="fv-val" id="fvElVal">36°</span></div>
-              <div class="fv-row"><span class="fv-label">镜头距离</span><input type="range" id="fvDist" min="9" max="38" step="0.5" value="23" aria-label="镜头距离" /><span class="fv-val" id="fvDistVal">23</span></div>
-              <div class="fv-row"><button type="button" id="btnFreeViewReset" class="seg-btn">恢复进入前视角</button></div>
-            </div>
           </div>
+        </div>
+        <div id="freeViewPanel" hidden>
+          <p class="fv-status" id="fvStatus"></p>
+          <div class="fv-head"><span>自由观景</span><span class="fv-paused">经营已暂停</span><button type="button" id="btnFreeViewExit" class="seg-btn fv-exit">退出观景</button></div>
+          <p class="fv-hint">拖动地图平移，双指或滚轮缩放；点地块不建设</p>
+          <div class="fv-row"><span class="fv-label">时间</span><input type="range" id="fvTime" min="0" max="24" step="0.5" value="8" aria-label="观景时间" /><span class="fv-val" id="fvTimeVal">08:00</span></div>
+          <div class="fv-row"><span class="fv-label">季节</span><button type="button" id="fvSeason-spring" class="seg-btn">春</button><button type="button" id="fvSeason-summer" class="seg-btn">夏</button><button type="button" id="fvSeason-autumn" class="seg-btn">秋</button><button type="button" id="fvSeason-winter" class="seg-btn">冬</button></div>
+          <div class="fv-row"><span class="fv-label">天气</span><button type="button" id="fvWeather-sunny" class="seg-btn">晴</button><button type="button" id="fvWeather-cloudy" class="seg-btn">多云</button><button type="button" id="fvWeather-rain" class="seg-btn">小雨</button><button type="button" id="fvWeather-storm" class="seg-btn">暴雨</button><button type="button" id="fvWeather-fog" class="seg-btn">大雾</button><button type="button" id="fvWeather-snow" class="seg-btn">降雪</button></div>
+          <div class="fv-row"><span class="fv-label">方位角</span><input type="range" id="fvAz" min="0" max="360" step="1" value="45" aria-label="镜头方位角" /><span class="fv-val" id="fvAzVal">45°</span></div>
+          <div class="fv-row"><span class="fv-label">仰角</span><input type="range" id="fvEl" min="10" max="75" step="1" value="36" aria-label="镜头仰角" /><span class="fv-val" id="fvElVal">36°</span></div>
+          <div class="fv-row"><span class="fv-label">镜头距离</span><input type="range" id="fvDist" min="9" max="38" step="0.5" value="23" aria-label="镜头距离" /><span class="fv-val" id="fvDistVal">23</span></div>
+          <div class="fv-row"><button type="button" id="btnFreeViewReset" class="seg-btn">恢复进入前视角</button></div>
         </div>
         <button type="button" id="mapResize" class="map-resize" aria-label="拖动调整3D地图高度：上下拖动拉高或压矮地图，双击恢复默认高度，聚焦后也可以用上下方向键调整">
           <span class="mr-arrow" aria-hidden="true">↕</span><span>拖动调整地图高度</span><span aria-hidden="true">· 双击复位</span>
@@ -737,7 +739,7 @@
           <summary>地块列表（点选建设，适合键盘和读屏操作）</summary>
           <div id="flatGrid" role="grid" aria-label="12乘12城市地块"></div>
         </details>
-        <p class="map-caption">这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。</p>
+        <p class="map-caption">这是你的 3D 城市：拖动可以平移视角，双指旋转可以转动视角，捏合或滚轮缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。</p>
       </section>
 
       <!-- ---------- 地块操作（未选地块时的说明卡；弹窗本体在页面末尾） ---------- -->
@@ -818,6 +820,10 @@
           <button type="button" id="btnS3Tra" class="seg-btn" aria-pressed="false">交通负荷：开</button>
           <span class="s3-note">开：地图按 3×3 分 9 区统计出行与负荷，拥堵超 100% 时商业收入最多 −10%。关：不统计、不扣钱。</span>
         </div>
+        <div class="s3-row">
+          <button type="button" id="btnS5Hints" class="seg-btn" aria-pressed="false">新手提示：关</button>
+          <span class="s3-note">默认关：开后偶尔给一条新手提示（首次建造、资金紧张、人口停滞、拥堵、发展建议），每月最多 1 条，每种最多 3 次；关时一条提示都不出。</span>
+        </div>
         <div class="width-row" id="stage4Row">
           <span class="wlabel">阶段四 · 动态环境</span>
           <span class="width-note">昼夜循环默认开；开关与时间只记在本机浏览器里，不进存档码。</span>
@@ -893,7 +899,7 @@
           <p>9. 人口达到 50 / 150 / 300 / 600 / 1000 / 1600，城市会逐级升级并拿到拨款奖励。</p>
           <p>10. 高级住宅区：一栋能住 30 人，是普通住宅（12 人）的 2.5 倍，地不够用时最省地；造价 320、维护和耗电也更高，居住品质好，每栋给满意度 +2（上限 +6）。它和普通住宅一样受工厂污染、位置限制和生活便利规则影响——别把它盖在工厂旁边，学校、商业街、医院也要盖近一点。</p>
           <p>11. 资金跌破 -300 金币城市会被托管，本局结束。进度自动保存在本机浏览器里，打开接着玩；存档码留作备份，导出后粘贴回来也能接着玩。</p>
-          <p>12. 地图是 3D 的（12×12，一共 144 块地）：拖动旋转、滚轮或双指缩放、点地块建设，右下角按钮重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才出现（最多 8 辆），只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上没人也没车。</p>
+          <p>12. 地图是 3D 的（12×12，一共 144 块地）：拖动平移、双指旋转转动、捏合或滚轮缩放、点地块建设，右下角按钮重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才出现（最多 8 辆），只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上没人也没车。</p>
           <p>13. 大事件：推进月份时约三成概率碰上大事件（暴雨内涝、流感大流行、工厂排污上新闻、大企业入驻、抢人大战……城市规模和建筑不同，能碰上的事件也不同）。大事件不会自动结算，会弹窗让你在几个处理方案里拍板：有的花钱买民心，有的省钱但得罪人，有的还能赚一笔或招来人口。每个方案只显示标题和一句话说明，不预先告诉你会花多少钱、涨多少口碑、来多少人——后果选完才揭晓，选项顺序每次打乱。事件共 18 种（新增地铁规划、大学分校、剧组取景、马拉松、老街保护、骑手风波、河道死鱼、社区食堂等）。【花费随收入提高】所有花钱方案（大事件、天灾人祸、小随机事件的支出都一样）不再是固定价，按城市规模动态缩放：缩放收入 = 每月总收入（税收 + 商业，顶部数据行能看）+ 当前资金的 4%；缩放收入 200 以内倍率 ×1（开局按基础价），超过 200 后倍率 = 1 +（缩放收入 − 200）÷ 180，保留 2 位小数（例如 380 → ×2.00、580 → ×3.11），封顶 ×4，实际花费 = 基础价 × 倍率（取整到 10）。花费倍率按这套公式在弹窗时冻结（上限 ×4），结算时照旧使用，选前不显示倍率和实际花费；方案赚到的钱（签约费、罚款、节庆收入）不缩放。收入越高、处理事件越贵，中后期要提前留足应急钱。你每次的选择都会攒下「市民口碑」——长期生效的满意度修正（累计最高 ±25），在「满意度解析」里单列为「大事抉择」一项：一路当好市长，满意度会一直受益；一路糊弄，市民也会一直记着。刚处理过的事件短期内不会重复出现。另外事件招来的人口也收紧了：企业入驻、抢人补贴这类正向迁入只按一半生效，处理不当的人口流失按 1.3 倍生效。</p>
           <p>14. 建筑统计与一键升级：地图上方的「建筑统计」栏数清全城有多少栋建筑、分哪几种、每种各有几栋、各在几级、每月维护花多少、总共提供多少容量 / 岗位 / 发电，还剩多少空地。升级不用一栋栋点：每种建筑一行末尾有「全部升一级」，栏底还有「一键全部升一级」和「一键全部升满级」，按钮上写明总花费；钱不够时按地块顺序先升能升的、跳过不够的，不会把资金扣成负数，攒够钱再点一次就行。</p>
           <p>15. 新建筑：银行（7 个岗位，金融收入约 45/月，和商业一样吃受教育度加成）、游乐园（12 个岗位，门票约 35/月，还给满意度加分）、污水处理厂（5 个岗位，每座削弱全城工厂污染 15%，多座叠加最多削弱 60%，住宅的污染值会直接变小）。点任意地块弹出操作界面：空地能看着每种建筑的造价、容量、岗位、耗电、维护挑着盖；已有建筑列出当前等级的数值和升到下一级的数值对比，升级、拆除都在弹窗里办。</p>
@@ -1684,7 +1690,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "10. 高级住宅区：一栋能住 30 人，是普通住宅（12 人）的 2.5 倍，地不够用时最省地；造价 320、维护和耗电也更高，居住品质好，每栋给满意度 +2（上限 +6）。它和普通住宅一样受工厂污染、位置限制和生活便利规则影响——别把它盖在工厂旁边，学校、商业街、医院也要盖近一点。": "10. Premium Residential District: one building houses 30 people — 2.5× an ordinary home (12 people), so it saves the most land when space is tight. It costs 320, with higher upkeep and power use, but living quality is high: +2 satisfaction each (max +6). It follows the same factory-pollution, placement and convenience rules as ordinary homes — don't build it next to a factory, and keep schools, commercial streets and hospitals close.",
 "11. 资金跌破 -300 金币城市会被托管，本局结束。进度自动保存在本机浏览器里，打开接着玩；存档码留作备份，导出后粘贴回来也能接着玩。": "11. If funds fall below −300 coins the city is put under administration and the run ends. Progress auto-saves in this browser — reopen to continue; the save code is a backup, and a pasted code resumes the game too.",
 "12 个岗位；门票收入约 35/月，还能提升市民幸福感": "12 jobs; ticket income about 35/month, and it lifts citizens' happiness",
-"12. 地图是 3D 的（12×12，一共 144 块地）：拖动旋转、滚轮或双指缩放、点地块建设，右下角按钮重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才出现（最多 8 辆），只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上没人也没车。": "12. The map is 3D (12×12, 144 tiles in total): drag to rotate, scroll or pinch to zoom, tap a tile to build; the button at the bottom right resets the view. Buildings grow taller each level, with visible windows, signs and details. Tiles are spaced apart — the gaps are roads with dashed centre lines. Pedestrians are citizens out for a stroll: more population means more people on the street (max 36). They stay on roads, turn at intersections along planned routes, and never cut through buildings. Cars appear once population reaches 60 and buildings reach 10 (max 8), driving back and forth only near built-up roads. The map's edge is wasteland and forest, not lawn. An empty city has no people and no cars.",
+"12. 地图是 3D 的（12×12，一共 144 块地）：拖动平移、双指旋转转动、捏合或滚轮缩放、点地块建设，右下角按钮重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才出现（最多 8 辆），只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上没人也没车。": "12. The map is 3D (12×12, 144 tiles in total): drag to pan, twist with two fingers to rotate, pinch or scroll to zoom, tap a tile to build; the button at the bottom right resets the view. Buildings grow taller each level, with visible windows, signs and details. Tiles are spaced apart — the gaps are roads with dashed centre lines. Pedestrians are citizens out for a stroll: more population means more people on the street (max 36). They stay on roads, turn at intersections along planned routes, and never cut through buildings. Cars appear once population reaches 60 and buildings reach 10 (max 8), driving back and forth only near built-up roads. The map's edge is wasteland and forest, not lawn. An empty city has no people and no cars.",
 "12乘12城市地块": "12×12 city tiles",
 "13. 大事件：推进月份时约三成概率碰上大事件（暴雨内涝、流感大流行、工厂排污上新闻、大企业入驻、抢人大战……城市规模和建筑不同，能碰上的事件也不同）。大事件不会自动结算，会弹窗让你在几个处理方案里拍板：有的花钱买民心，有的省钱但得罪人，有的还能赚一笔或招来人口。每个方案只显示标题和一句话说明，不预先告诉你会花多少钱、涨多少口碑、来多少人——后果选完才揭晓，选项顺序每次打乱。事件共 18 种（新增地铁规划、大学分校、剧组取景、马拉松、老街保护、骑手风波、河道死鱼、社区食堂等）。【花费随收入提高】所有花钱方案（大事件、天灾人祸、小随机事件的支出都一样）不再是固定价，按城市规模动态缩放：缩放收入 = 每月总收入（税收 + 商业，顶部数据行能看）+ 当前资金的 4%；缩放收入 200 以内倍率 ×1（开局按基础价），超过 200 后倍率 = 1 +（缩放收入 − 200）÷ 180，保留 2 位小数（例如 380 → ×2.00、580 → ×3.11），封顶 ×4，实际花费 = 基础价 × 倍率（取整到 10）。花费倍率按这套公式在弹窗时冻结（上限 ×4），结算时照旧使用，选前不显示倍率和实际花费；方案赚到的钱（签约费、罚款、节庆收入）不缩放。收入越高、处理事件越贵，中后期要提前留足应急钱。你每次的选择都会攒下「市民口碑」——长期生效的满意度修正（累计最高 ±25），在「满意度解析」里单列为「大事抉择」一项：一路当好市长，满意度会一直受益；一路糊弄，市民也会一直记着。刚处理过的事件短期内不会重复出现。另外事件招来的人口也收紧了：企业入驻、抢人补贴这类正向迁入只按一半生效，处理不当的人口流失按 1.3 倍生效。": "13. Major events: advancing a month has about a 30% chance of a major event (floods, flu pandemics, factory pollution in the news, big companies moving in, talent wars…). Which events can appear depends on city size and buildings. Major events never settle themselves — a dialog asks you to pick one of several responses: some buy goodwill with money, some save money but offend people, some even earn money or attract residents. Each option shows only its title and a one-line description — no advance word on cost, approval gained, or people attracted: consequences are revealed only after you choose, and the option order is shuffled every time. There are 18 event types (new: metro planning, university branch, film crew, marathon, old-street protection, courier dispute, dead fish in the river, community canteen…). [Costs scale with income] Every paid option (major events, disasters and small random events alike) is no longer a fixed price — it scales with city size. Scaled income = monthly total income (taxes + commercial, visible in the top stats) + 4% of current funds. Up to 200 scaled income the multiplier is ×1 (base price at the start); above 200, multiplier = 1 + (scaled income − 200) ÷ 180, kept to 2 decimals (e.g. 380 → ×2.00, 580 → ×3.11), capped at ×4. Actual cost = base price × multiplier (rounded to 10). The multiplier is frozen when the dialog opens using this formula (capped at ×4) and used for settlement as before, but neither the multiplier nor the actual costs are shown before you choose. Money earned by an option (signing fees, fines, festival income) is not scaled. The richer the city, the pricier the response — keep emergency money aside from the mid-game on. Every choice builds up “public approval” — a long-term satisfaction modifier (cumulative max ±25), listed under “Big Decisions” in the satisfaction breakdown: govern well and satisfaction benefits for the long run; cut corners and citizens remember. Recently handled events won't repeat soon. Population from events is tightened too: positive move-ins from company arrivals or talent subsidies only count at half, while population lost through bad handling counts at 1.3×.",
 "14 个岗位，月入约 45；受教育度越高赚得越多": "14 jobs; income about 45/month — the higher the education level, the more it earns",
@@ -1715,8 +1721,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "33. 隐藏彩蛋：图鉴里有 10 个彩蛋等你撞——特定人口数（111、520）、特定日期（跨年）、特定建筑组合（学校+图书馆+办公楼、5 座公园、双警局+双消防站）、吉利资金数、三座 5 级建筑、甚至「空城之计」都有。触发时弹提示、发小奖励、记进日志；没发现的彩蛋在图鉴里只显示「？？？」和一条线索，收集进度随存档码保存。": "33. Hidden easter eggs: 10 easter eggs wait in the collection — specific population counts (111, 520), specific dates (New Year), specific building combos (school + library + office, 5 parks, two police stations + two fire stations), lucky funds numbers, three Lv.5 buildings, even an “empty city” trick. Triggering one pops a notice, pays a small reward and logs it. Undiscovered eggs show only “???” plus one clue in the collection, and collection progress is saved with the save code.",
 "34. 面板收起 + 详情页：市政日志、满意度解析和建筑统计都默认收起，不再一直占页面——满意度解析收起时只留标题和当前总分，建筑统计收起时只留标题和建筑总数 / 维护合计，点标题旁的「展开 ▾」才看明细（加减分项、市民需求、建筑问题、分类型统计和一键升级都在展开区里），再点「收起 ▴」收回去；日志展开后有筛选标签（全部｜建筑｜人口｜灾害｜财政｜城市）。详情页无处不在：点建筑看建筑详情，点顶部城市等级标题看等级详情，点 HUD 里的详情按钮看指标构成，点成就/彩蛋看图鉴详情，点任意一条日志看那条记录的详情页（月份、分类、全文）——主页面只留关键数字，细账都在详情页里。": "34. Collapsible panels + detail pages: the city log, satisfaction breakdown and building stats are collapsed by default instead of hogging the page — the breakdown shows just its title and current total, building stats just its title and building count / upkeep total. Tap “Expand ▾” beside the title for the details (bonus/deduction items, citizen needs, building problems, per-type stats and bulk upgrade are all in the expanded area); tap “Collapse ▴” to fold it back. The expanded log has filter tabs (All | Buildings | Population | Disasters | Finance | City). Detail pages are everywhere: tap a building for its details, the city-level title at the top for level details, a “Details” button in the HUD for a metric's breakdown, an achievement/easter egg for its collection details, or any log entry for that record's detail page (month, category, full text). The main page keeps only key numbers — the fine print is all in detail pages.",
 "350 金币补贴池，新落户和返乡的年轻人都能领。": "A 350-coin subsidy pool — newly settled and returning young people can all claim it.",
-"3D 城市 · 拖动旋转 · 点地块建设": "3D City · Drag to rotate · Tap a tile to build",
-"3D 城市地图：拖动旋转视角，滚轮或双指缩放，点地块进行建设": "3D city map: drag to rotate, scroll or pinch to zoom, tap a tile to build",
+"3D 城市 · 拖动平移 · 双指转动 · 点地块建设": "3D City · Drag to pan · Twist to rotate · Tap a tile to build",
+"3D 城市地图：拖动平移视角，双指旋转转动，捏合或滚轮缩放，点地块进行建设": "3D city map: drag to pan, twist with two fingers to rotate, pinch or scroll to zoom, tap a tile to build",
 "3D 渲染库加载失败，已切换到地块列表模式——用下面展开的「地块列表」照样可以点选每一块地建设。": "The 3D rendering library failed to load — switched to tile-list mode. Use the “Tile List” below to tap any tile and build as usual.",
 "3D 视图没能加载，可以用下面的「地块列表」照常建设经营。": "The 3D view failed to load — use the “Tile List” below to build and manage as usual.",
 "4 个岗位；1 级教育覆盖 150 人，每升一级多覆盖约 120 人，受教育人数和受教育度跟着涨；靠近住宅上学便利，加满意度": "4 jobs; education coverage 150 people at Lv.1, about 120 more per level — educated residents and the education level rise with it; close to homes it adds school convenience and satisfaction",
@@ -3169,7 +3175,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "这台设备没能启动 3D 渲染，不过没关系——用下面展开的「地块列表」照样可以点选每一块地建设。": "This device couldn't start 3D rendering — no problem: use the “Tile List” below to tap and build on any tile.",
 "这块已经有建筑了——关掉面板，点一块发光的空地": "This tile already has a building — close the panel and tap a glowing empty tile",
 "这座已经满级，覆盖已拉满（": "This one is already max level; coverage is maxed out (",
-"这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。": "This is your 3D city: drag to rotate the view, scroll or pinch to zoom, and tap any tile to build or manage. Higher-level buildings are taller. Between tiles are roads with dashed centre lines and street lamps; as population grows, more pedestrians stroll the streets — each plans a route before setting off, keeps right along the street, turns only at intersections, walks around every building without cutting across tiles, and slows down to make way for others. Vehicles brake by the real distance from their front bumper to pedestrians: if someone is still ahead, they slow down and stop to yield, rechecking each step's landing spot, never overlapping a pedestrian, and keeping a bumper's distance from the car ahead. Cars only appear once population reaches 60 and buildings reach 10, and they only drive back and forth near streets with buildings — never onto empty streets. Around the map is not lawn but wasteland and forest: yellow earth, dead trees, rocks and woods surround the city, and empty tiles are rough ground with soil patches and shrubs. Yellowed tiles on the map are within factory pollution range (deeper colour means worse): factories and homes can't be built next to each other, one tile apart means lighter pollution, two tiles apart means none at all. A park next to homes offsets pollution — higher level and closer to homes offsets more — and tiles fully cleaned by parks stop turning yellow; tap a factory to see its pollution zone. Homes near a school, commercial street and hospital all at once (within 2 tiles) get a green “convenient” marker: life is convenient, satisfaction higher. A building with a problem (bank financial turmoil, hospital overcrowding, untended park…) shows a red “⚠ Problem” marker above it — tap to pay to fix it; the longer you wait, the costlier it gets.",
+"这是你的 3D 城市：拖动可以平移视角，双指旋转可以转动视角，捏合或滚轮缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。": "This is your 3D city: drag to pan the view, twist with two fingers to rotate it, pinch or scroll to zoom, and tap any tile to build or manage. Higher-level buildings are taller. Between tiles are roads with dashed centre lines and street lamps; as population grows, more pedestrians stroll the streets — each plans a route before setting off, keeps right along the street, turns only at intersections, walks around every building without cutting across tiles, and slows down to make way for others. Vehicles brake by the real distance from their front bumper to pedestrians: if someone is still ahead, they slow down and stop to yield, rechecking each step's landing spot, never overlapping a pedestrian, and keeping a bumper's distance from the car ahead. Cars only appear once population reaches 60 and buildings reach 10, and they only drive back and forth near streets with buildings — never onto empty streets. Around the map is not lawn but wasteland and forest: yellow earth, dead trees, rocks and woods surround the city, and empty tiles are rough ground with soil patches and shrubs. Yellowed tiles on the map are within factory pollution range (deeper colour means worse): factories and homes can't be built next to each other, one tile apart means lighter pollution, two tiles apart means none at all. A park next to homes offsets pollution — higher level and closer to homes offsets more — and tiles fully cleaned by parks stop turning yellow; tap a factory to see its pollution zone. Homes near a school, commercial street and hospital all at once (within 2 tiles) get a green “convenient” marker: life is convenient, satisfaction higher. A building with a problem (bank financial turmoil, hospital overcrowding, untended park…) shows a red “⚠ Problem” marker above it — tap to pay to fix it; the longer you wait, the costlier it gets.",
 "这是定期找上门的随机城市事件：城市日常治理题——人口流入流出、福利政策、环境、商业、租金、养老、就业。应对不只是花钱：有的方案会直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板。花掉的钱立刻结算；「口碑」长期加进（或扣进）满意度；人口增减立刻生效（迁入减半、流失加重）。": "This is a random city event that drops by regularly: everyday governance topics — population flow, welfare policy, environment, commerce, rent, elder care, employment. Responding isn't just about spending: some plans adjust the tax rate directly (effective immediately once chosen), others fix weak spots by adding facilities or paying subsidies. Money spent settles immediately; “approval” feeds into satisfaction long-term; population changes take effect at once (move-ins halved, outflow heavier).",
 "这是平台的事，不管": "That's the platform's business — not ours",
 "这条记录发生在": "This record happened in ",
@@ -3590,7 +3596,20 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     "39. 四季变化（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「四季变化」开关，默认开。关时固定为春季外观；打开后季节随月份变化，每 3 个月换一季：春（第 0–2 月）植被鲜绿、公园树木带粉色花簇，夏（第 3–5 月）植被深绿、树冠更密，秋（第 6–8 月）植被黄橙、地面偏黄，冬（第 9–11 月）树木落叶只剩枝干、地面盖上积雪、部分建筑屋顶有薄雪；之后每年循环。天空仍按昼夜变化，季节只加一点暖色或冷色，夜晚灯光也不受影响。四季只改画面，不影响资金、人口、满意度等任何经营数值。地图上方的「时间」小标签打开四季后会显示当前季节。": "39. Seasonal changes (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Seasonal Changes” switch, on by default. Off means a fixed spring look. On, the season follows the months and changes every 3 months: spring (months 0–2) brings bright-green vegetation and pink flower clusters under the park trees; summer (months 3–5) brings deep-green vegetation and fuller crowns; autumn (months 6–8) turns vegetation yellow-orange and the ground yellowish; winter (months 9–11) leaves trees bare down to brown branches, covers the ground in snow and dusts some rooftops white; then it cycles every year. The sky still follows the day/night cycle — seasons only add a touch of warm or cool tint — and the night lights are unaffected. Seasons only change the visuals; funds, population, satisfaction and all other management numbers are untouched. With seasons on, the small “time” chip above the map also shows the current season.",
     "40. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。": "40. Weather effects (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Weather Effects” switch, on by default. On, each game day brings one weather — sunny, cloudy, light rain, heavy rain, fog or snow — fixed for a given day and season. Cloudy days turn the sky grey with a few clouds drifting slowly; light and heavy rain bring falling streaks (heavier rain is denser and darker); fog closes the view in and greys the scene; snow falls slowly. Weather only changes the visuals; funds, population, satisfaction, traffic, power, events and all other management numbers are untouched. Off means fixed sunny weather. With weather on, the small “time” chip above the map also shows the current weather.",
     "41. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。": "41. Dynamic street life (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Dynamic Street Life” switch, on by default. On, pedestrians no longer stroll evenly: in the daytime (07:00–17:00) commercial streets and parks are busy while industrial areas are quiet; at dusk (17:00–19:00) commercial streets stay lively and parks cool off a little; at night (19:00–05:00) pedestrians gather on the lit commercial streets while parks and industrial areas go quiet. Vehicles also run by type and district: trucks head mostly to industrial areas and rarely to parks, buses head mostly to commercial areas. Pedestrian totals still follow population (max 36) and vehicles stay at max 8 — only the distribution changes, no extra people or cars. Dynamic street life only changes the visuals; funds, population, satisfaction and all other management numbers are untouched. Off means pedestrians spread evenly again and vehicles go back to taking turns on the road segments as before.",
-    "42. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（原来是旋转），双指或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。": "42. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (it used to rotate) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.",
+    "42. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。": "42. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel below the map controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The control panel sits directly below the map and never covers it; its first line shows the viewing hint plus the current time, season and weather, and no status bar overlays the map. The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (dragging pans in the normal view too) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.",
+    "新手提示：开": "Beginner tips: On",
+    "新手提示：关": "Beginner tips: Off",
+    "默认关：开后偶尔给一条新手提示（首次建造、资金紧张、人口停滞、拥堵、发展建议），每月最多 1 条，每种最多 3 次；关时一条提示都不出。": "Off by default: when on, you get an occasional beginner tip (first build, tight funds, stalled population, congestion, development advice) — at most 1 per month and 3 of each kind; off means no tips at all.",
+    "第一栋建筑盖好了！接下来可以看看顶部资金和人口，跟着新手教程继续盖。": "Your first building is up! Check funds and population at the top, then keep following the tutorial.",
+    "资金有点紧，这个月还是入不敷出。先少盖点贵的，看看财政报表里哪块花得多。": "Funds are tight and this month still runs at a loss. Hold off on pricey builds and check the finance report to see what's costing most.",
+    "人口两个月没动了，是因为住房住满了。再盖住宅，空出位置才有人搬进来。": "Population hasn't moved in two months — housing is full. Build more homes so newcomers have somewhere to move into.",
+    "人口没有增长：住宅已经住满了，新市民搬不进来，盖几栋住宅就能继续涨人。": "Population isn't growing: housing is full — new residents can't move in. Build a few homes to keep growing.",
+    "人口没有增长：现在停电了，居民留不住，盖座发电厂恢复供电，人口才会回来。": "Population isn't growing: there's a power outage and residents won't stay. Build a power plant to restore supply and people will come back.",
+    "人口没有增长：岗位不够，失业的人多了，盖商业街或工厂多提供些岗位。": "Population isn't growing: there aren't enough jobs and unemployment is high. Build commercial streets or factories for more jobs.",
+    "人口两个月没动了，满意度还不到 55，来的人少。先把满意度提上去，看看满意度解析里扣分最多的是哪项。": "Population hasn't moved in two months and satisfaction is still under 55, so few people move in. Raise satisfaction first — the breakdown shows what's dragging it down most.",
+    "全城拥堵指数超过 100% 了，商业收入正在被压。可以在交通负荷里看看哪个区最堵。": "Citywide congestion is over 100% and it's squeezing commercial income. Check the traffic load view to see which zone is worst.",
+    "城市升级了！人口再往上走，记得补齐学校、医院这些配套，别只顾着盖房子。": "Your city just levelled up! As population grows, remember to add schools, hospitals and other services — not just more housing.",
+    "城市好几个月没长了。不妨换个方向试试：补住房、提满意度，或者看看城市发展报告找找原因。": "The city hasn't grown in months. Try a different angle: add housing, raise satisfaction, or check the city development report for clues.",
 };
     var I18N_REV = {
 " congested, ": " 个、繁忙 ",
@@ -3882,7 +3901,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "100 buildings citywide — even the ants moving house on the last empty tile queued up to see the new landmark.": "全城建筑达到 100 栋——最后一块空地的蚂蚁搬家时都排队参观了新地标。",
 "11. If funds fall below −300 coins the city is put under administration and the run ends. Progress auto-saves in this browser — reopen to continue; the save code is a backup, and a pasted code resumes the game too.": "11. 资金跌破 -300 金币城市会被托管，本局结束。进度自动保存在本机浏览器里，打开接着玩；存档码留作备份，导出后粘贴回来也能接着玩。",
 "12 jobs; ticket income about 35/month, and it lifts citizens' happiness": "12 个岗位；门票收入约 35/月，还能提升市民幸福感",
-"12. The map is 3D (12×12, 144 tiles in total): drag to rotate, scroll or pinch to zoom, tap a tile to build; the button at the bottom right resets the view. Buildings grow taller each level, with visible windows, signs and details. Tiles are spaced apart — the gaps are roads with dashed centre lines. Pedestrians are citizens out for a stroll: more population means more people on the street (max 36). They stay on roads, turn at intersections along planned routes, and never cut through buildings. Cars appear once population reaches 60 and buildings reach 10 (max 8), driving back and forth only near built-up roads. The map's edge is wasteland and forest, not lawn. An empty city has no people and no cars.": "12. 地图是 3D 的（12×12，一共 144 块地）：拖动旋转、滚轮或双指缩放、点地块建设，右下角按钮重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才出现（最多 8 辆），只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上没人也没车。",
+"12. The map is 3D (12×12, 144 tiles in total): drag to pan, twist with two fingers to rotate, pinch or scroll to zoom, tap a tile to build; the button at the bottom right resets the view. Buildings grow taller each level, with visible windows, signs and details. Tiles are spaced apart — the gaps are roads with dashed centre lines. Pedestrians are citizens out for a stroll: more population means more people on the street (max 36). They stay on roads, turn at intersections along planned routes, and never cut through buildings. Cars appear once population reaches 60 and buildings reach 10 (max 8), driving back and forth only near built-up roads. The map's edge is wasteland and forest, not lawn. An empty city has no people and no cars.": "12. 地图是 3D 的（12×12，一共 144 块地）：拖动平移、双指旋转转动、捏合或滚轮缩放、点地块建设，右下角按钮重置视角；建筑升一级就长高一截，窗户、招牌这些小细节也看得见。地块之间留了间距，空隙就是带虚线中线的马路。街上的行人是出来散步的市民——人口越多，街上的人越多（最多 36 位），他们只走街道、按规划好的路线在路口拐弯，不会穿过建筑物；小汽车要等人口达到 60、建筑达到 10 栋才出现（最多 8 辆），只在有建筑的路段附近来回开。地图外围是荒地和森林，不是草坪。没人住的空城，街上没人也没车。",
 "12×12 city tiles": "12乘12城市地块",
 "13. Major events: advancing a month has about a 30% chance of a major event (floods, flu pandemics, factory pollution in the news, big companies moving in, talent wars…). Which events can appear depends on city size and buildings. Major events never settle themselves — a dialog asks you to pick one of several responses: some buy goodwill with money, some save money but offend people, some even earn money or attract residents. Each option shows only its title and a one-line description — no advance word on cost, approval gained, or people attracted: consequences are revealed only after you choose, and the option order is shuffled every time. There are 18 event types (new: metro planning, university branch, film crew, marathon, old-street protection, courier dispute, dead fish in the river, community canteen…). [Costs scale with income] Every paid option (major events, disasters and small random events alike) is no longer a fixed price — it scales with city size. Scaled income = monthly total income (taxes + commercial, visible in the top stats) + 4% of current funds. Up to 200 scaled income the multiplier is ×1 (base price at the start); above 200, multiplier = 1 + (scaled income − 200) ÷ 180, kept to 2 decimals (e.g. 380 → ×2.00, 580 → ×3.11), capped at ×4. Actual cost = base price × multiplier (rounded to 10). The multiplier is frozen when the dialog opens using this formula (capped at ×4) and used for settlement as before, but neither the multiplier nor the actual costs are shown before you choose. Money earned by an option (signing fees, fines, festival income) is not scaled. The richer the city, the pricier the response — keep emergency money aside from the mid-game on. Every choice builds up “public approval” — a long-term satisfaction modifier (cumulative max ±25), listed under “Big Decisions” in the satisfaction breakdown: govern well and satisfaction benefits for the long run; cut corners and citizens remember. Recently handled events won't repeat soon. Population from events is tightened too: positive move-ins from company arrivals or talent subsidies only count at half, while population lost through bad handling counts at 1.3×.": "13. 大事件：推进月份时约三成概率碰上大事件（暴雨内涝、流感大流行、工厂排污上新闻、大企业入驻、抢人大战……城市规模和建筑不同，能碰上的事件也不同）。大事件不会自动结算，会弹窗让你在几个处理方案里拍板：有的花钱买民心，有的省钱但得罪人，有的还能赚一笔或招来人口。每个方案只显示标题和一句话说明，不预先告诉你会花多少钱、涨多少口碑、来多少人——后果选完才揭晓，选项顺序每次打乱。事件共 18 种（新增地铁规划、大学分校、剧组取景、马拉松、老街保护、骑手风波、河道死鱼、社区食堂等）。【花费随收入提高】所有花钱方案（大事件、天灾人祸、小随机事件的支出都一样）不再是固定价，按城市规模动态缩放：缩放收入 = 每月总收入（税收 + 商业，顶部数据行能看）+ 当前资金的 4%；缩放收入 200 以内倍率 ×1（开局按基础价），超过 200 后倍率 = 1 +（缩放收入 − 200）÷ 180，保留 2 位小数（例如 380 → ×2.00、580 → ×3.11），封顶 ×4，实际花费 = 基础价 × 倍率（取整到 10）。花费倍率按这套公式在弹窗时冻结（上限 ×4），结算时照旧使用，选前不显示倍率和实际花费；方案赚到的钱（签约费、罚款、节庆收入）不缩放。收入越高、处理事件越贵，中后期要提前留足应急钱。你每次的选择都会攒下「市民口碑」——长期生效的满意度修正（累计最高 ±25），在「满意度解析」里单列为「大事抉择」一项：一路当好市长，满意度会一直受益；一路糊弄，市民也会一直记着。刚处理过的事件短期内不会重复出现。另外事件招来的人口也收紧了：企业入驻、抢人补贴这类正向迁入只按一半生效，处理不当的人口流失按 1.3 倍生效。",
 "14 jobs; income about 45/month — the higher the education level, the more it earns": "14 个岗位，月入约 45；受教育度越高赚得越多",
@@ -3911,8 +3930,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "32. Settlement highlights + next-month forecast: the monthly settlement card highlights key changes at the top — population surges/crashes (±10+ people), satisfaction plunges/jumps (±8+ pts), big funds moves (±400+ coins), and a warning when funds go negative. Next to “Advance a Month” is a “Forecast Next Month” button: before advancing, it estimates next month's income/upkeep/funds, population change and main reasons, satisfaction direction and risk warnings from current buildings, tax rate and population. Major events, disasters and random city events can't be foreseen — the forecast says so.": "32. 结算高亮 + 预估下月：每月结算卡顶部会把重点变化单独亮出来——人口暴涨/骤减（±10 人以上）、满意度大跌/大涨（±8 分以上）、资金大额变动（±400 金币以上）、资金转负警告。「推进一个月」旁有「预估下月」按钮：推进前先按当前建筑、税率、人口静态推算下月的收入/维护/资金、人口增减和主要原因、满意度走向和风险提示；大事件、天灾、随机城市事件无法预知，预估里会写明。",
 "33. Hidden easter eggs: 10 easter eggs wait in the collection — specific population counts (111, 520), specific dates (New Year), specific building combos (school + library + office, 5 parks, two police stations + two fire stations), lucky funds numbers, three Lv.5 buildings, even an “empty city” trick. Triggering one pops a notice, pays a small reward and logs it. Undiscovered eggs show only “???” plus one clue in the collection, and collection progress is saved with the save code.": "33. 隐藏彩蛋：图鉴里有 10 个彩蛋等你撞——特定人口数（111、520）、特定日期（跨年）、特定建筑组合（学校+图书馆+办公楼、5 座公园、双警局+双消防站）、吉利资金数、三座 5 级建筑、甚至「空城之计」都有。触发时弹提示、发小奖励、记进日志；没发现的彩蛋在图鉴里只显示「？？？」和一条线索，收集进度随存档码保存。",
 "34. Collapsible panels + detail pages: the city log, satisfaction breakdown and building stats are collapsed by default instead of hogging the page — the breakdown shows just its title and current total, building stats just its title and building count / upkeep total. Tap “Expand ▾” beside the title for the details (bonus/deduction items, citizen needs, building problems, per-type stats and bulk upgrade are all in the expanded area); tap “Collapse ▴” to fold it back. The expanded log has filter tabs (All | Buildings | Population | Disasters | Finance | City). Detail pages are everywhere: tap a building for its details, the city-level title at the top for level details, a “Details” button in the HUD for a metric's breakdown, an achievement/easter egg for its collection details, or any log entry for that record's detail page (month, category, full text). The main page keeps only key numbers — the fine print is all in detail pages.": "34. 面板收起 + 详情页：市政日志、满意度解析和建筑统计都默认收起，不再一直占页面——满意度解析收起时只留标题和当前总分，建筑统计收起时只留标题和建筑总数 / 维护合计，点标题旁的「展开 ▾」才看明细（加减分项、市民需求、建筑问题、分类型统计和一键升级都在展开区里），再点「收起 ▴」收回去；日志展开后有筛选标签（全部｜建筑｜人口｜灾害｜财政｜城市）。详情页无处不在：点建筑看建筑详情，点顶部城市等级标题看等级详情，点 HUD 里的详情按钮看指标构成，点成就/彩蛋看图鉴详情，点任意一条日志看那条记录的详情页（月份、分类、全文）——主页面只留关键数字，细账都在详情页里。",
-"3D City · Drag to rotate · Tap a tile to build": "3D 城市 · 拖动旋转 · 点地块建设",
-"3D city map: drag to rotate, scroll or pinch to zoom, tap a tile to build": "3D 城市地图：拖动旋转视角，滚轮或双指缩放，点地块进行建设",
+"3D City · Drag to pan · Twist to rotate · Tap a tile to build": "3D 城市 · 拖动平移 · 双指转动 · 点地块建设",
+"3D city map: drag to pan, twist with two fingers to rotate, pinch or scroll to zoom, tap a tile to build": "3D 城市地图：拖动平移视角，双指旋转转动，捏合或滚轮缩放，点地块进行建设",
 "4 jobs; education coverage 150 people at Lv.1, about 120 more per level — educated residents and the education level rise with it; close to homes it adds school convenience and satisfaction": "4 个岗位；1 级教育覆盖 150 人，每升一级多覆盖约 120 人，受教育人数和受教育度跟着涨；靠近住宅上学便利，加满意度",
 "4 jobs; the backbone of the security rate — one covers 150 people, more when upgraded (630 at Lv.5); each cuts citywide upkeep by 4%": "4 个岗位；治安管理率的主力，一座覆盖 150 人，升级覆盖更多（5 级 630 人）；每座全城维护费 -4%",
 "4. Factory pollution depends on position: radius 2 tiles. Homes next door suffer most, one tile away less, two tiles away nothing — so factories and homes can't be built adjacent (building is blocked with a reason). Yellowed tiles on the map are the polluted area, and polluted homes carry a “!” marker. Parks cancel pollution: a Lv.1 park cancels 1 point for an adjacent home, +0.5 per level (Lv.5 cancels 3), a park one tile away also helps at half effect, and several parks stack. Best value: a park between the factory and homes, touching the homes. A home whose pollution is fully cancelled stops losing points and adds a “park cleansing” bonus to satisfaction; factories far from all homes earn a siting bonus.": "4. 工厂污染按位置算：污染半径 2 格，相邻的住宅受污染最重、隔一格较轻、隔两格没事，所以工厂和住宅不能紧挨着建（盖时会被拦下并说明原因）。地图上发黄的地块就是污染范围，受污染的住宅带「污」标记。公园能抵消污染：1 级公园抵消紧挨着的住宅 1 点污染，每升 1 级多抵消 0.5 点（5 级抵消 3 点），隔一格的公园也能帮忙、效果减半，多座公园可以叠加；把公园盖在工厂和住宅之间、紧贴住宅最划算。污染被完全抵消的住宅不再扣分，还会给满意度加「公园净化」分；工厂离住宅都够远时有选址加分。",
@@ -5286,7 +5305,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "This flu wave is fierce; clinics have long queues. Spend money to organise citywide protection?": "这一波流感来势汹汹，诊所排起了长队。要不要花钱组织全城防护？",
 "This flu wave is fierce; in the city": "这一波流感来势汹汹，城里 ",
 "This is a random city event that drops by regularly: everyday governance topics — population flow, welfare policy, environment, commerce, rent, elder care, employment. Responding isn't just about spending: some plans adjust the tax rate directly (effective immediately once chosen), others fix weak spots by adding facilities or paying subsidies. Money spent settles immediately; “approval” feeds into satisfaction long-term; population changes take effect at once (move-ins halved, outflow heavier).": "这是定期找上门的随机城市事件：城市日常治理题——人口流入流出、福利政策、环境、商业、租金、养老、就业。应对不只是花钱：有的方案会直接调整税率（选完立即生效），有的靠增建设施、发补贴补短板。花掉的钱立刻结算；「口碑」长期加进（或扣进）满意度；人口增减立刻生效（迁入减半、流失加重）。",
-"This is your 3D city: drag to rotate the view, scroll or pinch to zoom, and tap any tile to build or manage. Higher-level buildings are taller. Between tiles are roads with dashed centre lines and street lamps; as population grows, more pedestrians stroll the streets — each plans a route before setting off, keeps right along the street, turns only at intersections, walks around every building without cutting across tiles, and slows down to make way for others. Vehicles brake by the real distance from their front bumper to pedestrians: if someone is still ahead, they slow down and stop to yield, rechecking each step's landing spot, never overlapping a pedestrian, and keeping a bumper's distance from the car ahead. Cars only appear once population reaches 60 and buildings reach 10, and they only drive back and forth near streets with buildings — never onto empty streets. Around the map is not lawn but wasteland and forest: yellow earth, dead trees, rocks and woods surround the city, and empty tiles are rough ground with soil patches and shrubs. Yellowed tiles on the map are within factory pollution range (deeper colour means worse): factories and homes can't be built next to each other, one tile apart means lighter pollution, two tiles apart means none at all. A park next to homes offsets pollution — higher level and closer to homes offsets more — and tiles fully cleaned by parks stop turning yellow; tap a factory to see its pollution zone. Homes near a school, commercial street and hospital all at once (within 2 tiles) get a green “convenient” marker: life is convenient, satisfaction higher. A building with a problem (bank financial turmoil, hospital overcrowding, untended park…) shows a red “⚠ Problem” marker above it — tap to pay to fix it; the longer you wait, the costlier it gets.": "这是你的 3D 城市：拖动可以旋转视角，滚轮或双指缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。",
+"This is your 3D city: drag to pan the view, twist with two fingers to rotate it, pinch or scroll to zoom, and tap any tile to build or manage. Higher-level buildings are taller. Between tiles are roads with dashed centre lines and street lamps; as population grows, more pedestrians stroll the streets — each plans a route before setting off, keeps right along the street, turns only at intersections, walks around every building without cutting across tiles, and slows down to make way for others. Vehicles brake by the real distance from their front bumper to pedestrians: if someone is still ahead, they slow down and stop to yield, rechecking each step's landing spot, never overlapping a pedestrian, and keeping a bumper's distance from the car ahead. Cars only appear once population reaches 60 and buildings reach 10, and they only drive back and forth near streets with buildings — never onto empty streets. Around the map is not lawn but wasteland and forest: yellow earth, dead trees, rocks and woods surround the city, and empty tiles are rough ground with soil patches and shrubs. Yellowed tiles on the map are within factory pollution range (deeper colour means worse): factories and homes can't be built next to each other, one tile apart means lighter pollution, two tiles apart means none at all. A park next to homes offsets pollution — higher level and closer to homes offsets more — and tiles fully cleaned by parks stop turning yellow; tap a factory to see its pollution zone. Homes near a school, commercial street and hospital all at once (within 2 tiles) get a green “convenient” marker: life is convenient, satisfaction higher. A building with a problem (bank financial turmoil, hospital overcrowding, untended park…) shows a red “⚠ Problem” marker above it — tap to pay to fix it; the longer you wait, the costlier it gets.": "这是你的 3D 城市：拖动可以平移视角，双指旋转可以转动视角，捏合或滚轮缩放，点任意地块进行建设或管理；建筑等级越高，楼就越高。地块之间是带虚线中线和路灯的马路，人口多了街上散步的行人会变多——行人出发前会先规划好路线，只沿着街道靠右走、到路口才拐弯，绕开所有建筑，不会穿过地块，彼此之间会放慢脚步避让；车辆按车头到行人的真实距离刹车：人还在车头前就减速、停住礼让，每迈一步还会再验算落点，绝不和行人重叠，也会和前车保持保险杠距离；小汽车要等人口达到 60、建筑达到 10 栋才会出现，而且只在有建筑的路段附近来回开，不会跑到空街上去。地图外围不是草坪，而是荒地和森林：黄土、枯树、岩石和成片的树林围着城市，空地也是带土斑和灌木的粗糙地面。地图上发黄的地块在工厂污染范围内（颜色越深越重）：工厂和住宅不能紧挨着建，隔一格污染较轻，隔两格完全无污染；在住宅旁盖公园能抵消污染，公园等级越高、离住宅越近抵消越多，被公园净化干净的地块就不再发黄；点中一座工厂可以看它的污染圈。住宅同时靠近学校、商业街和医院（2 格内）会带绿色「便」标记：生活便利，满意度更高。建筑出了问题（银行金融风波、医院人满为患、公园无人打理……）头上会顶红色「⚠问题」标记，点开就能花钱处理，拖越久代价越大。",
 "This isn't a natural disaster — it's tensions built up. How to calm it?": "这不是天灾，是矛盾攒出来的——怎么平息？",
 "This one is already max level; coverage is maxed out (": "这座已经满级，覆盖已拉满（",
 "This record happened in": "这条记录发生在",
@@ -5884,7 +5903,20 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     "39. Seasonal changes (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Seasonal Changes” switch, on by default. Off means a fixed spring look. On, the season follows the months and changes every 3 months: spring (months 0–2) brings bright-green vegetation and pink flower clusters under the park trees; summer (months 3–5) brings deep-green vegetation and fuller crowns; autumn (months 6–8) turns vegetation yellow-orange and the ground yellowish; winter (months 9–11) leaves trees bare down to brown branches, covers the ground in snow and dusts some rooftops white; then it cycles every year. The sky still follows the day/night cycle — seasons only add a touch of warm or cool tint — and the night lights are unaffected. Seasons only change the visuals; funds, population, satisfaction and all other management numbers are untouched. With seasons on, the small “time” chip above the map also shows the current season.": "39. 四季变化（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「四季变化」开关，默认开。关时固定为春季外观；打开后季节随月份变化，每 3 个月换一季：春（第 0–2 月）植被鲜绿、公园树木带粉色花簇，夏（第 3–5 月）植被深绿、树冠更密，秋（第 6–8 月）植被黄橙、地面偏黄，冬（第 9–11 月）树木落叶只剩枝干、地面盖上积雪、部分建筑屋顶有薄雪；之后每年循环。天空仍按昼夜变化，季节只加一点暖色或冷色，夜晚灯光也不受影响。四季只改画面，不影响资金、人口、满意度等任何经营数值。地图上方的「时间」小标签打开四季后会显示当前季节。",
     "40. Weather effects (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Weather Effects” switch, on by default. On, each game day brings one weather — sunny, cloudy, light rain, heavy rain, fog or snow — fixed for a given day and season. Cloudy days turn the sky grey with a few clouds drifting slowly; light and heavy rain bring falling streaks (heavier rain is denser and darker); fog closes the view in and greys the scene; snow falls slowly. Weather only changes the visuals; funds, population, satisfaction, traffic, power, events and all other management numbers are untouched. Off means fixed sunny weather. With weather on, the small “time” chip above the map also shows the current weather.": "40. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。",
     "41. Dynamic street life (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Dynamic Street Life” switch, on by default. On, pedestrians no longer stroll evenly: in the daytime (07:00–17:00) commercial streets and parks are busy while industrial areas are quiet; at dusk (17:00–19:00) commercial streets stay lively and parks cool off a little; at night (19:00–05:00) pedestrians gather on the lit commercial streets while parks and industrial areas go quiet. Vehicles also run by type and district: trucks head mostly to industrial areas and rarely to parks, buses head mostly to commercial areas. Pedestrian totals still follow population (max 36) and vehicles stay at max 8 — only the distribution changes, no extra people or cars. Dynamic street life only changes the visuals; funds, population, satisfaction and all other management numbers are untouched. Off means pedestrians spread evenly again and vehicles go back to taking turns on the road segments as before.": "41. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。",
-    "42. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (it used to rotate) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.": "42. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（原来是旋转），双指或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。",
+    "42. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel below the map controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The control panel sits directly below the map and never covers it; its first line shows the viewing hint plus the current time, season and weather, and no status bar overlays the map. The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (dragging pans in the normal view too) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.": "42. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。",
+"Beginner tips: On": "新手提示：开",
+"Beginner tips: Off": "新手提示：关",
+"Off by default: when on, you get an occasional beginner tip (first build, tight funds, stalled population, congestion, development advice) — at most 1 per month and 3 of each kind; off means no tips at all.": "默认关：开后偶尔给一条新手提示（首次建造、资金紧张、人口停滞、拥堵、发展建议），每月最多 1 条，每种最多 3 次；关时一条提示都不出。",
+"Your first building is up! Check funds and population at the top, then keep following the tutorial.": "第一栋建筑盖好了！接下来可以看看顶部资金和人口，跟着新手教程继续盖。",
+"Funds are tight and this month still runs at a loss. Hold off on pricey builds and check the finance report to see what's costing most.": "资金有点紧，这个月还是入不敷出。先少盖点贵的，看看财政报表里哪块花得多。",
+"Population hasn't moved in two months — housing is full. Build more homes so newcomers have somewhere to move into.": "人口两个月没动了，是因为住房住满了。再盖住宅，空出位置才有人搬进来。",
+"Population isn't growing: housing is full — new residents can't move in. Build a few homes to keep growing.": "人口没有增长：住宅已经住满了，新市民搬不进来，盖几栋住宅就能继续涨人。",
+"Population isn't growing: there's a power outage and residents won't stay. Build a power plant to restore supply and people will come back.": "人口没有增长：现在停电了，居民留不住，盖座发电厂恢复供电，人口才会回来。",
+"Population isn't growing: there aren't enough jobs and unemployment is high. Build commercial streets or factories for more jobs.": "人口没有增长：岗位不够，失业的人多了，盖商业街或工厂多提供些岗位。",
+"Population hasn't moved in two months and satisfaction is still under 55, so few people move in. Raise satisfaction first — the breakdown shows what's dragging it down most.": "人口两个月没动了，满意度还不到 55，来的人少。先把满意度提上去，看看满意度解析里扣分最多的是哪项。",
+"Citywide congestion is over 100% and it's squeezing commercial income. Check the traffic load view to see which zone is worst.": "全城拥堵指数超过 100% 了，商业收入正在被压。可以在交通负荷里看看哪个区最堵。",
+"Your city just levelled up! As population grows, remember to add schools, hospitals and other services — not just more housing.": "城市升级了！人口再往上走，记得补齐学校、医院这些配套，别只顾着盖房子。",
+"The city hasn't grown in months. Try a different angle: add housing, raise satisfaction, or check the city development report for clues.": "城市好几个月没长了。不妨换个方向试试：补住房、提满意度，或者看看城市发展报告找找原因。",
 }; /* 英文 → 中文（按去首尾空白后的英文值查；歧义取无首尾空白的中文键） */
     var currentLang = "zh";
     try { var savedLang = window.localStorage.getItem(LANG_KEY); if (savedLang === "en" || savedLang === "zh") currentLang = savedLang; } catch (e) {}
@@ -6114,6 +6146,96 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       });
     }
     stage3Load();
+    /* ---------------- 阶段五 P2-4 新手引导增补（开发计划 §3.3 P2-4 / §3.4） ----------------
+       低频情境提示：首次建造、财政困难、人口增长解释、交通拥堵提示、城市发展建议。
+       复用现有 toast 提示通道（不新造 UI、不写 S.log、不弹窗、不打断）；触发判定只读
+       nextMonth / doBuild 已有的结算结果，不新造计算模块，不耗随机数。
+       开关默认关；开关与提示状态只存本机 localStorage（HINTS_KEY），绝不进经营存档、
+       存档码与自动保存。冷却：每种至少间隔 3 个月；全局每月最多 1 条；每种全程最多 3 次。
+       阈值（保守口径，P2-5 按测试版对齐）：财政 S.funds<200 且 c.net<0；人口连续两月零增长且有明确原因
+       （住房满 S.pop>=容量，或停电 !cEnd.powerOk，或失业率 cEnd.unemploymentRate>=0.25，按此顺序取）；
+       拥堵 cEnd.traffic.cityCongestion>100；发展建议为城市升级当月，或连续 3 个月人口不增长且无升级。 */
+    var HINTS_KEY = "xiao-cheng-shi-jing-ying-jing-tai-ban:p24hints";
+    var HINTS = { on: false, counts: {}, last: {}, lastAny: -1, zeroStreak: 0, noGrowthStreak: 0 };
+    function hintsLoad() {
+      try {
+        var raw = window.localStorage.getItem(HINTS_KEY);
+        if (!raw) return;
+        var d = JSON.parse(raw);
+        if (d && typeof d === "object") {
+          HINTS.on = !!d.on;
+          if (d.counts && typeof d.counts === "object") HINTS.counts = d.counts;
+          if (d.last && typeof d.last === "object") HINTS.last = d.last;
+          if (isFinite(+d.lastAny)) HINTS.lastAny = +d.lastAny;
+          if (isFinite(+d.zeroStreak)) HINTS.zeroStreak = Math.max(0, +d.zeroStreak);
+          if (isFinite(+d.noGrowthStreak)) HINTS.noGrowthStreak = Math.max(0, +d.noGrowthStreak);
+        }
+      } catch (e) {}
+    }
+    function hintsSave() {
+      try { window.localStorage.setItem(HINTS_KEY, JSON.stringify(HINTS)); } catch (e) {}
+    }
+    function hintsSet(on) {
+      HINTS.on = !!on; hintsSave(); syncHintsButton();
+    }
+    function syncHintsButton() {
+      var b = document.getElementById("btnS5Hints");
+      if (!b) return;
+      b.textContent = tr("新手提示：" + (HINTS.on ? "开" : "关"));
+      b.classList.toggle("on", !!HINTS.on);
+      b.setAttribute("aria-pressed", HINTS.on ? "true" : "false");
+    }
+    /* 新开一局：连续月份的计数清零（新城从头算），各提示累计次数与冷却保留（全程上限）。 */
+    function hintsResetStreaks() {
+      HINTS.zeroStreak = 0; HINTS.noGrowthStreak = 0; hintsSave();
+    }
+    function hintsCanShow(kind, month) {
+      if (!HINTS.on) return false;
+      if ((HINTS.counts[kind] || 0) >= 3) return false;
+      var l = HINTS.last[kind];
+      if (l != null && isFinite(+l) && month - (+l) < 3) return false;
+      if (HINTS.lastAny === month) return false;
+      return true;
+    }
+    function hintsShow(kind, month, zhText) {
+      toast(tr(zhText));
+      HINTS.counts[kind] = (HINTS.counts[kind] || 0) + 1;
+      HINTS.last[kind] = month;
+      HINTS.lastAny = month;
+      hintsSave();
+    }
+    /* 月度情境判定（只读入参，不改游戏状态、不耗随机数）。c 为本月结算，cEnd 为
+       月末重算，popBefore 为月初人口，tierBefore/tierAfter 为升级前后等级。 */
+    function hintsMonthlyCheck(c, cEnd, popBefore, tierBefore, tierAfter) {
+      if (!HINTS.on) return;
+      var popDelta = S.pop - popBefore;
+      if (popDelta === 0) HINTS.zeroStreak++; else HINTS.zeroStreak = 0;
+      if (popDelta <= 0 && !(tierAfter > tierBefore)) HINTS.noGrowthStreak++; else HINTS.noGrowthStreak = 0;
+      var popReason = null;
+      if (HINTS.zeroStreak >= 2) {
+        if (S.pop >= cEnd.capacity) popReason = "housing";
+        else if (!cEnd.powerOk) popReason = "power";
+        else if (cEnd.unemploymentRate >= 0.25) popReason = "jobs";
+      }
+      var mNow = S.month;
+      if (tierAfter > tierBefore && hintsCanShow("dev", mNow)) {
+        hintsShow("dev", mNow, "城市升级了！人口再往上走，记得补齐学校、医院这些配套，别只顾着盖房子。");
+      } else if (S.funds < 200 && c.net < 0 && hintsCanShow("fiscal", mNow)) {
+        hintsShow("fiscal", mNow, "资金有点紧，这个月还是入不敷出。先少盖点贵的，看看财政报表里哪块花得多。");
+      } else if (popReason && hintsCanShow("pop", mNow)) {
+        hintsShow("pop", mNow, popReason === "housing"
+          ? "人口没有增长：住宅已经住满了，新市民搬不进来，盖几栋住宅就能继续涨人。"
+          : popReason === "power"
+            ? "人口没有增长：现在停电了，居民留不住，盖座发电厂恢复供电，人口才会回来。"
+            : "人口没有增长：岗位不够，失业的人多了，盖商业街或工厂多提供些岗位。");
+      } else if (cEnd.traffic && cEnd.traffic.cityCongestion > 100 && hintsCanShow("traffic", mNow)) {
+        hintsShow("traffic", mNow, "全城拥堵指数超过 100% 了，商业收入正在被压。可以在交通负荷里看看哪个区最堵。");
+      } else if (HINTS.noGrowthStreak >= 3 && hintsCanShow("dev", mNow)) {
+        hintsShow("dev", mNow, "城市好几个月没长了。不妨换个方向试试：补住房、提满意度，或者看看城市发展报告找找原因。");
+      }
+      hintsSave();
+    }
+    hintsLoad();
     /* ---------------- 阶段四 4-1 昼夜循环（开发计划 §4，P1-7 前半） ----------------
        环境状态源（单一对象，纯视觉，永不写入经营存档；4-3 四季 / 4-4 天气以后共用）。
        开关默认开；关时固定白天光照、时段不推进。开关与时段只存本机 localStorage，
@@ -6228,6 +6350,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         var m = NIGHT_MATS[k];
         if (m && m.emissiveIntensity !== target) m.emissiveIntensity = target;
       }
+      /* P2-3：路灯光晕与灯头同亮同灭（同一 nightLightsOn 口径，白天 0、夜晚 0.35） */
+      if (three.lampHaloMat && three.lampHaloMat.opacity !== (target ? 0.35 : 0)) three.lampHaloMat.opacity = target ? 0.35 : 0;
     }
     function stage4SetLights(on) {
       if (!STAGE4.dayNight) return; /* 昼夜关时灯光开关置灰不可点，此为守卫兜底 */
@@ -6379,6 +6503,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           o.visible = true;
         }
       });
+      /* P2-3：共用材质的季节色——路缘描边冬季盖雪、路口绿篱随公园灌木同一调色板；
+         只改两个共享材质的颜色，不动任何单个网格、不耗 Math.random */
+      if (three.roadEdgeMat) three.roadEdgeMat.color.setHex(season === "winter" ? 0xdfe8e4 : (three.roadEdgeBase || 0x8f8878));
+      if (three.hedgeMat) three.hedgeMat.color.setHex(seasonBushColors(false)[1]);
     }
     function syncSeason(force) { ENV.season = getSeason(); applySeason(force); }
     function stage4SetSeasons(on) {
@@ -6563,7 +6691,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       STAGE4.street = !!on; stage4Save(); syncStage4Buttons();
     }
     /* ---------------- 阶段四 4-6 自由观景（开发计划 §3.2 P1-11、§3.4 开关表） ----------------
-       入口在 3D 视图左下角（btnFreeView），面板在视图内底部（freeViewPanel）。
+       入口在 3D 视图左下角（btnFreeView），面板在地图正下方的正常文档流里（freeViewPanel，#tut-map 之后、#mapResize 之前），不盖地图；观景时地图上方的 stageChip/timeChip 隐藏，提示与时间/季节/天气改由面板首行 fvStatus 显示。
        进入即暂停经营：nextMonth() 开头守卫（自动推进也走它）、applyDayNightLighting()
        里的时间推进跳过（光照/日月/天气仍按手动值每帧刷新），stage4Save() 守卫
        暂停节流持久化。进入时快照进入前的环境与镜头（时间、季节/天气覆盖、
@@ -6631,7 +6759,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       camR = Math.max(FREE_VIEW.distMin, Math.min(FREE_VIEW.distMax, v));
       updateCamera(); freeViewSyncPanel();
     }
-    function freeViewPanBy(dx, dy) { /* 观景内单指拖拽 = 平移：右向 -dx、前向 +dy，速度随距离缩放 */
+    function freeViewPanBy(dx, dy) { /* 单指拖拽 = 平移：右向 -dx、前向 +dy，速度随距离缩放；平时视角与自由观景共用，目标点 x/z 钳在 ±14，无固定中心 */
       if (!camTarget) return;
       var s = camR * 0.0016;
       var rx = Math.cos(camTheta), rz = -Math.sin(camTheta);
@@ -6701,8 +6829,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (entry) entry.hidden = true;
       var nm = document.getElementById("btnNextMonth");
       if (nm) nm.disabled = true;
+      /* 面板已移到地图下方：观景时地图上方的两条状态条都藏起来，提示与时间/季节/天气改由面板首行 fvStatus 显示（updateTimeChip 里同步），地图完整露出；正常模式下两条 chips 原样不动 */
       var chip = document.getElementById("stageChip");
-      if (chip) chip.textContent = tr("自由观景中 · 拖动平移 · 双指/滚轮缩放");
+      if (chip) { freeViewSnapshot.stageChipDisplay = chip.style.display; chip.textContent = tr("自由观景中 · 拖动平移 · 双指/滚轮缩放"); chip.style.display = "none"; } /* 文案照常写进 chip（读它的旧逻辑不受影响），但 chip 藏起来不压地图，提示改由面板首行 fvStatus 显示 */
+      var tchip = document.getElementById("timeChip");
+      if (tchip) { freeViewSnapshot.timeChipDisplay = tchip.style.display; tchip.style.display = "none"; }
       freeViewSyncPanel();
       updateTimeChip(true);
       return true;
@@ -6727,7 +6858,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       var nm = document.getElementById("btnNextMonth");
       if (nm) nm.disabled = false;
       var chip = document.getElementById("stageChip");
-      if (chip) chip.textContent = tr("3D 城市 · 拖动旋转 · 点地块建设");
+      if (chip) { chip.style.display = snap ? (snap.stageChipDisplay || "") : ""; chip.textContent = tr("3D 城市 · 拖动平移 · 双指转动 · 点地块建设"); }
+      var tchip2 = document.getElementById("timeChip");
+      if (tchip2) tchip2.style.display = snap ? (snap.timeChipDisplay || "") : "";
       updateCamera();
       updateTimeChip(true);
       if (snap && snap.autoWasOn && typeof startAuto === "function" && (typeof autoTimer === "undefined" || !autoTimer)) startAuto(); /* 任务 2 对齐测试版：进入前自动推进开着，退出后恢复；观景中手动改过自动推进的，以最后一次手动选择为准（见 btnAuto 处理） */
@@ -6951,6 +7084,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (STAGE4.seasons || freeView) label += " \u00b7 " + tr(seasonName(seasonNow)); /* 4-6 对齐测试版：观景内 chip 照常带季节/天气后缀，开关关也不挡 */
       if (STAGE4.weather || freeView) label += " \u00b7 " + tr(weatherName(weatherNow));
       chip.textContent = label;
+      var fvs = document.getElementById("fvStatus");
+      if (fvs && freeView) fvs.textContent = tr("自由观景中 · 拖动平移 · 双指/滚轮缩放") + " · " + label;
     }
     /* 天上日月的位置与显隐（2026-11-23 用户要求）：太阳 6:00 东升、18:00 西落，
        月亮 18:00 东升、6:00 西落；都在升起/落下前后各 1 小时内淡入淡出，
@@ -8892,6 +9027,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         eventTitle2: pendingKind === "big" && pendingEvent ? pendingEvent.title : null,
         cityTitle: pendingKind === "city" && pendingEvent ? pendingEvent.title : null
       };
+      /* 阶段五 P2-4：月度情境提示（只读结算结果，见 hintsMonthlyCheck；城市已被托管时不再提示）。 */
+      if (!S.gameOver) hintsMonthlyCheck(c, cEnd, popBefore, tierBefore, tierAfter);
       /* 阶段三 P1-4/P1-5：记一笔本月财政与城市快照（仅本机内存，不进存档），
          供财政报表趋势与城市发展报告归因用；最多各留 24 个月。
          财政报表是结算快照：totalIncome 用本次结算的总额（测试版 MonthReport.total
@@ -8949,6 +9086,12 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       sfxPlace();
       fxAtTile(i, "build");
       tutOnBuild(type);
+      /* 阶段五 P2-4：建成第一栋建筑后一次提示（只读计数，不改数值、不耗随机数）。 */
+      if (HINTS.on) {
+        var builtNow = 0;
+        for (var bi = 0; bi < N; bi++) if (S.grid[bi]) builtNow++;
+        if (builtNow === 1 && hintsCanShow("first", S.month)) hintsShow("first", S.month, "第一栋建筑盖好了！接下来可以看看顶部资金和人口，跟着新手教程继续盖。");
+      }
       /* 建设随机事件：建成后约 20% 概率触发（教程期间不触发） */
       rollBuildEvent(type);
     }
@@ -9446,9 +9589,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             if (lv2 >= 5) antenna(-0.28, 0.85 * hGrow + 0.06, 0.2, 0.28);
             break;
           case "env":
-            var tw2 = cyl(0.03, 0.03, 0.35, 0x607d8b, 0.28, 0.6, -0.2, 8); g2.add(tw2);
+            var tw2 = cyl(0.03, 0.03, 0.31, 0x607d8b, 0.28, 0.42 * hGrow + 0.215, -0.2, 8); g2.add(tw2); /* P2-3：监测杆随屋顶长高（原固定，Lv1–3 轮廓顶封死 0.85） */
             var dish2 = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), mat(0xe8e2d4, { roughness: 0.4 }));
-            dish2.position.set(0.28, 0.79, -0.2); g2.add(dish2);
+            dish2.position.set(0.28, 0.42 * hGrow + 0.37, -0.2); g2.add(dish2); /* P2-3：碟形天线随屋顶长高（Lv1 仍为 0.79） */
             g2.add(box(0.18, 0.09, 0.07, 0x43a047, -0.3, 0.055, front + 0.02, { roughness: 1 }));
             g2.add(box(0.18, 0.09, 0.07, 0x2f7d3a, 0.3, 0.055, front + 0.02, { roughness: 1 }));
             parapet(0.42 * hGrow + 0.07, W * 0.85, W * 0.85, 0x43a047);
@@ -9477,8 +9620,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           case "attraction":
             for (var fi2 = 0; fi2 < 5; fi2++) {
               var fx2 = -0.2 + fi2 * 0.1;
-              g2.add(box(0.012, 0.3, 0.012, 0x607d8b, fx2, 0.75, 0.1, { roughness: 0.5, metalness: 0.4 }));
-              g2.add(box(0.07, 0.045, 0.005, [0xe53935, 0xffb300, 0x43a047, 0x1e88e5, 0x8e24aa][fi2], fx2 + 0.035, 0.87, 0.1, { roughness: 0.6 }));
+              g2.add(box(0.012, 0.3 * hGrow, 0.012, 0x607d8b, fx2, 0.6 * hGrow + 0.15, 0.1, { roughness: 0.5, metalness: 0.4 })); /* P2-3：彩旗杆随屋顶长高（Lv1 仍为高 0.3 / y 0.75） */
+              g2.add(box(0.07, 0.045, 0.005, [0xe53935, 0xffb300, 0x43a047, 0x1e88e5, 0x8e24aa][fi2], fx2 + 0.035, 0.6 * hGrow + 0.27, 0.1, { roughness: 0.6 })); /* P2-3：彩旗随杆长高（Lv1 仍为 0.87） */
             }
             g2.add(box(0.05, 0.05, 0.05, 0xffd54f, -0.12, 0.6, front + 0.012, { roughness: 0.4 }));
             g2.add(box(0.05, 0.05, 0.05, 0xffd54f, 0.12, 0.6, front + 0.012, { roughness: 0.4 }));
@@ -9491,7 +9634,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             g2.add(cyl(0.3, 0.33, 0.03, 0xb9a98c, 0, 0.015, 0, 14));
             g2.add(box(0.1, 0.17, 0.02, 0x707a85, 0, 0.3, 0.056, { roughness: 0.7 }));
             fence(0x9aa2a8, 0.06);
-            if (lv2 >= 3) { g2.add(cyl(0.008, 0.008, 0.12, 0x8d99a6, 0.1, 1.32, -0.05, 6)); var anm = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), mat(0x8d99a6, { roughness: 0.5 })); anm.position.set(0.1, 1.39, -0.05); g2.add(anm); }
+            if (lv2 >= 3) { g2.add(cyl(0.008, 0.008, 0.12, 0x8d99a6, 0.1, poleH + 0.07, -0.05, 6)); var anm = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), mat(0x8d99a6, { roughness: 0.5 })); anm.position.set(0.1, poleH + 0.14, -0.05); g2.add(anm); }
             if (lv2 >= 5) { /* 迷你副风机（静态，不进 turbines 转动列表） */
               g2.add(cyl(0.025, 0.035, 0.55, 0xc9d2d8, 0.3, 0.275, 0.3, 8));
               var mh = new THREE.Group(); mh.position.set(0.3, 0.58, 0.36);
@@ -9588,9 +9731,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           break;
         }
         case "wind": {
-          var pole = cyl(0.045, 0.06, 1.25, 0xc9d2d8, 0, 0.625, 0, 10);
+          var poleH = 1.25 * hGrow; /* P2-3：风机塔身随等级长高（原固定 1.25，Lv1–5 轮廓全无变化） */
+          var pole = cyl(0.045, 0.06, poleH, 0xc9d2d8, 0, poleH / 2, 0, 10);
           g.add(pole);
-          var hub = new THREE.Group(); hub.position.set(0, 1.28, 0.07);
+          var hub = new THREE.Group(); hub.position.set(0, poleH + 0.03, 0.07);
           for (var bI = 0; bI < 3; bI++) {
             var blade = box(0.05, 0.52, 0.02, 0xf2f5f7, 0, 0.26, 0);
             var holder = new THREE.Group(); holder.rotation.z = bI * Math.PI * 2 / 3; holder.add(blade); hub.add(holder);
@@ -9661,15 +9805,17 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         }
         case "amusement": {
           /* 会转的摩天轮 + 小帐篷（轮子挂到 turbines 里跟着转） */
-          var legL = box(0.05, 0.62, 0.05, 0x8d99a6, -0.16, 0.28, -0.1); legL.rotation.z = 0.22; g.add(legL);
-          var legR = box(0.05, 0.62, 0.05, 0x8d99a6, 0.16, 0.28, -0.1); legR.rotation.z = -0.22; g.add(legR);
-          var wheel = new THREE.Group(); wheel.position.set(0, 0.58, -0.1);
-          var rim2 = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.022, 8, 24), mat(0xe4572e));
+          var wheelY = 0.58 + 0.09 * (level - 1), rimR = 0.34 + 0.025 * (level - 1); /* P2-3：摩天轮随等级长高变大（原固定，Lv1–5 轮廓全无变化） */
+          var legLen = 0.62 + (wheelY - 0.58) / 0.976, legY = wheelY - (legLen / 2) * 0.976;
+          var legL = box(0.05, legLen, 0.05, 0x8d99a6, -0.16, legY, -0.1); legL.rotation.z = 0.22; g.add(legL);
+          var legR = box(0.05, legLen, 0.05, 0x8d99a6, 0.16, legY, -0.1); legR.rotation.z = -0.22; g.add(legR);
+          var wheel = new THREE.Group(); wheel.position.set(0, wheelY, -0.1);
+          var rim2 = new THREE.Mesh(new THREE.TorusGeometry(rimR, 0.022, 8, 24), mat(0xe4572e));
           rim2.castShadow = true; wheel.add(rim2);
           var cabCols = [0x38618c, 0xe9a13b, 0x3e9b4f, 0xe86a92, 0x8a5fb0, 0xd95f43, 0x2a9d8f, 0xf2b01e];
           for (var wI = 0; wI < 8; wI++) {
             var wa = wI / 8 * Math.PI * 2;
-            wheel.add(box(0.08, 0.09, 0.07, cabCols[wI], Math.cos(wa) * 0.34, Math.sin(wa) * 0.34, 0));
+            wheel.add(box(0.08, 0.09, 0.07, cabCols[wI], Math.cos(wa) * rimR, Math.sin(wa) * rimR, 0));
           }
           wheel.add(new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), mat(0xf2b01e)));
           g.add(wheel); g.userData.hub = wheel; turbines.push(wheel);
@@ -9797,23 +9943,23 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             finial(topY + coneH + 0.03);
           }
         } else if (type === "factory") {
-          if (level === 2) g.add(box(0.92, 0.04, 0.02, 0xf2b01e, 0, topY - 0.02, W / 2 + 0.005, { roughness: 0.6 })); /* 黄色警示带 */
-          else if (level === 4) g.add(cyl(0.14, 0.18, 0.3, 0x8d99a6, -0.25, topY + 0.3, 0.15, 12)); /* 屋顶通风塔 */
+          if (level >= 2) g.add(box(0.92, 0.04, 0.02, 0xf2b01e, 0, topY - 0.02, W / 2 + 0.005, { roughness: 0.6 })); /* 黄色警示带（Lv2 起保留；原 Lv2 专属，Lv3 得副烟囱同时丢警示带，净零） */
+          if (level === 4) g.add(cyl(0.14, 0.18, 0.3, 0x8d99a6, -0.25, topY + 0.3, 0.15, 12)); /* 屋顶通风塔 */
           else if (level >= 5) { /* 红白条纹高烟囱 */
             g.add(cyl(0.07, 0.08, 0.35, 0xd23b2e, -0.28, topY + 0.45, 0.2, 10));
             g.add(cyl(0.07, 0.07, 0.35, 0xe8e2d4, -0.28, topY + 0.8, 0.2, 10));
           }
         } else if (type === "power") {
-          if (level === 2) trimBand();
-          else if (level === 4) g.add(cyl(0.16, 0.22, 0.5, 0x9aa2a8, -0.28, 0.25, -0.28, 12)); /* 冷却塔 */
+          if (level >= 2) trimBand(); /* 檐口线（Lv2 起保留；原 Lv2 专属，Lv3 得副变压器同时丢檐口线，净零） */
+          if (level === 4) g.add(cyl(0.16, 0.22, 0.5, 0x9aa2a8, -0.28, 0.25, -0.28, 12)); /* 冷却塔 */
           else if (level >= 5) { var bc = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), mat(0xff5252, { roughness: 0.4 })); bc.position.set(0.3, 0.6 * hGrow + 0.78, -0.15); g.add(bc); }
         } else if (type === "wind") {
-          if (level === 2) g.add(cyl(0.055, 0.055, 0.06, 0xd23b2e, 0, 1.0, 0, 8)); /* 塔身警示环 */
-          else if (level === 4) g.add(box(0.22, 0.16, 0.18, 0xb9bcba, 0.25, 0.08, -0.25, { roughness: 0.6, metalness: 0.3 })); /* 控制舱 */
+          if (level >= 2) g.add(cyl(0.055, 0.055, 0.06, 0xd23b2e, 0, 1.0 * hGrow, 0, 8)); /* 塔身警示环（Lv2 起保留，随塔身长高） */
+          if (level === 4) g.add(box(0.22, 0.16, 0.18, 0xb9bcba, 0.25, 0.08, -0.25, { roughness: 0.6, metalness: 0.3 })); /* 控制舱 */
           else if (level >= 5) g.add(cyl(0.011, 0.014, 0.5, 0x8d99a6, -0.3, 0.25, -0.3, 6)); /* 旗杆 */
         } else if (type === "amusement") {
-          if (level === 2) g.add(box(0.2, 0.03, 0.24, 0x2a9d8f, -0.3, 0.23, 0.28, { roughness: 0.9 })); /* 售票亭遮阳沿 */
-          else if (level === 4) { /* 热气球：气球 + 吊篮 + 系绳杆 */
+          if (level >= 2) g.add(box(0.2, 0.03, 0.24, 0x2a9d8f, -0.3, 0.23, 0.28, { roughness: 0.9 })); /* 售票亭遮阳沿（Lv2 起保留） */
+          if (level === 4) { /* 热气球：气球 + 吊篮 + 系绳杆 */
             g.add(cyl(0.012, 0.012, 0.5, 0x8d99a6, -0.28, 0.4, -0.28, 6));
             var bl = new THREE.Mesh(new THREE.SphereGeometry(0.14, 14, 10), mat(0xe9a13b, { roughness: 0.6 }));
             bl.position.set(-0.28, 0.78, -0.28); bl.castShadow = true; g.add(bl);
@@ -9821,8 +9967,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           }
           else if (level >= 5) { for (var fl = 0; fl < 3; fl++) { g.add(cyl(0.008, 0.008, 0.3, 0x8d99a6, -0.25 + fl * 0.25, 0.15, -0.42, 6)); g.add(box(0.08, 0.05, 0.012, [0xe53935, 0xffb300, 0x43a047][fl], -0.2 + fl * 0.25, 0.28, -0.42, { roughness: 0.6 })); } }
         } else if (type === "sewage") {
-          if (level === 2) g.add(box(0.3, 0.03, 0.28, 0x38618c, 0.24, 0.26, -0.22, { roughness: 0.7 })); /* 控制室檐口 */
-          else if (level === 4) g.add(cyl(0.05, 0.06, 0.6, 0x5b6b7a, 0.3, 0.3, -0.28, 8)); /* 通风高管 */
+          if (level >= 2) g.add(box(0.3, 0.03, 0.28, 0x38618c, 0.24, 0.26, -0.22, { roughness: 0.7 })); /* 控制室檐口（Lv2 起保留；原 Lv2 专属，Lv3 即消失，致 Lv2→3 净零） */
+          if (level >= 2) { var fp = cyl(0.03, 0.03, 0.6, 0x5b6b7a, 0, 0.06, 0.42, 8); fp.rotation.z = Math.PI / 2; g.add(fp); } /* P2-3：Lv2 起前沿地面管 */
+          if (level >= 3) g.add(cyl(0.045, 0.045, 0.5, 0x5b6b7a, 0.36, 0.25, 0.34, 8)); /* P2-3：Lv3 起东南角立管（高 0.5，Lv2→3 轮廓首次长高） */
+          if (level === 4) g.add(cyl(0.05, 0.06, 0.6, 0x5b6b7a, 0.3, 0.3, -0.28, 8)); /* 通风高管 */
           else if (level >= 5) { g.add(cyl(0.04, 0.05, 0.7, 0x5b6b7a, -0.32, 0.35, 0.3, 8)); var bc2 = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), mat(0xff5252, { roughness: 0.4 })); bc2.position.set(0.3, 0.62, -0.28); g.add(bc2); }
         } else if (type === "park") {
           if (level >= 5) { /* 第五棵大树 + 两座石灯笼 */
@@ -10115,6 +10263,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         var walkGeo = new THREE.BoxGeometry(1.20, 0.03, 1.20);
         var walkMat = mat(dark ? 0x4a4f45 : 0xb9b3a4, { roughness: 1 });
         var hlMat = mat(0xf2c230, { roughness: 0.6 });
+        /* P2-3 道路边缘：人行道外沿描边——复用 walkGeo 的薄板（1.28 宽、0.012 厚，
+           比人行道板宽一圈、顶面低 0.015），共用一个描边材质，144 块地只加
+           144 个网格、不新增几何体；冬季经 applySeason 盖雪，夜间随光照变暗 */
+        var roadEdgeMat = mat(dark ? 0x2f332e : 0x8f8878, { roughness: 1 });
+        three.roadEdgeMat = roadEdgeMat; three.roadEdgeBase = dark ? 0x2f332e : 0x8f8878;
         var polMat = mat(0xd9c84a, { roughness: 1 });
         three.pads = {};
         three.walks = {};
@@ -10122,6 +10275,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           var p = wpos(i);
           var walk = new THREE.Mesh(walkGeo, walkMat);
           walk.position.set(p[0], 0.012, p[1]); walk.receiveShadow = true; scene.add(walk);
+          var rim = new THREE.Mesh(walkGeo, roadEdgeMat); /* P2-3：外沿描边环（非点选目标） */
+          rim.scale.set(1.28 / 1.20, 0.4, 1.28 / 1.20); rim.position.set(p[0], 0.006, p[1]); rim.receiveShadow = true; scene.add(rim);
           /* 人行道板也是点选目标的一部分（与测试版一致）：地垫只盖住地块
              中央 1.02，路缘一圈 1.16 靠它来点，否则点路缘会落空 */
           walk.userData.tile = i; three.walks[i] = walk;
@@ -10152,6 +10307,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         }
         /* 路灯：每隔 3 个路口一盏，暖黄灯头（与测试版一致的街道细节） */
         var lampPoleMat = mat(0x3a4656, { roughness: 0.6, metalness: 0.3 });
+        /* P2-3 夜间光晕：灯头外一圈共用暖色光晕球（加色混合，白天透明度 0），
+           透明度由 applyNightLights() 与灯头同亮同灭；灯杆底座沿用既有 lampBase */
+        var lampHaloMat = new THREE.MeshBasicMaterial({ color: 0xffd27a, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+        var lampHaloGeo = new THREE.SphereGeometry(0.11, 10, 8);
+        three.lampHaloMat = lampHaloMat;
         var lampHeadMat = nightMat("lamp", 0xffe9a3, 0xffd27a) || new THREE.MeshStandardMaterial({ color: 0xffe9a3, emissive: 0xffd27a, emissiveIntensity: 0, roughness: 0.35 }); /* 4-2 灯光：路灯头共用自发光材质，夜晚亮暖色 #ffd27a，白天灭 */
         for (var lx = 0; lx <= SIZE; lx += 3) {
           for (var lz = 0; lz <= SIZE; lz += 3) {
@@ -10160,6 +10320,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             pole.position.set(lwx, 0.31, lwz); pole.castShadow = true; scene.add(pole);
             var head = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 6), lampHeadMat);
             head.position.set(lwx - 0.09, 0.64, lwz); scene.add(head);
+            var halo = new THREE.Mesh(lampHaloGeo, lampHaloMat); /* P2-3：夜间光晕（非点选目标） */
+            halo.position.set(lwx - 0.09, 0.64, lwz); scene.add(halo);
             var arm = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.025, 0.025), lampPoleMat);
             arm.position.set(lwx - 0.045, 0.63, lwz); scene.add(arm);
             var lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.05, 8), lampPoleMat);
@@ -10167,6 +10329,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           }
         }
         /* 斑马线：每隔 3 个路口一道（与路灯同一批路口），两个方向各 4 条白条 */
+        var hedgeGeo = new THREE.BoxGeometry(0.16, 0.1, 0.16);
+        var hedgeMat = mat(seasonBushColors(false)[1], { roughness: 1 });
+        three.hedgeMat = hedgeMat;
         var zebraMat = new THREE.MeshBasicMaterial({ color: 0xe8e6da });
         var zebraGeo = new THREE.PlaneGeometry(0.07, 0.3);
         for (var zx = 0; zx <= SIZE; zx += 3) {
@@ -10182,6 +10347,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
             /* 路口行道树已移除：树种在路口角 (0.14, 0.14)，树冠半径约 0.145，
                正好垂到行人走线和车行线上方，行人过路口必穿树冠、车辆也蹭。
                路口只留斑马线，绿化交给公园和外围森林。 */
+            /* P2-3 绿化带：路口三边角各一丛低绿篱（高 0.1、贴地，灯杆占 (+,+) 角故
+               让开；离路口中心 0.28，行人/车辆走线在中心线 ±0.065 内，碰不到；
+               与公园灌木同一调色板 seasonBushColors，共用一个几何体与一个材质，
+               高度按路口哈希 0.9/1.0/1.1 微差，零 Math.random） */
+            [[-0.2, -0.2], [-0.2, 0.2], [0.2, -0.2]].forEach(function (hc) {
+              var hg = new THREE.Mesh(hedgeGeo, hedgeMat);
+              hg.position.set(zcx + hc[0], 0.05, zcz + hc[1]);
+              hg.scale.y = 0.9 + (((zx + zz) / 3) % 3) * 0.1;
+              hg.castShadow = true; hg.receiveShadow = true; scene.add(hg);
+            });
           }
         }
         groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -10217,13 +10392,15 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     }
     function bindCameraControls(canvas) {
       var dragging = false, moved = 0, lx = 0, ly = 0, sx = 0, sy = 0;
-      var pointers = {}, pinchD = 0;
+      var pointers = {}, pinchD = 0, pinchA = null, pinchMidY = 0, dragButton = 0;
       canvas.addEventListener("pointerdown", function (e) {
         pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
-        if (Object.keys(pointers).length === 1) { dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; sx = e.clientX; sy = e.clientY; }
+        if (Object.keys(pointers).length === 1) { dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; sx = e.clientX; sy = e.clientY; dragButton = (typeof e.button === "number" ? e.button : 0); }
         if (Object.keys(pointers).length === 2) {
           var ps = Object.values(pointers);
           pinchD = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
+          pinchA = Math.atan2(ps[1].y - ps[0].y, ps[1].x - ps[0].x);
+          pinchMidY = (ps[0].y + ps[1].y) / 2;
         }
         canvas.setPointerCapture(e.pointerId);
       });
@@ -10234,7 +10411,19 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           var ps = Object.values(pointers);
           var nd = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
           if (pinchD > 0) { camR = Math.max(9, Math.min(38, camR * pinchD / nd)); }
-          pinchD = nd; moved = 99; return;
+          pinchD = nd;
+          var na = Math.atan2(ps[1].y - ps[0].y, ps[1].x - ps[0].x);
+          if (pinchA !== null) {
+            var dA = na - pinchA;
+            if (dA > Math.PI) dA -= 2 * Math.PI;
+            if (dA < -Math.PI) dA += 2 * Math.PI;
+            if (!freeView) camTheta += dA; /* 平时视角：双指扭转 = 转动（顺时针扭，画面跟着顺时针转）；自由观景内双指只捏合缩放，镜头逻辑不动 */
+          }
+          pinchA = na;
+          var midY = (ps[0].y + ps[1].y) / 2;
+          if (!freeView) camPhi = Math.max(0.26, Math.min(1.40, camPhi - (midY - pinchMidY) * 0.006)); /* 平时视角：双指上下同向拖 = 俯仰（与右键拖动同口径），钳制不变，不翻到地下 */
+          pinchMidY = midY;
+          moved = 99; return;
         }
         if (!dragging) return;
         var dx = e.clientX - lx, dy = e.clientY - ly;
@@ -10244,23 +10433,36 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           lx = e.clientX; ly = e.clientY;
           return;
         }
-        /* 用「离按下点的最大距离」判断点按还是拖动：手指点按时来回
-           抖动几像素很常见，按每步位移累加会把正常点按误判成拖动，
-           导致点空地永远选不中、建造菜单不弹出来 */
+        /* 平时视角（2026-11-24 自由视角）：单指/左键拖动 = 平移视角目标
+           （复用 freeViewPanBy，无固定中心，地图跟着手指走）；右键拖动 =
+           转动（方位角 + 俯仰，与旧拖动旋转同手感同钳制）。点按判定仍按
+           moved（离按下点的最大距离 < 14px）算：手指点按时来回抖动几像素
+           很常见，按每步位移累加会把正常点按误判成拖动，导致点空地永远
+           选不中、建造菜单不弹出来。 */
         moved = Math.max(moved, Math.hypot(e.clientX - sx, e.clientY - sy));
-        camTheta -= dx * 0.008;
-        camPhi = Math.max(0.26, Math.min(1.40, camPhi - dy * 0.006)); /* 4-6 仰角 10–75°：钳制与滑杆同范围 */
+        if (dragButton === 2) {
+          camTheta -= dx * 0.008;
+          camPhi = Math.max(0.26, Math.min(1.40, camPhi - dy * 0.006)); /* 4-6 仰角 10–75°：钳制与滑杆同范围 */
+        } else {
+          freeViewPanBy(dx, dy);
+        }
         lx = e.clientX; ly = e.clientY;
       });
       function up(e) {
+        var wasTwo = Object.keys(pointers).length === 2;
         delete pointers[e.pointerId];
         if (Object.keys(pointers).length === 0) {
-          if (dragging && moved < 14) pickTile(e);
-          dragging = false;
+          if (dragging && moved < 14 && dragButton !== 2) pickTile(e);
+          dragging = false; pinchD = 0; pinchA = null;
+        } else if (wasTwo) {
+          /* 双指变回单指：以剩下那根手指当前位置重定拖动起点，避免按旧 lx/ly 算出一大段跳变 */
+          var rest = Object.values(pointers)[0];
+          lx = rest.x; ly = rest.y; pinchD = 0; pinchA = null;
         }
       }
       canvas.addEventListener("pointerup", up);
       canvas.addEventListener("pointercancel", up);
+      canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); }); /* 右键拖动旋转时不弹菜单 */
       canvas.addEventListener("wheel", function (e) {
         e.preventDefault();
         camR = Math.max(9, Math.min(38, camR * (e.deltaY > 0 ? 1.1 : 0.9)));
@@ -10395,10 +10597,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       return null;
     }
     /* 当前路段的前进方向（单位向量，沿街道轴线） */
+    /* P2-3 性能：行人方向/目标每帧调用 36 人 × 数次，原先每次返回新数组；
+       改为三只复用草稿数组（调用方都只 immediate 读值，不保留引用；
+       roadNodeXY 的临时数组也在热路径上改内联取模，避免二次分配） */
+    var _dirScratch = [1, 0], _offScratch = [0, 0], _tgtScratch = [0, 0];
     function pedDirVec(p) {
-      if (!p.route || p.seg >= p.route.length - 1) return [1, 0];
-      var a = roadNodeXY(p.route[p.seg]), b = roadNodeXY(p.route[p.seg + 1]);
-      return [Math.sign(b[0] - a[0]), Math.sign(b[1] - a[1])];
+      if (!p.route || p.seg >= p.route.length - 1) { _dirScratch[0] = 1; _dirScratch[1] = 0; return _dirScratch; }
+      var aId = p.route[p.seg], bId = p.route[p.seg + 1];
+      _dirScratch[0] = Math.sign((bId % ROAD_N) - (aId % ROAD_N));
+      _dirScratch[1] = Math.sign(Math.floor(bId / ROAD_N) - Math.floor(aId / ROAD_N));
+      return _dirScratch;
     }
     /* 靠右分道偏移：按当前前进方向算「右手侧」偏移量。
        以前所有行人 lane=0 全挤在街道正中心一条线上：对向行人面对面
@@ -10406,19 +10614,22 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
        0.07–0.10，行人缩小后体宽只有约 0.11），对向两人自然错开，
        也不会蹭到地块边缘，不再对穿。 */
     function pedLaneOffset(d, lane) {
-      if (d[0] !== 0) return [0, lane * d[0]];
-      if (d[1] !== 0) return [-lane * d[1], 0];
-      return [0, 0];
+      if (d[0] !== 0) { _offScratch[0] = 0; _offScratch[1] = lane * d[0]; }
+      else if (d[1] !== 0) { _offScratch[0] = -lane * d[1]; _offScratch[1] = 0; }
+      else { _offScratch[0] = 0; _offScratch[1] = 0; }
+      return _offScratch;
     }
     /* 当前路段的目标点：下一个路口（靠右分道线上）。掉头后 keepLane
        有值时按掉头那一刻行人所在的同一侧走（见 ped 移动循环里的
        掉头逻辑），不按方向重算右侧——否则掉头要斜穿整条街，第一步
        就可能踩进那辆停住的车的包围盒，掉头也走不动。 */
     function pedTarget(p) {
-      var b = roadNodeXY(p.route[p.seg + 1]);
+      var bId = p.route[p.seg + 1];
       var d = pedDirVec(p);
       var off = p.keepLane || pedLaneOffset(d, p.lane);
-      return [streetCoord(b[0]) + off[0], streetCoord(b[1]) + off[1]];
+      _tgtScratch[0] = streetCoord(bId % ROAD_N) + off[0];
+      _tgtScratch[1] = streetCoord(Math.floor(bId / ROAD_N)) + off[1];
+      return _tgtScratch;
     }
     var SKIN_TONES = [0xf0c8a0, 0xe0aa7e, 0xc98a5e, 0xf5d3ae];
     var HAIR_COLORS = [0x2c2320, 0x4a3220, 0x6e5136, 0x1e1e24, 0x8a6d4a, 0xb0a89c];
@@ -12759,6 +12970,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       renderStage3(c);
       syncStage3Buttons();
       syncStage4Buttons();
+      syncHintsButton();
       syncSeason();
       syncWeather();
       updateTimeChip(true);
@@ -12884,6 +13096,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     });
     document.getElementById("btnResetCam").addEventListener("click", function () {
       camTheta = Math.PI / 4; camPhi = 0.95; camR = 23;
+      if (camTarget) camTarget.set(0, 0, 0); /* 平时视角可平移后，重置视角也要回到中心目标点（否则平移出去就回不来了）；每帧 animate 会调 updateCamera() 生效 */
     });
     /* 自动推进：与原版一致，每 2.4 秒推进一个月，碰上大事件或破产自动停 */
     var autoTimer = null;
@@ -12904,6 +13117,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     });
     function doRestart() {
       S = newState(); selected = -1; lastReport = null;
+      hintsResetStreaks(); /* P2-4：新城连续月份计数清零 */
       confirmRestart = false; confirmDemolish = false; confirmLoad = false;
       pendingEvent = null;
       pendingKind = "big";
@@ -12956,6 +13170,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     document.getElementById("btnS3Pop").addEventListener("click", function () { stage3Set("pop", !STAGE3.pop); });
     document.getElementById("btnS3Ind").addEventListener("click", function () { stage3Set("industry", !STAGE3.industry); });
     document.getElementById("btnS3Tra").addEventListener("click", function () { stage3Set("traffic", !STAGE3.traffic); });
+    /* 阶段五 P2-4 新手提示开关：只记本机 localStorage，不进存档 */
+    document.getElementById("btnS5Hints").addEventListener("click", function () { hintsSet(!HINTS.on); });
     /* 阶段四 4-1 昼夜循环开关（市政操作 → 阶段四 · 动态环境）：只记本机 localStorage，不进存档 */
     document.getElementById("btnS4Day").addEventListener("click", function () { stage4Set(!STAGE4.dayNight); });
     /* 阶段四 4-2 夜间灯光开关：同上；昼夜关时按钮置灰不可点，stage4SetLights 内另有守卫 */
