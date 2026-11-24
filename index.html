@@ -236,6 +236,26 @@
         padding: 6px 12px; backdrop-filter: blur(4px); min-height: 2rem;
       }
       #btnFreeView:disabled { opacity: .45; }
+      /* 旋转视角圆盘（2026-11-24）：地图下方正常流里的一行，左对齐，不浮在地图上；
+         与旧平移圆盘同尺寸（96px）同风格；自由观景入口 #btnFreeView 仍在地图左下角 bottom:8，不动 */
+      #btnRotateDial {
+        margin-top: 8px; width: 96px; height: 96px;
+        display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+        background: rgba(0,0,0,.45); border-radius: 50%; backdrop-filter: blur(4px);
+        touch-action: none; user-select: none; -webkit-user-select: none;
+      }
+      #btnRotateDial[hidden] { display: none; }
+      #btnRotateDial .rd-btn {
+        border: 0; background: transparent; color: #fff; font-size: 17px; line-height: 1;
+        padding: 0; min-width: 0; min-height: 0; cursor: pointer; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; touch-action: none;
+      }
+      #btnRotateDial .rd-btn.held, #btnRotateDial .rd-btn:active { color: var(--gold); background: rgba(255,255,255,.16); }
+      #btnRotateDial .rd-up { grid-area: 1 / 2; }
+      #btnRotateDial .rd-left { grid-area: 2 / 1; }
+      #btnRotateDial .rd-center { grid-area: 2 / 2; font-size: 15px; }
+      #btnRotateDial .rd-right { grid-area: 2 / 3; }
+      #btnRotateDial .rd-down { grid-area: 3 / 2; }
       #freeViewPanel {
         margin-top: 8px;
         background: var(--surface); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(35,64,42,.10);
@@ -720,6 +740,13 @@
             <button type="button" id="btnFreeView" aria-label="进入自由观景">自由观景</button>
           </div>
         </div>
+        <div id="btnRotateDial" role="group" aria-label="旋转视角圆盘">
+          <button type="button" class="rd-btn rd-up" data-dir="up" aria-label="旋转视角：按住抬高">↑</button>
+          <button type="button" class="rd-btn rd-left" data-dir="left" aria-label="旋转视角：按住向左转">←</button>
+          <button type="button" class="rd-btn rd-center" data-dir="center" aria-label="回到默认角度">◎</button>
+          <button type="button" class="rd-btn rd-right" data-dir="right" aria-label="旋转视角：按住向右转">→</button>
+          <button type="button" class="rd-btn rd-down" data-dir="down" aria-label="旋转视角：按住压低">↓</button>
+        </div>
         <div id="freeViewPanel" hidden>
           <p class="fv-status" id="fvStatus"></p>
           <div class="fv-head"><span>自由观景</span><span class="fv-paused">经营已暂停</span><button type="button" id="btnFreeViewExit" class="seg-btn fv-exit">退出观景</button></div>
@@ -927,6 +954,10 @@
           <p>37. 自动保存：进度会自动保存在本机浏览器里，不用再复制存档码——建造、升级、推进月份、处理事件后都会自动保存，关页面前也会再存一次；下次打开直接续玩。存档码留作备份或换手机转移用：「立即保存」仍能生成存档码，「复制」仍能复制，「重新读档」仍能用粘贴的存档码读档；手动导入存档码成功后也会立即自动保存一次。重开一局会先清掉本机的自动保存，再存新开局，不会复活旧城。本机浏览器清掉网站数据或换浏览器、换手机后自动保存会丢，重要进度请用存档码另外备份。</p>
           <p>38. 夜间灯光（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「夜间灯光」开关，默认开；只有先打开「昼夜循环」，这个开关才能用（昼夜关时它会置灰并提示原因）。打开后，夜晚（19:00 至次日 5:00）路灯会亮起暖黄色的灯，约一半住宅楼会亮起 1–3 扇暖色窗户，商业街的招牌会发光，工厂和医院会亮起一条灯带；白天所有灯都会熄灭。灯光只改画面，不影响资金、人口、满意度等任何经营数值。</p>
           <p>39. 四季变化（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「四季变化」开关，默认开。关时固定为春季外观；打开后季节随月份变化，每 3 个月换一季：春（第 0–2 月）植被鲜绿、公园树木带粉色花簇，夏（第 3–5 月）植被深绿、树冠更密，秋（第 6–8 月）植被黄橙、地面偏黄，冬（第 9–11 月）树木落叶只剩枝干、地面盖上积雪、部分建筑屋顶有薄雪；之后每年循环。天空仍按昼夜变化，季节只加一点暖色或冷色，夜晚灯光也不受影响。四季只改画面，不影响资金、人口、满意度等任何经营数值。地图上方的「时间」小标签打开四季后会显示当前季节。</p>
+          <p>40. 旋转视角圆盘：地图下方有一行左对齐的圆形圆盘，按住 ←/→ 左右转动视角，按住 ↑/↓ 调整俯仰（↑ 抬高、↓ 压低，仰角 10–75°），起步约 15°/秒、0.6 秒内加速到约 45°/秒，松开立即停，没有惯性；同时按两个方向可斜向组合，每轴按各自速率转动；点中间的 ◎ 只把方位角与俯仰角回到默认值，目标点与距离不动。电脑上也可以鼠标按住方向键不放，或把鼠标移到地图上 / 点一下圆盘获得焦点后按键盘方向键转动，松开即停；焦点在输入框里、地图高度滑杆上或在页面其他地方时，键盘方向键照常滚动页面。单指拖动平移、双指旋转、捏合缩放和点选都照常用，圆盘不挡手势；自由观景里圆盘会藏起来，退出后恢复。</p>
+          <p>41. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。</p>
+          <p>42. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。</p>
+          <p>43. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。</p>
         </div>
       </details>
     </div>
@@ -3594,9 +3625,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     "秋": "Autumn",
     "冬": "Winter",
     "39. 四季变化（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「四季变化」开关，默认开。关时固定为春季外观；打开后季节随月份变化，每 3 个月换一季：春（第 0–2 月）植被鲜绿、公园树木带粉色花簇，夏（第 3–5 月）植被深绿、树冠更密，秋（第 6–8 月）植被黄橙、地面偏黄，冬（第 9–11 月）树木落叶只剩枝干、地面盖上积雪、部分建筑屋顶有薄雪；之后每年循环。天空仍按昼夜变化，季节只加一点暖色或冷色，夜晚灯光也不受影响。四季只改画面，不影响资金、人口、满意度等任何经营数值。地图上方的「时间」小标签打开四季后会显示当前季节。": "39. Seasonal changes (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Seasonal Changes” switch, on by default. Off means a fixed spring look. On, the season follows the months and changes every 3 months: spring (months 0–2) brings bright-green vegetation and pink flower clusters under the park trees; summer (months 3–5) brings deep-green vegetation and fuller crowns; autumn (months 6–8) turns vegetation yellow-orange and the ground yellowish; winter (months 9–11) leaves trees bare down to brown branches, covers the ground in snow and dusts some rooftops white; then it cycles every year. The sky still follows the day/night cycle — seasons only add a touch of warm or cool tint — and the night lights are unaffected. Seasons only change the visuals; funds, population, satisfaction and all other management numbers are untouched. With seasons on, the small “time” chip above the map also shows the current season.",
-    "40. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。": "40. Weather effects (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Weather Effects” switch, on by default. On, each game day brings one weather — sunny, cloudy, light rain, heavy rain, fog or snow — fixed for a given day and season. Cloudy days turn the sky grey with a few clouds drifting slowly; light and heavy rain bring falling streaks (heavier rain is denser and darker); fog closes the view in and greys the scene; snow falls slowly. Weather only changes the visuals; funds, population, satisfaction, traffic, power, events and all other management numbers are untouched. Off means fixed sunny weather. With weather on, the small “time” chip above the map also shows the current weather.",
-    "41. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。": "41. Dynamic street life (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Dynamic Street Life” switch, on by default. On, pedestrians no longer stroll evenly: in the daytime (07:00–17:00) commercial streets and parks are busy while industrial areas are quiet; at dusk (17:00–19:00) commercial streets stay lively and parks cool off a little; at night (19:00–05:00) pedestrians gather on the lit commercial streets while parks and industrial areas go quiet. Vehicles also run by type and district: trucks head mostly to industrial areas and rarely to parks, buses head mostly to commercial areas. Pedestrian totals still follow population (max 36) and vehicles stay at max 8 — only the distribution changes, no extra people or cars. Dynamic street life only changes the visuals; funds, population, satisfaction and all other management numbers are untouched. Off means pedestrians spread evenly again and vehicles go back to taking turns on the road segments as before.",
-    "42. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。": "42. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel below the map controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The control panel sits directly below the map and never covers it; its first line shows the viewing hint plus the current time, season and weather, and no status bar overlays the map. The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (dragging pans in the normal view too) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.",
+    "40. 旋转视角圆盘：地图下方有一行左对齐的圆形圆盘，按住 ←/→ 左右转动视角，按住 ↑/↓ 调整俯仰（↑ 抬高、↓ 压低，仰角 10–75°），起步约 15°/秒、0.6 秒内加速到约 45°/秒，松开立即停，没有惯性；同时按两个方向可斜向组合，每轴按各自速率转动；点中间的 ◎ 只把方位角与俯仰角回到默认值，目标点与距离不动。电脑上也可以鼠标按住方向键不放，或把鼠标移到地图上 / 点一下圆盘获得焦点后按键盘方向键转动，松开即停；焦点在输入框里、地图高度滑杆上或在页面其他地方时，键盘方向键照常滚动页面。单指拖动平移、双指旋转、捏合缩放和点选都照常用，圆盘不挡手势；自由观景里圆盘会藏起来，退出后恢复。": "40. Rotate-view dial: a round dial sits in a left-aligned row just below the map. Hold ←/→ to rotate the view left or right, and ↑/↓ to adjust the pitch (↑ raises the view, ↓ lowers it, elevation 10–75°); it starts at about 15°/s and speeds up to about 45°/s within 0.6 seconds, stopping the moment you release, with no inertia; holding two arrows combines diagonally, each axis at its own rate; tap the centre ◎ to reset only the azimuth and pitch to their defaults, leaving the target point and distance untouched. On a computer you can also hold an arrow with the mouse, or move the pointer over the map / click the dial to focus it and then use the keyboard arrow keys — release to stop; while focus is in a text field, on the map-height slider, or elsewhere on the page, the arrow keys scroll the page as usual. Drag to pan, twist with two fingers to rotate, pinch to zoom and tap to select all still work, and the dial never blocks gestures; it hides inside Free View and returns when you exit.",
+    "旋转视角圆盘": "Rotate-view dial",
+    "旋转视角：按住抬高": "Rotate view: hold to raise the view",
+    "旋转视角：按住压低": "Rotate view: hold to lower the view",
+    "旋转视角：按住向左转": "Rotate view: hold to turn left",
+    "旋转视角：按住向右转": "Rotate view: hold to turn right",
+    "回到默认角度": "Back to default angles",
+    "41. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。": "41. Weather effects (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Weather Effects” switch, on by default. On, each game day brings one weather — sunny, cloudy, light rain, heavy rain, fog or snow — fixed for a given day and season. Cloudy days turn the sky grey with a few clouds drifting slowly; light and heavy rain bring falling streaks (heavier rain is denser and darker); fog closes the view in and greys the scene; snow falls slowly. Weather only changes the visuals; funds, population, satisfaction, traffic, power, events and all other management numbers are untouched. Off means fixed sunny weather. With weather on, the small “time” chip above the map also shows the current weather.",
+    "42. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。": "42. Dynamic street life (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Dynamic Street Life” switch, on by default. On, pedestrians no longer stroll evenly: in the daytime (07:00–17:00) commercial streets and parks are busy while industrial areas are quiet; at dusk (17:00–19:00) commercial streets stay lively and parks cool off a little; at night (19:00–05:00) pedestrians gather on the lit commercial streets while parks and industrial areas go quiet. Vehicles also run by type and district: trucks head mostly to industrial areas and rarely to parks, buses head mostly to commercial areas. Pedestrian totals still follow population (max 36) and vehicles stay at max 8 — only the distribution changes, no extra people or cars. Dynamic street life only changes the visuals; funds, population, satisfaction and all other management numbers are untouched. Off means pedestrians spread evenly again and vehicles go back to taking turns on the road segments as before.",
+    "43. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。": "43. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel below the map controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The control panel sits directly below the map and never covers it; its first line shows the viewing hint plus the current time, season and weather, and no status bar overlays the map. The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (dragging pans in the normal view too) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.",
     "新手提示：开": "Beginner tips: On",
     "新手提示：关": "Beginner tips: Off",
     "默认关：开后偶尔给一条新手提示（首次建造、资金紧张、人口停滞、拥堵、发展建议），每月最多 1 条，每种最多 3 次；关时一条提示都不出。": "Off by default: when on, you get an occasional beginner tip (first build, tight funds, stalled population, congestion, development advice) — at most 1 per month and 3 of each kind; off means no tips at all.",
@@ -5901,9 +5939,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     "Autumn": "秋",
     "Winter": "冬",
     "39. Seasonal changes (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Seasonal Changes” switch, on by default. Off means a fixed spring look. On, the season follows the months and changes every 3 months: spring (months 0–2) brings bright-green vegetation and pink flower clusters under the park trees; summer (months 3–5) brings deep-green vegetation and fuller crowns; autumn (months 6–8) turns vegetation yellow-orange and the ground yellowish; winter (months 9–11) leaves trees bare down to brown branches, covers the ground in snow and dusts some rooftops white; then it cycles every year. The sky still follows the day/night cycle — seasons only add a touch of warm or cool tint — and the night lights are unaffected. Seasons only change the visuals; funds, population, satisfaction and all other management numbers are untouched. With seasons on, the small “time” chip above the map also shows the current season.": "39. 四季变化（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「四季变化」开关，默认开。关时固定为春季外观；打开后季节随月份变化，每 3 个月换一季：春（第 0–2 月）植被鲜绿、公园树木带粉色花簇，夏（第 3–5 月）植被深绿、树冠更密，秋（第 6–8 月）植被黄橙、地面偏黄，冬（第 9–11 月）树木落叶只剩枝干、地面盖上积雪、部分建筑屋顶有薄雪；之后每年循环。天空仍按昼夜变化，季节只加一点暖色或冷色，夜晚灯光也不受影响。四季只改画面，不影响资金、人口、满意度等任何经营数值。地图上方的「时间」小标签打开四季后会显示当前季节。",
-    "40. Weather effects (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Weather Effects” switch, on by default. On, each game day brings one weather — sunny, cloudy, light rain, heavy rain, fog or snow — fixed for a given day and season. Cloudy days turn the sky grey with a few clouds drifting slowly; light and heavy rain bring falling streaks (heavier rain is denser and darker); fog closes the view in and greys the scene; snow falls slowly. Weather only changes the visuals; funds, population, satisfaction, traffic, power, events and all other management numbers are untouched. Off means fixed sunny weather. With weather on, the small “time” chip above the map also shows the current weather.": "40. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。",
-    "41. Dynamic street life (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Dynamic Street Life” switch, on by default. On, pedestrians no longer stroll evenly: in the daytime (07:00–17:00) commercial streets and parks are busy while industrial areas are quiet; at dusk (17:00–19:00) commercial streets stay lively and parks cool off a little; at night (19:00–05:00) pedestrians gather on the lit commercial streets while parks and industrial areas go quiet. Vehicles also run by type and district: trucks head mostly to industrial areas and rarely to parks, buses head mostly to commercial areas. Pedestrian totals still follow population (max 36) and vehicles stay at max 8 — only the distribution changes, no extra people or cars. Dynamic street life only changes the visuals; funds, population, satisfaction and all other management numbers are untouched. Off means pedestrians spread evenly again and vehicles go back to taking turns on the road segments as before.": "41. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。",
-    "42. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel below the map controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The control panel sits directly below the map and never covers it; its first line shows the viewing hint plus the current time, season and weather, and no status bar overlays the map. The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (dragging pans in the normal view too) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.": "42. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。",
+    "40. Rotate-view dial: a round dial sits in a left-aligned row just below the map. Hold ←/→ to rotate the view left or right, and ↑/↓ to adjust the pitch (↑ raises the view, ↓ lowers it, elevation 10–75°); it starts at about 15°/s and speeds up to about 45°/s within 0.6 seconds, stopping the moment you release, with no inertia; holding two arrows combines diagonally, each axis at its own rate; tap the centre ◎ to reset only the azimuth and pitch to their defaults, leaving the target point and distance untouched. On a computer you can also hold an arrow with the mouse, or move the pointer over the map / click the dial to focus it and then use the keyboard arrow keys — release to stop; while focus is in a text field, on the map-height slider, or elsewhere on the page, the arrow keys scroll the page as usual. Drag to pan, twist with two fingers to rotate, pinch to zoom and tap to select all still work, and the dial never blocks gestures; it hides inside Free View and returns when you exit.": "40. 旋转视角圆盘：地图下方有一行左对齐的圆形圆盘，按住 ←/→ 左右转动视角，按住 ↑/↓ 调整俯仰（↑ 抬高、↓ 压低，仰角 10–75°），起步约 15°/秒、0.6 秒内加速到约 45°/秒，松开立即停，没有惯性；同时按两个方向可斜向组合，每轴按各自速率转动；点中间的 ◎ 只把方位角与俯仰角回到默认值，目标点与距离不动。电脑上也可以鼠标按住方向键不放，或把鼠标移到地图上 / 点一下圆盘获得焦点后按键盘方向键转动，松开即停；焦点在输入框里、地图高度滑杆上或在页面其他地方时，键盘方向键照常滚动页面。单指拖动平移、双指旋转、捏合缩放和点选都照常用，圆盘不挡手势；自由观景里圆盘会藏起来，退出后恢复。",
+    "Rotate-view dial": "旋转视角圆盘",
+    "Rotate view: hold to raise the view": "旋转视角：按住抬高",
+    "Rotate view: hold to lower the view": "旋转视角：按住压低",
+    "Rotate view: hold to turn left": "旋转视角：按住向左转",
+    "Rotate view: hold to turn right": "旋转视角：按住向右转",
+    "Back to default angles": "回到默认角度",
+    "41. Weather effects (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Weather Effects” switch, on by default. On, each game day brings one weather — sunny, cloudy, light rain, heavy rain, fog or snow — fixed for a given day and season. Cloudy days turn the sky grey with a few clouds drifting slowly; light and heavy rain bring falling streaks (heavier rain is denser and darker); fog closes the view in and greys the scene; snow falls slowly. Weather only changes the visuals; funds, population, satisfaction, traffic, power, events and all other management numbers are untouched. Off means fixed sunny weather. With weather on, the small “time” chip above the map also shows the current weather.": "41. 天气效果（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「天气效果」开关，默认开。打开后每天一种天气：晴、多云、小雨、暴雨、大雾、降雪，按游戏日与季节确定，同一天同一季节固定不变；多云时天空偏灰、有几朵云缓慢漂移，小雨与暴雨有雨丝下落（暴雨更密、光线更暗），大雾时视野收紧、画面偏灰，降雪时雪花缓慢飘落。天气只改画面，不影响资金、人口、满意度、交通、用电、事件等任何经营数值；关时固定晴天。地图上方的「时间」小标签打开天气后会显示当前天气。",
+    "42. Dynamic street life (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Dynamic Street Life” switch, on by default. On, pedestrians no longer stroll evenly: in the daytime (07:00–17:00) commercial streets and parks are busy while industrial areas are quiet; at dusk (17:00–19:00) commercial streets stay lively and parks cool off a little; at night (19:00–05:00) pedestrians gather on the lit commercial streets while parks and industrial areas go quiet. Vehicles also run by type and district: trucks head mostly to industrial areas and rarely to parks, buses head mostly to commercial areas. Pedestrian totals still follow population (max 36) and vehicles stay at max 8 — only the distribution changes, no extra people or cars. Dynamic street life only changes the visuals; funds, population, satisfaction and all other management numbers are untouched. Off means pedestrians spread evenly again and vehicles go back to taking turns on the road segments as before.": "42. 动态街景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「动态街景」开关，默认开。打开后行人不再均匀散步：白天（7–17 点）商业街与公园人多、工业区人少，黄昏（17–19 点）商业街仍热闹、公园稍冷，夜晚（19 点–次日 5 点）行人向灯亮的商业街聚集、公园与工业区冷清；车辆也按车型分区跑：货车多去工业区、少去公园，公交多去商业区。行人总数仍按人口算（最多 36 位）、车辆仍最多 8 辆，只调分布、不多加人车。动态街景只改画面，不影响资金、人口、满意度等任何经营数值；关时行人恢复均匀分布、车辆恢复原来按路段轮流跑。",
+    "43. Free View (Stage 4 · Dynamic Environment): “City Operations” → “Stage 4 · Dynamic Environment” has a “Free View” switch, on by default. On, a “Free View” entry appears at the bottom left of the 3D view: entering pauses management — the month does not advance and the environment clock stops flowing on its own; the panel below the map controls it by hand instead, and exiting restores everything exactly as it was when you entered (time, season, weather, camera, funds, population and month, all unchanged). The control panel sits directly below the map and never covers it; its first line shows the viewing hint plus the current time, season and weather, and no status bar overlays the map. The panel has six parameters that take effect immediately: a time slider for 0–24 hours (0.5-hour steps), four season buttons (spring/summer/autumn/winter), six weather buttons (sunny/cloudy/light rain/heavy rain/fog/snow), camera azimuth 0–360°, elevation 10–75°, and camera distance 9–38 (close-up to full panorama). While viewing, dragging the map pans it (dragging pans in the normal view too) and pinch or scroll still zooms; tapping a tile builds nothing. Azimuth, elevation and distance can also be changed by dragging the map and scrolling, and the panel sliders follow along. Inside Free View, time, season and weather ignore their own switches: you can still pick winter with seasons off, heavy rain with weather off, and sliding the time into the night while day/night is off still turns the scene dark and lights the lamps; exiting restores the switches' normal behaviour. Free View only changes the visuals; funds, population, satisfaction and all other management numbers are untouched, and nothing is written to the management save or the Stage 4 local record.": "43. 自由观景（阶段四 · 动态环境）：「市政操作」→「阶段四 · 动态环境」里有「自由观景」开关，默认开。打开后 3D 视图左下角出现「自由观景」入口：点进去就暂停经营——月份不推进、环境时间不自动流逝，改由地图下方的面板手动调，退出时全部恢复进入前的样子（时间、季节、天气、镜头、资金、人口、月份一个不少）。控制面板在地图正下方，不盖住地图；面板首行显示观景提示与当前时间、季节、天气，地图上方不再压任何状态条。面板六个参数即时生效：时间滑杆 0–24 小时（步长 0.5 小时）、季节四按钮（春/夏/秋/冬）、天气六按钮（晴/多云/小雨/暴雨/大雾/降雪）、镜头方位角 0–360°、仰角 10–75°、镜头距离 9–38（近景到全景）。观景时拖动地图是平移（平时视角拖动也是平移），双指捏合或滚轮照常缩放，点地块不建设；方位角、仰角、距离也可以直接拖动地图与滚轮改，面板滑杆会跟着变。观景里时间、季节、天气都不受各自开关限制：四季关时也能切冬季、天气关时也能切暴雨、昼夜关时把时间调到夜里也会变黑亮灯；退出后恢复进入前的开关口径。自由观景只改画面，不影响资金、人口、满意度等任何经营数值，也不写入经营存档与阶段四本地记录。",
 "Beginner tips: On": "新手提示：开",
 "Beginner tips: Off": "新手提示：关",
 "Off by default: when on, you get an occasional beginner tip (first build, tight funds, stalled population, congestion, development advice) — at most 1 per month and 3 of each kind; off means no tips at all.": "默认关：开后偶尔给一条新手提示（首次建造、资金紧张、人口停滞、拥堵、发展建议），每月最多 1 条，每种最多 3 次；关时一条提示都不出。",
@@ -6768,6 +6813,138 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       camTarget.z = Math.max(FREE_VIEW.panMin, Math.min(FREE_VIEW.panMax, camTarget.z - rz * dx * s + fz * dy * s));
       updateCamera();
     }
+    /* ---- 旋转视角圆盘（2026-11-24）：独立 DOM 控件，不碰 bindCameraControls；
+       每帧按方向直接改 camTheta/camPhi（自定义球面相机原有状态），复用 updateCamera()
+       与已有钒制 camPhi 0.26–1.40 rad（仰角约 10–75°，与拖动/滑杆同范围）；不碰 game state、
+       不耗随机数、不进存档/localStorage。
+       方向：←/→ = 方位角 camTheta 减小/增大（左右转）；↑ = 俯仰抬高（camPhi 减小），↓ = 压低（camPhi 增大）。
+       速度：起步约 15°/秒，0.6 秒内线性加速到巡航约 45°/秒；松开立即停，无惯性。
+       对角：两轴各自按速率转，不归一化、不叠加超速。中心 ◎：只把 camTheta/camPhi 回默认值
+       （Math.PI/4、0.95，与 btnResetCam 的角度默认值同值），目标点与距离不动。 */
+    var rotDialHoldStart = 0; /* 当前这轮按住的开始时刻（毫秒）；全部松开后清零 */
+    var rotDialLastT = 0; /* animate 上一帧时间戳，供圆盘算 dt */
+    var rotDialPointerDirs = {}; /* pointerId -> 方向（手指/鼠标按住的方向键） */
+    var rotDialKeyDirs = {}; /* 方向 -> true（键盘方向键按住） */
+    var rotDialHover = false; /* 鼠标指针是否在 #stageWrap 或圆盘上（键盘接管条件之一） */
+    function rotDialActiveDirs() {
+      var d = { up: false, down: false, left: false, right: false };
+      var k;
+      for (k in rotDialPointerDirs) if (rotDialPointerDirs[k] && d.hasOwnProperty(rotDialPointerDirs[k])) d[rotDialPointerDirs[k]] = true;
+      for (k in rotDialKeyDirs) if (rotDialKeyDirs[k] && d.hasOwnProperty(k)) d[k] = true;
+      return d;
+    }
+    function rotDialSyncHeld() { /* 按住的方向键变 accent（金色）高亮：指针与键盘共用同一视觉状态 */
+      var d = rotDialActiveDirs();
+      var btns = document.querySelectorAll("#btnRotateDial .rd-btn[data-dir]");
+      for (var i = 0; i < btns.length; i++) {
+        var dir = btns[i].getAttribute("data-dir");
+        if (dir === "center") continue;
+        btns[i].classList.toggle("held", !!d[dir]);
+      }
+    }
+    function rotDialTick(nowMs, dt) { /* 每帧由 animate 调：按当前方向改 camTheta/camPhi */
+      if (freeView) return;
+      var d = rotDialActiveDirs();
+      var az = (d.right ? 1 : 0) - (d.left ? 1 : 0); /* 方位角：→ 增大、← 减小 */
+      var el = (d.up ? 1 : 0) - (d.down ? 1 : 0); /* 俯仰：↑ 抬高（camPhi 减）、↓ 压低（camPhi 增） */
+      if (!az && !el) { rotDialHoldStart = 0; return; }
+      if (!rotDialHoldStart) rotDialHoldStart = nowMs;
+      var elapsed = Math.min(0.6, Math.max(0, (nowMs - rotDialHoldStart) / 1000));
+      var speedDeg = 15 + 30 * (elapsed / 0.6); /* 起步约 15°/秒，0.6 秒线性加速到巡航约 45°/秒 */
+      var speed = speedDeg * Math.PI / 180;
+      if (!isFinite(dt) || dt <= 0) return;
+      camTheta += az * speed * dt;
+      camPhi = Math.max(0.26, Math.min(1.40, camPhi - el * speed * dt)); /* 仰角 10–75°：与拖动钒制同范围 */
+      updateCamera();
+    }
+    function rotDialResetAngles() { /* 中心 ◎：只回角度（方位角 Math.PI/4、俯仰角 0.95），目标点、距离全不动 */
+      camTheta = Math.PI / 4; camPhi = 0.95;
+      updateCamera();
+    }
+    function rotDialSetVisible(v) {
+      var pad = document.getElementById("btnRotateDial");
+      if (pad) pad.hidden = !v;
+    }
+    function rotDialClearAll() { /* 进入自由观景 / 失焦时清掉全部按住状态，防松开后还继续转 */
+      rotDialPointerDirs = {}; rotDialKeyDirs = {}; rotDialHoldStart = 0;
+      rotDialSyncHeld();
+    }
+    function rotDialBind() {
+      var pad = document.getElementById("btnRotateDial");
+      if (!pad) return;
+      var wrap = document.getElementById("stageWrap");
+      if (wrap) { /* 键盘接管条件之一：鼠标指针在地图上 */
+        wrap.addEventListener("mouseenter", function () { rotDialHover = true; });
+        wrap.addEventListener("mouseleave", function () { rotDialHover = false; });
+      }
+      /* 圆盘在地图下方的正常流里（不在 #stageWrap 内），指针停在圆盘上也算“在地图区”，与旧圆盘在地图内时的语义一致 */
+      pad.addEventListener("mouseenter", function () { rotDialHover = true; });
+      pad.addEventListener("mouseleave", function () { rotDialHover = false; });
+      var btns = pad.querySelectorAll(".rd-btn[data-dir]");
+      for (var i = 0; i < btns.length; i++) {
+        (function (b) {
+          var dir = b.getAttribute("data-dir");
+          if (dir === "center") {
+            b.addEventListener("click", function () { if (!freeView) rotDialResetAngles(); });
+            return;
+          }
+          b.addEventListener("pointerdown", function (e) {
+            if (freeView) return;
+            try { b.setPointerCapture(e.pointerId); } catch (err) {}
+            rotDialPointerDirs[e.pointerId] = dir;
+            rotDialSyncHeld();
+          });
+          var release = function (e) {
+            if (rotDialPointerDirs[e.pointerId] === dir) delete rotDialPointerDirs[e.pointerId];
+            rotDialSyncHeld();
+          };
+          b.addEventListener("pointerup", release);
+          b.addEventListener("pointercancel", release);
+          b.addEventListener("lostpointercapture", release);
+          b.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+        })(btns[i]);
+      }
+      /* 键盘方向键转动视角（电脑端）：与圆盘同一速度曲线、同一方向映射。
+         接管规则（防页面滚动冲突）：仅当同时满足以下全部条件时才接管并 preventDefault，
+         否则方向键照常滚动页面——
+         (1) 焦点不在 input/textarea/select/可编辑元素里，也不在弹窗（[role=dialog]）里，
+             且当前焦点元素不是 #mapResize（它自己用上下方向键调地图高度）；
+         (2) 鼠标指针在 #stageWrap 或圆盘上，或焦点在 #stageWrap 内或圆盘内（点过圆盘/重置/自由观景按钮、
+             或 Tab 到地图区）。选这条而非“全局接管”，是因为页面很长、方向键是主要滚动键，
+             全局接管会让电脑用户在页面其他位置无法用方向键滚动；hover/focus 两种入口
+             覆盖了鼠标用户（手在地图上）和键盘用户（Tab 到地图区）两种习惯。
+         修饰键（Ctrl/Cmd/Alt）按下时不接管，不抢浏览器快捷键。 */
+      var KEY_DIR = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" };
+      function rotDialKeyAllowed(e) {
+        if (e.metaKey || e.ctrlKey || e.altKey) return false;
+        var t = e.target;
+        if (t && t.closest) {
+          if (t.closest("input, textarea, select, [contenteditable='true'], [contenteditable=''], [role='dialog']")) return false;
+          if (t.id === "mapResize") return false;
+        }
+        var ae = document.activeElement;
+        if (ae && ae.id === "mapResize") return false;
+        if (rotDialHover) return true;
+        if (wrap && ae && wrap.contains(ae)) return true;
+        if (pad && ae && pad.contains(ae)) return true;
+        return false;
+      }
+      window.addEventListener("keydown", function (e) {
+        var dir = KEY_DIR[e.key];
+        if (!dir) return;
+        if (freeView) return;
+        if (!rotDialKeyAllowed(e)) return; /* 不接管：放行，让页面照常滚动 */
+        e.preventDefault();
+        rotDialKeyDirs[dir] = true;
+        rotDialSyncHeld();
+      });
+      window.addEventListener("keyup", function (e) {
+        var dir = KEY_DIR[e.key];
+        if (!dir) return;
+        if (rotDialKeyDirs[dir]) { delete rotDialKeyDirs[dir]; rotDialSyncHeld(); }
+      });
+      window.addEventListener("blur", function () { rotDialClearAll(); });
+    }
     function freeViewResetView() { /* 只恢复进入前的镜头，不动时间/季节/天气 */
       if (!freeView || !freeViewSnapshot) return;
       var s = freeViewSnapshot;
@@ -6827,6 +7004,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (panel) panel.hidden = false;
       var entry = document.getElementById("btnFreeView");
       if (entry) entry.hidden = true;
+      rotDialClearAll(); rotDialSetVisible(false); /* 自由观景内不出现圆盘 */
       var nm = document.getElementById("btnNextMonth");
       if (nm) nm.disabled = true;
       /* 面板已移到地图下方：观景时地图上方的两条状态条都藏起来，提示与时间/季节/天气改由面板首行 fvStatus 显示（updateTimeChip 里同步），地图完整露出；正常模式下两条 chips 原样不动 */
@@ -6855,6 +7033,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       if (panel) panel.hidden = true;
       var entry = document.getElementById("btnFreeView");
       if (entry) entry.hidden = false;
+      rotDialSetVisible(true); /* 退出自由观景后圆盘恢复 */
       var nm = document.getElementById("btnNextMonth");
       if (nm) nm.disabled = false;
       var chip = document.getElementById("stageChip");
@@ -10914,6 +11093,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     function animate(t) {
       requestAnimationFrame(animate);
       var time = (t || 0) / 1000;
+      var rotDialNow = t || 0; /* 圆盘：按真实帧间隔算 dt（首帧 0.016），只供 rotDialTick 用 */
+      var rotDialDt = rotDialLastT ? Math.min(0.05, Math.max(0, (rotDialNow - rotDialLastT) / 1000)) : 0.016;
+      rotDialLastT = rotDialNow;
+      rotDialTick(rotDialNow, rotDialDt);
       turbines.forEach(function (h) { h.rotation.z += 0.06; });
       /* 教程标记呼吸：金圈微微缩放、箭头上下浮动（与原版一致） */
       tutMarkers.forEach(function (mg, mi) {
@@ -13094,6 +13277,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         renderLog();
       });
     });
+    rotDialBind(); /* 旋转视角圆盘：指针（手指/鼠标）+ 键盘方向键绑定 */
     document.getElementById("btnResetCam").addEventListener("click", function () {
       camTheta = Math.PI / 4; camPhi = 0.95; camR = 23;
       if (camTarget) camTarget.set(0, 0, 0); /* 平时视角可平移后，重置视角也要回到中心目标点（否则平移出去就回不来了）；每帧 animate 会调 updateCamera() 生效 */
