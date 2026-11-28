@@ -304,15 +304,27 @@
       }
       .overlay.open { display: block; }
       @media (min-width: 640px) {
-        .overlay.open { display: flex; align-items: center; justify-content: center; padding: 16px 12px; }
+        .overlay.open { display: flex; justify-content: center; padding: 16px 12px; }
       }
       .dialog-card {
         background: var(--surface); border-radius: var(--radius); box-shadow: 0 12px 40px rgba(0,0,0,.35);
-        width: 100%; max-width: 512px; margin: 0 auto; padding: 12px 14px;
+        width: 100%; max-width: 512px; margin: auto; padding: 12px 14px;
+        max-height: calc(100vh - 56px); max-height: calc(100dvh - 56px);
+        overflow-y: auto; overscroll-behavior: contain;
       }
-      @media (min-width: 640px) { .dialog-card { max-width: 576px; } }
+      @media (min-width: 640px) { .dialog-card { max-width: 576px; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); } }
       @media (min-width: 1024px) { .dialog-card { max-width: 768px; } }
-      .dlg-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+      .dlg-head { position: sticky; top: -12px; z-index: 2; background: var(--surface); margin: -12px -14px 0; padding: 12px 14px 0; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px; }
+      /* 地块弹窗顶部数值条：与页面顶部数值一致；空地弹窗里它是标题栏第二行（随标题栏一起吸顶），已有建筑弹窗里是独立吸顶条 */
+      .tile-stats { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); font-size: 12px; line-height: 1.6; color: var(--dim); }
+      .tile-stats .ts-item b { color: var(--text); font-weight: 600; }
+      .tile-stats .ts-item .neg { color: var(--brick); }
+      .tile-stats .ts-sub { color: var(--dim); font-weight: 400; }
+      .tile-stats-bar { position: sticky; top: -12px; z-index: 2; background: var(--surface); margin: -12px -14px 0; padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
+      .tile-stats-bar .tile-stats { margin-top: 0; padding-top: 0; border-top: 0; }
+      /* 计算过程折叠开关：默认收起，点开在原地展开；开关状态只放内存变量，不进存档 */
+      .calc-toggle { margin: 8px 0 0; }
+      .calc-body[hidden] { display: none; }
       .dlg-title { font-size: 18px; line-height: 1.3; margin: 0; }
       .dlg-title .lv-note { font-size: 14px; color: var(--dim); font-family: ui-sans-serif, system-ui, sans-serif; margin-left: 8px; }
       .dlg-sub { font-size: 12px; color: var(--dim); margin: 2px 0 0; }
@@ -660,7 +672,7 @@
       .ach-hero .ach-stat { background: var(--surface); }
       .ach-tabs {
         display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 2px;
-        position: sticky; top: 0; background: var(--surface); padding: 6px 0; z-index: 2;
+        background: var(--surface); padding: 6px 0;
       }
       .ach-tab {
         border: 1px solid var(--border); background: var(--surface-2); color: var(--dim);
@@ -3648,6 +3660,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     "全城拥堵指数超过 100% 了，商业收入正在被压。可以在交通负荷里看看哪个区最堵。": "Citywide congestion is over 100% and it's squeezing commercial income. Check the traffic load view to see which zone is worst.",
     "城市升级了！人口再往上走，记得补齐学校、医院这些配套，别只顾着盖房子。": "Your city just levelled up! As population grows, remember to add schools, hospitals and other services — not just more housing.",
     "城市好几个月没长了。不妨换个方向试试：补住房、提满意度，或者看看城市发展报告找找原因。": "The city hasn't grown in months. Try a different angle: add housing, raise satisfaction, or check the city development report for clues.",
+    "详情 ▸": "Details ▸",
+    "收起 ▾": "Collapse ▾",
 };
     var I18N_REV = {
 " congested, ": " 个、繁忙 ",
@@ -5962,6 +5976,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
 "Citywide congestion is over 100% and it's squeezing commercial income. Check the traffic load view to see which zone is worst.": "全城拥堵指数超过 100% 了，商业收入正在被压。可以在交通负荷里看看哪个区最堵。",
 "Your city just levelled up! As population grows, remember to add schools, hospitals and other services — not just more housing.": "城市升级了！人口再往上走，记得补齐学校、医院这些配套，别只顾着盖房子。",
 "The city hasn't grown in months. Try a different angle: add housing, raise satisfaction, or check the city development report for clues.": "城市好几个月没长了。不妨换个方向试试：补住房、提满意度，或者看看城市发展报告找找原因。",
+"Details ▸": "详情 ▸",
+"Collapse ▾": "收起 ▾",
 }; /* 英文 → 中文（按去首尾空白后的英文值查；歧义取无首尾空白的中文键） */
     var currentLang = "zh";
     try { var savedLang = window.localStorage.getItem(LANG_KEY); if (savedLang === "en" || savedLang === "zh") currentLang = savedLang; } catch (e) {}
@@ -6157,6 +6173,14 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     var saveNote = "";
     /* 满意度解析 / 建筑统计默认收起（点标题旁按钮展开/收起），只是界面状态，不进存档 */
     var statsOpen = false, buildStatsOpen = false;
+    /* 「详情」折叠开关状态：只放内存变量，不进存档、不写 localStorage（与 statsOpen 同口径） */
+    var detailOpen = {};
+    /* 计算过程折叠块：默认只显示最终数值，点「详情」在原地展开原来的逐项内容，再点收起 */
+    function calcDetailHtml(key, innerHtml) {
+      var open = !!detailOpen[key];
+      return "<div class='calc-detail'><button type='button' class='calc-toggle mini-btn' data-detail-key='" + key + "' aria-expanded='" + open + "'>" + (open ? tr("收起 ▾") : tr("详情 ▸")) + "</button>"
+        + "<div class='calc-body'" + (open ? "" : " hidden") + ">" + innerHtml + "</div></div>";
+    }
     /* ---------------- 阶段三开关（开发计划 §3.4） ----------------
        P1-1 人口结构 / P1-2 产业联动 / P1-3 交通负荷各带独立开关，
        默认开启；关闭时游戏回到阶段三上线前的旧行为、旧存档不受影响。
@@ -9019,7 +9043,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     function closeOutcome() { document.getElementById("outcomeOverlay").classList.remove("open"); }
 
     /* 通用详情弹窗：页面只留关键数字，构成/计算/逐项账目点按钮看这里 */
-    function openInfo(title, sub, lines) {
+    /* detailLines（可选）：逐项计算过程，默认收在「详情」开关里，点开在原地展开；不传则全部直接显示（原行为） */
+    function openInfo(title, sub, lines, detailLines) {
       document.getElementById("infoTitle").textContent = title;
       document.getElementById("infoSub").textContent = sub || "";
       var body = document.getElementById("infoBody");
@@ -9030,6 +9055,13 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         p.textContent = ln;
         body.appendChild(p);
       });
+      if (detailLines && detailLines.length) {
+        var wrap = document.createElement("div");
+        wrap.innerHTML = calcDetailHtml("info:" + title, detailLines.map(function (ln) {
+          return "<p class='info-line'>" + ln.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>";
+        }).join(""));
+        while (wrap.firstChild) body.appendChild(wrap.firstChild);
+      }
       document.getElementById("infoOverlay").classList.add("open");
     }
     function closeInfo() { document.getElementById("infoOverlay").classList.remove("open"); }
@@ -11826,6 +11858,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       ];
       var trend = c.popTrend;
       var popLines = [];
+      var popDetailLines = [];
       if (trend) {
         var tMain = trend.reasons.filter(function (r) { return r.people !== 0; })[0];
         var tTxt = S.pop === 0
@@ -11835,9 +11868,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         popLines = [tr("下月预计人口变化 ") + (trend.delta > 0 ? "+" : "") + trend.delta + tr(" 人。人口增减由九项按权重综合计算，满意度只是其中一项；迁入已大幅收紧：正向贡献大致砍半、每月净迁入封顶 15 人（车站每级再 +2 人）且被空房数硬顶住，负向流失加重，总流失封顶 −20%/月（车站能留人：流出率 −0.3%/级，上限 −1.5%）。"),
           tr("当前条件：空房 ") + c.vacancy + tr(" 间（空置率 ") + c.vacancyRate + tr("%）、污染率 ") + c.pollutionRate + tr("%、治安管理率 ") + c.security + tr("%、满意度 ") + c.sat.total + tr(" 分、失业率 ") + Math.round(c.unemploymentRate * 100) + "%。"];
         trend.reasons.filter(function (r) { return r.people !== 0; }).forEach(function (r) {
-          popLines.push(r.label + "：" + (r.people > 0 ? "+" : "") + r.people + tr(" 人（权重 ×") + (r.w || 1) + "）——" + r.text);
+          popDetailLines.push(r.label + "：" + (r.people > 0 ? "+" : "") + r.people + tr(" 人（权重 ×") + (r.w || 1) + "）——" + r.text);
         });
-        if (popLines.length === 2) popLines.push(tr("本月各项因素都没有造成人口增减，城市人口保持稳定。"));
+        if (popDetailLines.length === 0) popDetailLines.push(tr("本月各项因素都没有造成人口增减，城市人口保持稳定。"));
       }
       if (S.reputation !== 0) {
         html += "<p class='hud-note " + (S.reputation > 0 ? "mood-pos" : "mood-neg") + tr("'>市民口碑 ") + signed(S.reputation) + "（" + (S.reputation > 0 ? tr("满意度长期受益") : tr("满意度长期受拖累")) + tr("，详见满意度解析的「大事抉择」）</p>");
@@ -11874,24 +11907,26 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       /* 详情按钮：把构成、计算和逐项账目收进弹窗，页面只留关键数字 */
       var bcf = document.getElementById("btnConflictInfo");
       if (bcf) bcf.addEventListener("click", function () {
-        openInfo(tr("社会矛盾值构成"), tr("矛盾值 = 住房紧张 + 环境污染 + 教育率低 + 治安率低，四项相加，满分 100"), [
-          tr("住房紧张 +") + c.conflictParts.housing + tr(" / 30：住房占用率超 55% 开始涨，住得越满矛盾越大——多盖住宅、盖高级住宅区能降。"),
-          tr("环境污染 +") + c.conflictParts.pollution + tr(" / 25：按全城污染率算——工厂离住宅远一点、盖公园和污水处理厂能降。"),
-          tr("教育率低 +") + c.conflictParts.edu + tr(" / 20：受教育度越低贡献越大——盖学校、图书馆并升级能降。"),
-          tr("治安率低 +") + c.conflictParts.security + tr(" / 25：治安管理率越低贡献越大——盖警察局、消防站，提高税率和受教育度也能帮上忙。"),
-          tr("现在矛盾值 ") + c.conflict + "（" + c.conflictWord + tr("）：30 以上开始扣满意度（最高 −18），40 以上加速人口流失，65 以上每月约 20% 概率爆发抗议或治安事件；低于 15 城市稳定、满意度 +2。"),
-          (c.counts.court > 0 ? tr("法院调节：健康法院 −2/座，积压案件的法院 +2/座（当前净调节 ") + (c.courtConflictNet >= 0 ? "+" : "") + c.courtConflictNet + tr("），矛盾事件触发几率 −") + c.courtConflictCut + "%。" : tr("法院能帮上忙：每座法院让矛盾值每月 −2，矛盾事件触发几率 −20%（上限 −60%）。"))
-        ]);
+        openInfo(tr("社会矛盾值构成"), tr("矛盾值 = 住房紧张 + 环境污染 + 教育率低 + 治安率低，四项相加，满分 100"),
+          [tr("现在矛盾值 ") + c.conflict + "（" + c.conflictWord + tr("）：30 以上开始扣满意度（最高 −18），40 以上加速人口流失，65 以上每月约 20% 概率爆发抗议或治安事件；低于 15 城市稳定、满意度 +2。")],
+          [
+            tr("住房紧张 +") + c.conflictParts.housing + tr(" / 30：住房占用率超 55% 开始涨，住得越满矛盾越大——多盖住宅、盖高级住宅区能降。"),
+            tr("环境污染 +") + c.conflictParts.pollution + tr(" / 25：按全城污染率算——工厂离住宅远一点、盖公园和污水处理厂能降。"),
+            tr("教育率低 +") + c.conflictParts.edu + tr(" / 20：受教育度越低贡献越大——盖学校、图书馆并升级能降。"),
+            tr("治安率低 +") + c.conflictParts.security + tr(" / 25：治安管理率越低贡献越大——盖警察局、消防站，提高税率和受教育度也能帮上忙。"),
+            (c.counts.court > 0 ? tr("法院调节：健康法院 −2/座，积压案件的法院 +2/座（当前净调节 ") + (c.courtConflictNet >= 0 ? "+" : "") + c.courtConflictNet + tr("），矛盾事件触发几率 −") + c.courtConflictCut + "%。" : tr("法院能帮上忙：每座法院让矛盾值每月 −2，矛盾事件触发几率 −20%（上限 −60%）。"))
+          ]);
       });
       var bgr = document.getElementById("btnGreenInfo");
       if (bgr) bgr.addEventListener("click", function () {
-        openInfo(tr("绿化率详情"), tr("公园数量和等级决定绿化率，绿化率影响舒适度、满意度和污染率"), [
-          tr("绿化率 ") + c.greenRate + tr("% = 绿化面积 ") + c.parkGreenArea + tr(" ÷ 全城 144 块地。现在有 ") + c.counts.park + tr(" 座公园，每座按等级提供绿化面积：1 级 10、每升一级 +5、5 级 30。"),
-          tr("居民舒适度 ") + c.comfort + tr(" 分（") + c.comfortWord + tr("）= 45 +（绿化率 − 20）× 0.5 − 污染率 × 0.25 + 生活便利 × 15。舒适度会写进满意度。"),
-          tr("绿化压低污染：绿化率每 1% 压低约 0.3% 污染率，最高压 30%——现在压了 ") + c.greenCutPct + tr("%，污染率从 ") + c.pollutionRateRaw + tr("% 降到 ") + c.pollutionRate + "%。",
-          (c.envCutPct ? tr("环保局再压污染：每座环保局削减全城污染 5%（上限 −20%），现在共压 ") + c.envCutPct + "%。" : tr("环保局能再压污染：每座削减全城污染 5%（上限 −20%），还没盖环保局。")),
-          tr("绿化对满意度按（绿化率 − 22）× 0.22 计分（−8 ～ +9 分）。绿化不足就多盖公园、给公园升级。")
-        ]);
+        openInfo(tr("绿化率详情"), tr("公园数量和等级决定绿化率，绿化率影响舒适度、满意度和污染率"),
+          [tr("绿化率 ") + c.greenRate + tr("% = 绿化面积 ") + c.parkGreenArea + tr(" ÷ 全城 144 块地。现在有 ") + c.counts.park + tr(" 座公园，每座按等级提供绿化面积：1 级 10、每升一级 +5、5 级 30。")],
+          [
+            tr("居民舒适度 ") + c.comfort + tr(" 分（") + c.comfortWord + tr("）= 45 +（绿化率 − 20）× 0.5 − 污染率 × 0.25 + 生活便利 × 15。舒适度会写进满意度。"),
+            tr("绿化压低污染：绿化率每 1% 压低约 0.3% 污染率，最高压 30%——现在压了 ") + c.greenCutPct + tr("%，污染率从 ") + c.pollutionRateRaw + tr("% 降到 ") + c.pollutionRate + "%。",
+            (c.envCutPct ? tr("环保局再压污染：每座环保局削减全城污染 5%（上限 −20%），现在共压 ") + c.envCutPct + "%。" : tr("环保局能再压污染：每座削减全城污染 5%（上限 −20%），还没盖环保局。")),
+            tr("绿化对满意度按（绿化率 − 22）× 0.22 计分（−8 ～ +9 分）。绿化不足就多盖公园、给公园升级。")
+          ]);
       });
       var bpr = document.getElementById("btnProbInfo");
       if (bpr) bpr.addEventListener("click", function () {
@@ -11900,9 +11935,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         openInfo(tr("建筑问题（") + c.problemList.length + tr(" 处）"), tr("每种建筑都会随机出问题，处理后恢复正常"), lines);
       });
       var bct = document.getElementById("btnCityInfo");
-      if (bct) bct.addEventListener("click", function () { openInfo(tr("城市详情"), tr("收入、岗位、污染、生活便利、治安构成都在这里"), cityLines); });
+      if (bct) bct.addEventListener("click", function () { openInfo(tr("城市详情"), tr("收入、岗位、污染、生活便利、治安构成都在这里"), [cityLines[0]], cityLines.slice(1)); });
       var bpp = document.getElementById("btnPopInfo");
-      if (bpp) bpp.addEventListener("click", function () { openInfo(tr("人口详情"), tr("下月人口增减的逐项贡献、权重和原因"), popLines); });
+      if (bpp) bpp.addEventListener("click", function () { openInfo(tr("人口详情"), tr("下月人口增减的逐项贡献、权重和原因"), popLines, popDetailLines); });
     }
 
     function renderReport() {
@@ -11929,9 +11964,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         + tr("<button type='button' class='rep-close' id='btnCloseReport' aria-label='关闭结算'>✕</button></div>")
         + (highs.length ? "<div class='rep-highs'>" + highs.map(function (h) { return "<span class='rh " + h.cls + "'>" + h.t + "</span>"; }).join("") + "</div>" : "")
         + tr("<p class='rep-body'>税收 ") + r.taxIncome + tr(" + 商业 ") + r.bizIncome + tr(" − 维护 ") + r.upkeep + tr("，净收支 <strong class='") + (r.net >= 0 ? "pos-t" : "neg-t") + "'>" + (r.net >= 0 ? "+" : "") + r.net + tr(" 金币</strong>；人口 ") + r.popBefore + " → " + r.popAfter + "（" + (r.popAfter - r.popBefore >= 0 ? "+" : "") + (r.popAfter - r.popBefore) + "）。</p>"
-        + (r.popReasons && r.popReasons.length ? "<ul class='rep-reasons'>" + r.popReasons.map(function (pr) {
+        + (r.popReasons && r.popReasons.length ? calcDetailHtml("report-pop", "<ul class='rep-reasons'>" + r.popReasons.map(function (pr) {
             return "<li><span class='rr-v " + (pr.v > 0 ? "pos-t" : pr.v < 0 ? "neg-t" : "") + "'>" + (pr.v > 0 ? "+" + pr.v : pr.v === 0 ? "·" : pr.v) + "</span><span class='rr-t'></span></li>";
-          }).join("") + "</ul>" : "")
+          }).join("") + "</ul>") : "")
         + (r.disasterTitle ? tr("<p class='rep-event'>🚨 天灾人祸「") + r.disasterTitle + tr("」来袭——先在弹窗里选处理方案，影响会立刻结算并记进市政日志。</p>") : "")
         + (r.eventTitle2 ? tr("<p class='rep-event'>⚠ 大事件「") + r.eventTitle2 + tr("」等你拍板——先在弹窗里选处理方案。</p>") : "")
         + (r.cityTitle ? tr("<p class='rep-event'>🎲 随机城市事件「") + r.cityTitle + tr("」等你拍板——先在弹窗里选应对方案。</p>") : "")
@@ -12086,7 +12121,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         body += row(tr("当前实际分（与目标一致；条件变差会立即下跌）"), "" + c.sat.total, "", true);
       }
       body += "</ul>";
-      body += tr("<h3 class='sec-h font-display' style='margin-top:14px'>治安管理率构成</h3>")
+      var det = "";
+      det += tr("<h3 class='sec-h font-display' style='margin-top:14px'>治安管理率构成</h3>")
         + "<ul class='sat-sum-list'>"
         + row(tr("警力覆盖基础（25 + 75 × 覆盖÷人口；警察局约 ") + c.policeService + tr(" 人 + 消防站约 ") + c.fireSecService + tr(" 人份，相对人口 ") + S.pop + tr(" 人；人口为 0 时基础 100）"), "" + c.secBase, "")
         + row(tr("税率影响（税率 ") + S.taxRate + tr("%，clamp(round((税率−10)×0.5), −6, +6)") + (S.pop === 0 ? tr("；人口为 0，修正为 0") : "") + "）", signed(c.secTax), c.secTax > 0 ? "pos-t" : c.secTax < 0 ? "neg-t" : "")
@@ -12094,7 +12130,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         + (c.secPolicePenalty ? row(tr("警察人手不足（治安率 −10，覆盖不减半）"), "−" + c.secPolicePenalty, "neg-t") : "")
         + row(tr("治安管理率（clamp 0～100）"), c.security + "%", "", true)
         + "</ul>";
-      body += tr("<h3 class='sec-h font-display' style='margin-top:14px'>社会矛盾值构成</h3>")
+      det += tr("<h3 class='sec-h font-display' style='margin-top:14px'>社会矛盾值构成</h3>")
         + "<ul class='sat-sum-list'>"
         + row(tr("住房紧张（住房占用率 ") + (c.capacity > 0 ? Math.round(S.pop / c.capacity * 100) : 0) + tr("%：超过 55% 后开始涨，最高 30）"), "+" + c.conflictParts.housing, c.conflictParts.housing > 0 ? "neg-t" : "")
         + row(tr("环境污染（污染率 ") + c.pollutionRate + tr("% × 0.25，最高 25）"), "+" + c.conflictParts.pollution, c.conflictParts.pollution > 0 ? "neg-t" : "")
@@ -12103,7 +12139,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         + row(tr("社会矛盾值（") + c.conflictWord + "）", "" + c.conflict, "", true)
         + "</ul>"
         + tr("<p class='note' style='margin-top:6px'>矛盾值的影响：30 以上开始扣满意度（最高 −18），40 以上加速人口流失，65 以上每月约 20% 概率爆发抗议 / 治安事件（弹窗拍板处理）；低于 15 则城市稳定、满意度 +2。降矛盾就按构成逐项治：盖住宅松住房、治污降污染、盖学校图书馆提教育、补警察局提治安。</p>");
-      body += tr("<h3 class='sec-h font-display' style='margin-top:14px'>绿化率构成（公园贡献与影响）</h3>")
+      det += tr("<h3 class='sec-h font-display' style='margin-top:14px'>绿化率构成（公园贡献与影响）</h3>")
         + "<ul class='sat-sum-list'>"
         + row(tr("公园绿化面积（") + c.counts.park + tr(" 座公园：1 级 10、每升一级 +5，5 级 30；无人打理的只剩三成）"), c.parkGreenArea + "", "")
         + row(tr("绿化率（绿化面积 ÷ 全城 144 块地）"), c.greenRate + "%", "", true)
@@ -12112,7 +12148,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         + row(tr("对污染率的影响（绿化压低污染，最高压 30%）"), "−" + c.greenCutPct + "%（" + c.pollutionRateRaw + "% → " + c.pollutionRate + "%）", c.greenCutPct > 0 ? "pos-t" : "")
         + "</ul>"
         + tr("<p class='note' style='margin-top:6px'>多盖公园、给公园升级都能涨绿化率：绿化高了，居民舒适度和满意度涨、污染率降、社会矛盾里的环境项也跟着小。</p>");
-      body += tr("<h3 class='sec-h font-display' style='margin-top:14px'>教育覆盖构成（受教育率详情）</h3>")
+      det += tr("<h3 class='sec-h font-display' style='margin-top:14px'>教育覆盖构成（受教育率详情）</h3>")
         + "<ul class='sat-sum-list'>"
         + row(tr("学校覆盖（") + c.counts.school + tr(" 座，按等级合计：1 级 150 人，每升一级 +120 人）"), c.schoolService + tr(" 人"), "")
         + row(tr("图书馆覆盖（") + c.counts.library + tr(" 座，按等级合计：1 级 80 人，每升一级 +64 人）"), c.libraryService + tr(" 人"), "")
@@ -12122,16 +12158,17 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         + row(tr("收入加成（受教育率 × 0.25，加到商业 / 办公 / 银行 / 工厂收入）"), "+" + c.eduBonusPct + "%", c.eduBonusPct > 0 ? "pos-t" : "")
         + "</ul>"
         + tr("<p class='note' style='margin-top:6px'>给学校或图书馆升级后，总覆盖、受教育人数和受教育率都会变大：学校每升一级多覆盖约 120 人、图书馆约 64 人；升级前后的单座覆盖变化，在点开学校 / 图书馆的建筑详情里也能看到（当前 → 下一级）。</p>");
-      body += tr("<h3 class='sec-h font-display' style='margin-top:14px'>逐项明细</h3>");
+      det += tr("<h3 class='sec-h font-display' style='margin-top:14px'>逐项明细</h3>");
       if (c.sat.items.length === 0) {
-        body += tr("<p class='note' style='margin:6px 0 0'>目前没有任何加减分项——") + (S.pop === 0 ? tr("先盖住宅把居民招进来吧。") : tr("城市运转平稳。")) + "</p>";
+        det += tr("<p class='note' style='margin:6px 0 0'>目前没有任何加减分项——") + (S.pop === 0 ? tr("先盖住宅把居民招进来吧。") : tr("城市运转平稳。")) + "</p>";
       } else {
-        body += "<ul class='sat-d-list'>" + c.sat.items.map(function (it) {
+        det += "<ul class='sat-d-list'>" + c.sat.items.map(function (it) {
           return "<li><span class='fv font-display " + (it.v > 0 ? "pos-t" : "neg-t") + "'>" + (it.v > 0 ? "+" + it.v : it.v) + "</span>"
             + "<div class='sat-d-main'><span class='dl2'></span><p class='dr'></p><p class='dc'></p></div></li>";
         }).join("") + "</ul>";
       }
-      body += tr("<p class='note' style='margin-top:10px'>数值为 0 的项目不会列入（比如税率适中、覆盖刚好达标）；所有分项四舍五入取整后计入。关掉这个弹窗就回到满意度解析。</p>");
+      det += tr("<p class='note' style='margin-top:10px'>数值为 0 的项目不会列入（比如税率适中、覆盖刚好达标）；所有分项四舍五入取整后计入。关掉这个弹窗就回到满意度解析。</p>");
+      body += calcDetailHtml("sat", det);
       document.getElementById("satDetailBody").innerHTML = body;
       document.getElementById("satDetailSub").textContent = tr("现在 ") + c.sat.total + tr(" 分（") + satisfactionWord(c.sat.total) + tr("）· 目标 ") + c.sat.target + tr(" 分 · 加分 +") + posSum + tr(" · 扣分 ") + negSum;
       var sls = document.querySelectorAll("#satDetailBody .sat-sum-list .sl");
@@ -12291,19 +12328,21 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       html += tr("<p class='note' style='margin:4px 0 0'>上月结算（") + formatMonth(snap.month) + tr("）的结算快照：口径与「推进一个月」的结算一致（税收 + 商业 + 工业 + 旅游 + 行政统筹 − 维护 − 建筑问题损失）。</p>")
         + "<ul class='sat-sum-list'>"
         + finRow(tr("总收入"), snap.totalIncome + tr(" 金币"), "", false)
+        + finRow(tr("总支出"), totalSpend + tr(" 金币"), "", false)
+        + finRow(tr("本月盈亏"), (netR >= 0 ? "+" : "") + netR + tr(" 金币"), netR >= 0 ? "pos-t" : "neg-t", true)
+        + "</ul>"
+        + calcDetailHtml("finance", "<ul class='sat-sum-list'>"
         + finRow(tr("居民税"), snap.incomeTax + tr(" 金币") + (snap.taxMult !== 1 ? tr("（税收乘数 ×") + String(snap.taxMult) + ")" : ""), "", false)
         + finRow(tr("商业收入"), snap.commercialSettled + tr(" 金币") + (snap.commercialMult !== 1 || snap.trafficCommercialMult !== 1 ? tr("（商业乘数 ×") + String(snap.commercialMult) + (snap.trafficCommercialMult !== 1 ? tr("，交通修正 ×") + String(snap.trafficCommercialMult) : "") + ")" : ""), "", false)
         + finRow(tr("工业收入"), snap.industrialSettled + tr(" 金币") + (snap.industrialMult !== 1 ? tr("（工业乘数 ×") + String(snap.industrialMult) + ")" : ""), "", false)
         + finRow(tr("旅游收入"), snap.incomeTourism + tr(" 金币"), "", false)
         + (snap.adminBonusGross !== 0 ? finRow(tr("行政统筹"), snap.adminBonusGross + tr(" 金币"), "", false) : "")
-        + finRow(tr("总支出"), totalSpend + tr(" 金币"), "", false)
         + finRow(tr("维护费"), snap.upkeep + tr(" 金币"), "", false)
         + finRow(tr("其中：公共服务支出"), snap.serviceUpkeep + tr(" 金币"), "", false)
         + finRow(tr("其中：其他维护"), Math.max(0, snap.upkeepRaw - snap.serviceUpkeep) + tr(" 金币"), "", false)
         + (snap.problemLoss > 0 ? finRow(tr("建筑问题损失"), snap.problemLoss + tr(" 金币"), "", false) : "")
-        + finRow(tr("本月盈亏"), (netR >= 0 ? "+" : "") + netR + tr(" 金币"), netR >= 0 ? "pos-t" : "neg-t", true)
         + "</ul>"
-        + tr("<p class='note' style='margin:4px 0 0'>商业 + 工业 = 商业与工业结算总额；公共服务支出是维护费的子项，仅作结构参考，不另计入总支出。</p>");
+        + tr("<p class='note' style='margin:4px 0 0'>商业 + 工业 = 商业与工业结算总额；公共服务支出是维护费的子项，仅作结构参考，不另计入总支出。</p>"));
       var prev = financeHistory.length >= 2 ? financeHistory[financeHistory.length - 2] : null;
       if (prev && prev.month === snap.month - 1) {
         var prevSpend = prev.upkeep + prev.problemLoss;
@@ -12326,8 +12365,9 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       }).join(tr("；"));
       return tr("<h3 class='sec-h font-display' style='margin-top:12px'>人口结构</h3>")
         + "<ul class='sat-sum-list'>" + rows + "</ul>"
-        + tr("<p class='note' style='margin:4px 0 0'>劳动人口 ") + c.laborForce + tr(" 人（按各组劳动参与率折算：年轻 100%、普通家庭 75%、老年 10%、高收入 90%）· 按劳动人口算的失业率 ") + Math.round(c.laborUnemployment * 100) + tr("%（只展示，不参与人口与满意度计算）。</p>")
-        + tr("<p class='note' style='margin:4px 0 0'>分组需求缺口 ") + String(c.groupDemandGap) + tr(" 分（0–100）") + (c.groupExtraMonths > 0 ? tr("，折算等效拖欠 +") + String(c.groupExtraMonths) + tr(" 个月（最多 +2 个月，最多让满意度多扣 2 分、人口多流失 1.4%/月）。") : tr("，暂未折算成拖欠月数。")) + "</p>"
+        + calcDetailHtml("pop-groups",
+          tr("<p class='note' style='margin:4px 0 0'>劳动人口 ") + c.laborForce + tr(" 人（按各组劳动参与率折算：年轻 100%、普通家庭 75%、老年 10%、高收入 90%）· 按劳动人口算的失业率 ") + Math.round(c.laborUnemployment * 100) + tr("%（只展示，不参与人口与满意度计算）。</p>")
+          + tr("<p class='note' style='margin:4px 0 0'>分组需求缺口 ") + String(c.groupDemandGap) + tr(" 分（0–100）") + (c.groupExtraMonths > 0 ? tr("，折算等效拖欠 +") + String(c.groupExtraMonths) + tr(" 个月（最多 +2 个月，最多让满意度多扣 2 分、人口多流失 1.4%/月）。") : tr("，暂未折算成拖欠月数。")) + "</p>")
         + tr("<p class='note' style='margin:4px 0 0'>") + top + tr("。</p>");
     }
     function industryBlockHtml(c) {
@@ -12378,6 +12418,7 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     function devDelta(cur, base) { return Math.round((cur - base) * 10) / 10; }
     function openDevReport(c) {
       var lines = [];
+      var det = []; /* 与基线对比、同期归因：默认收在「详情」里 */
       var ti = tierIndexFor(S.pop), nextTier = TIERS[ti + 1];
       lines.push(tr("报告月份：") + formatMonth(S.month) + tr(" · 城市等级「") + TIERS[ti].title + tr("」（人口 ") + S.pop + tr(" 人）") + (nextTier ? tr("，距下一级「") + nextTier.title + tr("」还差 ") + (nextTier.minPop - S.pop) + tr(" 人") : tr("，已是最高等级")));
       var base = citySnapshots.length >= 2 ? citySnapshots[0] : null;
@@ -12393,10 +12434,10 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       var occ = c.capacity > 0 ? Math.round(S.pop / c.capacity * 100) : 0;
       lines.push(tr("人口：当前人口 ") + S.pop + tr(" 人，住房容量 ") + c.capacity + tr(" 人，占用率 ") + occ + tr("%。"));
       if (base) {
-        lines.push(tr("人口：与最早记录相比，人口") + (dPop >= 0 ? "+" : "") + dPop + tr(" 人，满意度") + (dSat >= 0 ? "+" : "") + dSat + tr(" 分。"));
-        if (dPop <= -5 && dPol >= 3) lines.push(tr("人口：同期污染率上升 ") + dPol + tr(" 个点，人口减少与污染加重同向。"));
-        if (dPop <= -5 && dSat <= -3) lines.push(tr("人口：同期满意度下降 ") + (-dSat) + tr(" 分，人口减少与满意度走低同向。"));
-        if (dPop >= 5 && dSat >= 3) lines.push(tr("人口：同期满意度上升 ") + dSat + tr(" 分，人口增长与满意度走高同向。"));
+        det.push(tr("人口：与最早记录相比，人口") + (dPop >= 0 ? "+" : "") + dPop + tr(" 人，满意度") + (dSat >= 0 ? "+" : "") + dSat + tr(" 分。"));
+        if (dPop <= -5 && dPol >= 3) det.push(tr("人口：同期污染率上升 ") + dPol + tr(" 个点，人口减少与污染加重同向。"));
+        if (dPop <= -5 && dSat <= -3) det.push(tr("人口：同期满意度下降 ") + (-dSat) + tr(" 分，人口减少与满意度走低同向。"));
+        if (dPop >= 5 && dSat >= 3) det.push(tr("人口：同期满意度上升 ") + dSat + tr(" 分，人口增长与满意度走高同向。"));
         if (STAGE3.pop && c.popGroups) {
           var gNames = { young: tr("年轻"), family: tr("普通家庭"), elderly: tr("老年"), highIncome: tr("高收入") };
           lines.push(tr("人口：人口结构：") + ["young", "family", "elderly", "highIncome"].map(function (k) { return gNames[k] + " " + Math.round(c.popGroups[k] * 100) + "%"; }).join(tr("、")) + tr("；劳动人口 ") + c.laborForce + tr(" 人。"));
@@ -12407,15 +12448,15 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       /* 满意度 */
       lines.push(tr("满意度：当前满意度 ") + c.sat.total + tr(" 分（基础 ") + c.sat.base + tr(" 分）。"));
       if (base) {
-        lines.push(tr("满意度：与最早记录相比") + (dSat >= 0 ? " +" : " ") + dSat + tr(" 分。"));
-        if (dSat <= -3 && dPol >= 3) lines.push(tr("满意度：同期污染率上升 ") + dPol + tr(" 个点，满意度下降与污染加重同向。"));
-        if (dSat <= -3 && dEdu <= -5) lines.push(tr("满意度：同期受教育度下降 ") + (-dEdu) + tr(" 个点，满意度下降与教育走低同向。"));
-        if (dSat <= -3 && dSec <= -3) lines.push(tr("满意度：同期治安管理率下降 ") + (-dSec) + tr(" 个点，满意度下降与治安走低同向。"));
-        if (dSat >= 3 && dEdu >= 5) lines.push(tr("满意度：同期受教育度上升 ") + dEdu + tr(" 个点，满意度上升与教育走高同向。"));
+        det.push(tr("满意度：与最早记录相比") + (dSat >= 0 ? " +" : " ") + dSat + tr(" 分。"));
+        if (dSat <= -3 && dPol >= 3) det.push(tr("满意度：同期污染率上升 ") + dPol + tr(" 个点，满意度下降与污染加重同向。"));
+        if (dSat <= -3 && dEdu <= -5) det.push(tr("满意度：同期受教育度下降 ") + (-dEdu) + tr(" 个点，满意度下降与教育走低同向。"));
+        if (dSat <= -3 && dSec <= -3) det.push(tr("满意度：同期治安管理率下降 ") + (-dSec) + tr(" 个点，满意度下降与治安走低同向。"));
+        if (dSat >= 3 && dEdu >= 5) det.push(tr("满意度：同期受教育度上升 ") + dEdu + tr(" 个点，满意度上升与教育走高同向。"));
       }
       /* 环境 */
       lines.push(tr("环境：污染率 ") + c.pollutionRate + tr("%，绿化率 ") + c.greenRate + tr("%。"));
-      if (base) lines.push(tr("环境：与最早记录相比，污染率") + (dPol >= 0 ? " +" : " ") + dPol + tr(" 个点，绿化率") + ((c.greenRate - base.greenRate) >= 0 ? " +" : " ") + (c.greenRate - base.greenRate) + tr(" 个点。"));
+      if (base) det.push(tr("环境：与最早记录相比，污染率") + (dPol >= 0 ? " +" : " ") + dPol + tr(" 个点，绿化率") + ((c.greenRate - base.greenRate) >= 0 ? " +" : " ") + (c.greenRate - base.greenRate) + tr(" 个点。"));
       /* 产业 */
       if (STAGE3.industry) {
         lines.push(tr("产业：消费力指数 ") + c.consumptionIndex + tr("，用工填充率 ") + Math.round(c.fillRate * 100) + tr("%，商业乘数 ×") + String(c.commercialMult) + tr("，工业乘数 ×") + String(c.industrialMult) + tr("，税收乘数 ×") + String(c.taxMult) + tr("。"));
@@ -12433,13 +12474,13 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         lines.push(tr("交通：全城拥堵指数 ") + String(t.cityCongestion) + tr("%；9 个区里拥堵 ") + nCon + tr(" 个、繁忙 ") + nBusy + tr(" 个；负荷最高的区是 Z") + worst.id + tr("（") + String(worst.loadPct) + tr("%，") + tierName(worst.tier) + tr("）。"));
         if (t.trafficCommercialMult < 1) lines.push(tr("交通：拥堵正在压商业收入：交通修正 ×") + String(t.trafficCommercialMult) + tr("（只扣商业，不扣工业）。"));
         else lines.push(tr("交通：全城拥堵未过 100%，交通不扣商业收入。"));
-        lines.push(tr("交通：3D 实际值：车辆目标 ") + t.vehicleCount + tr(" 辆、行人目标 ") + t.pedTarget + tr(" 位；统计口径：车辆目标按各区出行需求占比分配（见下表「车辆分配」列，只作展示，不驱动渲染）。"));
+        det.push(tr("交通：3D 实际值：车辆目标 ") + t.vehicleCount + tr(" 辆、行人目标 ") + t.pedTarget + tr(" 位；统计口径：车辆目标按各区出行需求占比分配（见下表「车辆分配」列，只作展示，不驱动渲染）。"));
       } else {
         lines.push(tr("交通：交通负荷未开启（市政操作 → 实验功能 → 交通负荷），3D 车辆与行人表现不受影响。"));
       }
       /* 城市等级进度 */
       lines.push(tr("城市等级进度：当前「") + TIERS[ti].title + tr("」") + (nextTier ? tr("，下一级「") + nextTier.title + tr("」需人口 ") + nextTier.minPop + tr(" 人，还差 ") + (nextTier.minPop - S.pop) + tr(" 人") : tr("，已是最高等级")));
-      openInfo(tr("城市发展报告"), tr("按当前指标与历史快照汇总；原因只引用已有指标的变化"), lines);
+      openInfo(tr("城市发展报告"), tr("按当前指标与历史快照汇总；原因只引用已有指标的变化"), lines, det);
       if (STAGE3.traffic && c.traffic) appendZoneTable(c.traffic);
     }
     /* 发展报告附表：9 区（区/出行需求/负荷率/档位/通勤效率/车辆分配）。
@@ -12513,6 +12554,16 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
       });
       openInfo(tr("建筑图鉴"), tr("23 种建筑一览：介绍、造价、升级费、岗位、服务范围、环境影响、维护成本、升级效果"), lines);
     }
+    /* 地块弹窗顶部数值条：与页面顶部数值完全一致（同一份 S / compute() 结果），只做展示、不改逻辑 */
+    function tileStatsHtml(c) {
+      function it(label, valHtml) { return "<span class='ts-item'>" + label + " <b>" + valHtml + "</b></span>"; }
+      return it(tr("资金"), "<span class='" + (S.funds < 0 ? "neg" : "") + "'>" + S.funds.toLocaleString() + "</span>")
+        + it(tr("人口"), S.pop + "/" + c.capacity)
+        + it(tr("满意度"), c.sat.total + "<span class='ts-sub'> " + satisfactionWord(c.sat.total) + "</span>")
+        + it(tr("教育"), c.education + "%<span class='ts-sub'> " + educationWord(c.education) + "</span>")
+        + it(tr("电力"), "<span class='" + (c.powerOk ? "" : "neg") + "'>" + c.gen + "/" + c.use + "</span>")
+        + it(tr("治安管理"), c.security + "%<span class='ts-sub'> " + c.securityWord + "</span>");
+    }
     function renderTileDialog(c) {
       var ov = document.getElementById("tileOverlay");
       if (selected < 0) { ov.classList.remove("open"); ov.innerHTML = ""; return; }
@@ -12555,7 +12606,8 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
         ov.innerHTML = tr("<div class='dialog-card' role='dialog' aria-modal='true' aria-label='选择建筑'>")
           + tr("<div class='dlg-head'><div><p class='dlg-title font-display'>选择建筑</p>")
           + tr("<p class='dlg-sub'>第 ") + rowNo + tr(" 行第 ") + colNo + tr(" 列 · 空地——挑一座盖下去</p></div>")
-          + tr("<button type='button' class='btn-close' id='btnCloseTile' aria-label='关闭选择建筑界面'>✕ 关闭</button></div>")
+          + tr("<button type='button' class='btn-close' id='btnCloseTile' aria-label='关闭选择建筑界面'>✕ 关闭</button>")
+          + "<div class='tile-stats'>" + tileStatsHtml(c) + "</div></div>"
           + hints + guide
           + "<div class='build-grid'>" + items + "</div>"
           + (S.funds < 80 ? tr("<p class='dlg-hint bad' style='margin-top:8px'>资金不够盖最便宜的建筑了——推进几个月攒攒税收，或拆掉不用的建筑回点款。</p>") : "")
@@ -12645,11 +12697,11 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
           ? tr("<button type='button' class='btn-demolish-confirm' id='btnDemolish' aria-label='确认拆除'>确认拆除？返 ") + refund + tr(" 金币</button>")
           : tr("<button type='button' class='btn-demolish' id='btnDemolish' aria-label='拆除建筑'>拆除</button>");
         ov.innerHTML = "<div class='dialog-card' role='dialog' aria-modal='true' aria-label='" + d.name + "'>"
+          + "<div class='tile-stats-bar'><div class='tile-stats'>" + tileStatsHtml(c) + "</div></div>"
           + "<div class='bhead'><span class='art-lg'>" + artSVG(b.type, b.level) + "</span><div class='bhead-main'>"
           + "<p class='dlg-title font-display'>" + d.name + "<span class='lv-note'>" + b.level + tr(" 级</span></p>")
           + "<p class='dlg-effect'>" + tileEffectText(b) + "</p>"
-          + "<dl class='data'>" + rows + "</dl>"
-          + paras
+          + calcDetailHtml("tile-data", "<dl class='data'>" + rows + "</dl>" + paras)
           + "</div></div>"
           + (fixBtn ? "<div class='action-row'>" + fixBtn + "</div>" : "")
           + "<div class='action-row'>" + upBtn + demBtn + "</div></div>";
@@ -13537,6 +13589,21 @@ if (typeof THREE === "undefined") { console.error("[\u5c0f\u57ce\u5e02\u7ecf\u84
     });
     document.getElementById("infoOverlay").addEventListener("click", function (e) {
       if (e.target === e.currentTarget) closeInfo();
+    });
+    /* 「详情」折叠开关委托：切换内存状态 + 原地展开/收起，不碰任何经营数值与存档 */
+    document.addEventListener("click", function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest(".calc-toggle") : null;
+      if (!btn) return;
+      var key = btn.getAttribute("data-detail-key");
+      var wrap = btn.closest(".calc-detail");
+      if (!wrap) return;
+      var body = wrap.querySelector(".calc-body");
+      if (!body) return;
+      var open = !(detailOpen[key] === true);
+      detailOpen[key] = open;
+      if (open) body.removeAttribute("hidden"); else body.setAttribute("hidden", "");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.textContent = open ? tr("收起 ▾") : tr("详情 ▸");
     });
     window.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
